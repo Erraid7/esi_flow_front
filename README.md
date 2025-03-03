@@ -1,30 +1,24 @@
-ESI Flow - Frontend
-🚀 ESI Flow is a web platform for managing maintenance tasks and equipment at ESI.
-This repository contains the frontend application, built with Next.js and Tailwind CSS.
+# ESI Flow - Frontend  
 
-🔹 Tech Stack
-Next.js 15
-React 19
-Tailwind CSS
-Axios (for API requests)
-🔹 Getting Started
-Clone the repository and navigate to the project folder.
-Install dependencies using npm install.
-Create a .env.local file to configure API settings.
-Start the development server with npm run dev.
-Open http://localhost:3000 in your browser.
-🔹 Project Structure
-The project includes:
+This is the frontend of **ESI Flow**, a web platform for managing maintenance tasks and equipment.  
+Built with **Next.js** and **Tailwind CSS**.  
 
-Pages: Main sections of the app (dashboard, login, etc.).
-Components: Reusable UI elements (navbar, footer, etc.).
-Styles: Tailwind CSS configuration.
-Utils: API requests and helper functions.
-🔹 Contribution Guide
-Use meaningful commit messages.
-Follow the branching strategy (main, dev, feature/{name}).
-Ensure code follows formatting and best practices before pushing.
-Pull Requests should be reviewed before merging.
+## 🚀 Getting Started  
+1. Clone the repository  
+2. Install dependencies: `npm install`  
+3. Start the development server: `npm run dev`  
+4. Open `http://localhost:3000` in your browser  
 
-📧 Contact
-For issues or suggestions, open an Issue on GitHub.
+## 📁 Project Structure  
+- **pages/** → Main views (Dashboard, Login, etc.)  
+- **components/** → Reusable UI elements  
+- **styles/** → Tailwind CSS configuration  
+- **utils/** → API calls and helper functions  
+
+## 📌 Contribution  
+- Use meaningful commit messages  
+- Follow the `main` → `dev` → `feature/{name}` branching strategy  
+- Ensure code is formatted before pushing  
+
+## 📧 Contact  
+For issues, open an **Issue** on GitHub.  
