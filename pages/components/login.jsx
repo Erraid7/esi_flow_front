@@ -1,12 +1,14 @@
-// pages/login.js
 import { useState } from 'react';
 import axios from 'axios';
+import { useLanguage } from '../translations/contexts/languageContext';
+
 
 export default function Login() {
+  const { t, toggleLanguage } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -14,31 +16,37 @@ export default function Login() {
       // Save token, redirect, etc.
       console.log(res.data);
     } catch (err) {
-      setError('Invalid credentials');
+      setError(t('login', 'error'));
     }
   };
-
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
+      <button
+        onClick={toggleLanguage}
+        className="absolute top-4 right-4 px-3 py-1 bg-gray-200 text-gray-800 rounded text-sm"
+      >
+        {t('common', 'toggleLanguage')}
+      </button>
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
-        <h2 className="text-2xl mb-4">Login</h2>
+        <h2 className="text-2xl mb-4">{t('login', 'title')}</h2>
         {error && <p className="text-red-500">{error}</p>}
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t('login', 'emailPlaceholder')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="mb-4 p-2 border rounded w-full"
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t('login', 'passwordPlaceholder')}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="mb-4 p-2 border rounded w-full"
         />
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-          Login
+          {t('login', 'button')}
         </button>
       </form>
     </div>
