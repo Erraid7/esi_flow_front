@@ -1,9 +1,11 @@
+// /contexts/LanguageContext.js
 import { createContext, useState, useContext, useEffect } from 'react';
 import { en } from '../en';
 import { fr } from '../fr';
+import { ar } from '../ar';
 
 
-const translations = { en, fr };
+const translations = { en , fr , ar };
 
 const LanguageContext = createContext();
 
@@ -18,10 +20,21 @@ export const LanguageProvider = ({ children }) => {
     }
   }, []);
   
+  const changeLanguage = (lang) => {
+    if (translations[lang]) {
+      setLanguage(lang);
+      localStorage.setItem('language', lang);
+    }
+  };
+  
   const toggleLanguage = () => {
-    const newLanguage = language === 'en' ? 'fr' : 'en';
-    setLanguage(newLanguage);
-    localStorage.setItem('language', newLanguage);
+    // Now cycles through en -> fr -> ar -> en
+    const languageOrder = ['en', 'fr', 'ar'];
+    const currentIndex = languageOrder.indexOf(language);
+    const nextIndex = (currentIndex + 1) % languageOrder.length;
+    const newLanguage = languageOrder[nextIndex];
+    
+    changeLanguage(newLanguage);
   };
   
   const t = (section, key) => {
@@ -33,7 +46,7 @@ export const LanguageProvider = ({ children }) => {
   };
   
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
+    <LanguageContext.Provider value={{ language, toggleLanguage, changeLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

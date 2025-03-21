@@ -1,6 +1,16 @@
 import Head from "next/head";
 import "@/styles/globals.css";
-import { LanguageProvider } from "./translations/contexts/languageContext";
+import { LanguageProvider, useLanguage } from "./translations/contexts/languageContext";
+
+function AppContent({ Component, pageProps }) {
+  const { language } = useLanguage();
+  
+  return (
+    <div dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      <Component {...pageProps} />
+    </div>
+  );
+}
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -11,7 +21,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="description" content="Your website description here" />
       </Head>
       <LanguageProvider>
-        <Component {...pageProps} />
+        <AppContent Component={Component} pageProps={pageProps} />
       </LanguageProvider>
     </>
   );
