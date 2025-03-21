@@ -13,6 +13,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "express": "^4.21.2",
+    "framer-motion": "^12.5.0",
     "helmet": "^8.0.0",
     "iconsax-react": "^0.0.8",
     "next": "^15.1.3",
