@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Mode 1 colors
+       // Mode 1 colors
         "neutral-50": "#F6F6F6FF",
         "neutral-100": "#E7E7E7FF",
         "neutral-200": "#D1D1D1FF",

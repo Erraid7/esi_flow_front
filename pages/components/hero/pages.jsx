@@ -1,8 +1,10 @@
 // components/hero/pages.jsx
 import React from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/pages/translations/contexts/languageContext';
 
 const Hero = () => {
+  const { t, toggleLanguage } = useLanguage();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#F5F7F8] dark:bg-neutral-950 px-4 py-12 text-center">
       {/* Logo */}
@@ -17,7 +19,7 @@ const Hero = () => {
       
       {/* Tagline */}
       <h3 className="text-5xl  font-russo mb-8 dark:text-white">
-        Stay Connected Simplify ESI Experience
+      {t('hero', 'title')}
       </h3>
       
       {/* Description */}
