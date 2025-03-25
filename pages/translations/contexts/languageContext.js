@@ -1,43 +1,48 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import { fr } from '../fr';
+// pages/translations/contexts/languageContext.js
+import React, { createContext, useState, useContext } from 'react';
 import { en } from '../en';
+import { fr } from '../fr';
 
-
-
-const translations = { fr , en };
+const translations = { en, fr };
 
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState('en');
-  
-  // Load language preference from localStorage if available
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage && translations[savedLanguage]) {
-      setLanguage(savedLanguage);
+
+  // Function to get nested translations
+  const t = (...keys) => {
+    let currentTranslation = translations[language];
+    
+    for (const key of keys) {
+      if (currentTranslation && currentTranslation[key] !== undefined) {
+        currentTranslation = currentTranslation[key];
+      } else {
+        return `Missing translation for ${keys.join('.')}`;
+      }
     }
-  }, []);
-  
+    
+    return currentTranslation;
+  };
+
+  // Toggle language between English and French
   const toggleLanguage = () => {
-    const newLanguage = language === 'en' ? 'fr' : 'en';
-    setLanguage(newLanguage);
-    localStorage.setItem('language', newLanguage);
+    setLanguage(prevLanguage => prevLanguage === 'en' ? 'fr' : 'en');
   };
-  
-  const t = (section, key) => {
-    if (translations[language] && translations[language][section] && translations[language][section][key]) {
-      return translations[language][section][key];
-    }
-    console.warn(`Translation missing: ${language}.${section}.${key}`);
-    return key;
-  };
-  
+
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
+    <LanguageContext.Provider value={{ t, language, toggleLanguage }}>
       {children}
     </LanguageContext.Provider>
   );
 };
 
-export const useLanguage = () => useContext(LanguageContext);
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  
+  return context;
+};

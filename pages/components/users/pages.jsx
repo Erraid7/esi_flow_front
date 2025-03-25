@@ -30,7 +30,7 @@ export default function WhoCanUseESIFlow() {
     }
   ];
   return (
-    <div className="p-20 bg-[#F5F7F8] ">
+    <section id="users" className="p-20 bg-[#F5F7F8] ">
       
         <h1 className="text-7xl ml-4 font-bold text-gray-800 mb-16">
           Who Can Use<br />
@@ -48,7 +48,7 @@ export default function WhoCanUseESIFlow() {
           ))}
         </div>
       
-    </div>
+    </section>
   );
 }
 
@@ -56,7 +56,8 @@ function RoleCard({ title, icon, description }) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <motion.div
+    
+      <motion.div
       className=" bg-white rounded-2xl shadow-md overflow-hidden h-80 w-96 cursor-pointer p-6"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -106,5 +107,6 @@ function RoleCard({ title, icon, description }) {
         </motion.p>
       </div>
     </motion.div>
+    
   );
 }

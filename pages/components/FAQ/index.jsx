@@ -46,7 +46,7 @@ export default function ESIFlowFAQs() {
   };
 
   return (
-    <div className=" bg-[#F5F7F8] py-8 px-20">
+    <section className=" bg-[#F5F7F8] py-8 px-20" id='faq'>
       <Head>
         <title>ESI Flow FAQs</title>
         <meta name="description" content="Frequently asked questions about ESI Flow" />
@@ -94,6 +94,6 @@ export default function ESIFlowFAQs() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
