@@ -3,17 +3,9 @@ import { useEffect } from 'react';
 import '../styles/globals.css';
 import Head from "next/head";
 import { LanguageProvider } from "./translations/contexts/languageContext";
+import { DarkModeProvider } from './darkLightMode/darkModeContext';
 
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    // Check on app initialization if dark mode should be applied
-    const savedTheme = localStorage.getItem('theme');
-    
-    if (savedTheme === 'dark' || 
-        (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
 
   return (
     <>
@@ -23,8 +15,10 @@ function MyApp({ Component, pageProps }) {
         <meta name="description" content="Your website description here" />
       </Head>
       <LanguageProvider>
+      <DarkModeProvider>
         <Component {...pageProps} />
-      </LanguageProvider>
+      </DarkModeProvider>
+    </LanguageProvider>
     </>
   );
 }

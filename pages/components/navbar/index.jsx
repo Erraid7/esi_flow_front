@@ -1,33 +1,13 @@
 // Navbar.jsx
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../translations/contexts/languageContext';
+import { useDarkMode } from '../../darkLightMode/darkModeContext';
 
 const Navbar = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { t, toggleLanguage } = useLanguage();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   
-  // Initialize theme based on user preference
-  useEffect(() => {
-    // Check if dark mode is already set in localStorage
-    const savedTheme = localStorage.getItem('theme');
-    
-    if (savedTheme === 'dark' || 
-        (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-  
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    if (isDarkMode) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setIsDarkMode(false);
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setIsDarkMode(true);
-    }
-  };
+
 
   return (
     <nav className="bg-white dark:bg-neutral-950 border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex justify-between items-center">
@@ -75,7 +55,7 @@ const Navbar = () => {
           </button>
           
           {/* Language selector icon (placeholder) */}
-          <button className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+          <button className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" onClick={toggleLanguage}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="2" y1="12" x2="22" y2="12"></line>
