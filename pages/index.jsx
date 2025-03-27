@@ -17,8 +17,7 @@ export default function Home() {
   
     <>
 
-    
-    
+      
       <Nav />
       <Hero />
       <Explor/>

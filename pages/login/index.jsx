@@ -87,7 +87,7 @@ const Login = () => {
                   className='absolute inset-y-0 right-4 flex items-center'
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeSlash size='26' color={isDarkMode ? '#F8F9FA' : '#5E636F'} /> : <Eye size='26' color={isDarkMode ? '#F8F9FA' : '#5E636F'} />}
+                  {showPassword ? <Eye size='20' variant="Bold" color={isDarkMode ? '#F8F9FA' : '#5E636F'} /> : <EyeSlash size='20' variant="Bold" color={isDarkMode ? '#F8F9FA' : '#5E636F'} />}
                 </button>
               </div>
             </div>

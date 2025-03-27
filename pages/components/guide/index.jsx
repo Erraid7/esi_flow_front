@@ -20,10 +20,10 @@ export default function Home() {
           </p>
           
           <CustomYouTube videoId="lfmg-EJ8gm4"  />
-          <button className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 hover:dark:bg-primary-400 dark:bg-primary-300 dark:text-neutral-950 text-neutral-100 font-semibold text-xs md:text-xl py-3 md:py-4 px-7 md:px-8 rounded-md transition-colors self-end">
+          <button className="flex items-center w-fit gap-3 bg-primary-600 hover:bg-primary-700 hover:dark:bg-primary-400 dark:bg-primary-300 dark:text-neutral-950 text-neutral-100 font-semibold text-xs md:text-xl py-3 md:py-4 px-7 md:px-8 rounded-md transition-colors self-end">
             {t('home' , 'howItWorks' , 'button')}  
             {isDarkMode ? (
-              <DocumentDownload size="28" color="black" className='hidden md:block'/>
+              <DocumentDownload size="26" color="black" className='hidden md:block'/>
 
             ) : (
               <DocumentDownload size="28" color="white" className='hidden md:block'/>

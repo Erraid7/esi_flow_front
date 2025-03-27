@@ -5,7 +5,7 @@ export default function Home() {
     const { t, toggleLanguage } = useLanguage();
     const { isDarkMode, toggleDarkMode } = useDarkMode();
   return (
-    <section className="px-4 md:px-20  flex flex-col gap-8 bg-neutral-50 dark:bg-neutral-990 pb-24" id='about'>
+    <section className="overflow-auto px-4 md:px-20  flex flex-col gap-8 bg-neutral-50 dark:bg-neutral-990 pb-24" id='about'>
      
         {/* Discover Section */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-8 ">
