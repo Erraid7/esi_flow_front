@@ -31,27 +31,44 @@ export const en = {
       button: "Log In"
     },
     discover: {
-      title: "Discover ESI Flow",
+      title: "Discover ESI",
       about: "About ESI Flow",
       aboutDescription: "ESI Flow is a dedicated platform designed for students and staff at ESI, allowing them to efficiently report, track, and resolve technical issues within the institution. Our goal is to enhance communication, transparency, and responsiveness to technical problems.",
       mission: "Our Mission",
       missionDescription: "To simplify technical issue management by providing a centralized, real-time reporting system. With ESI Flow, every problem is handled swiftly, ensuring an optimal and uninterrupted learning environment for everyone."
     },
     howItWorks: {
-      title: "How ESI Flow Works",
+      title: {
+        1:"How ESI Flow",
+        2:"Works",
+      },
+      
       description: "ESI Flow streamlines maintenance management by offering a structured, intuitive process for reporting issues, assigning tasks to technicians, and providing real-time notifications. It ensures transparency and responsiveness, with a user-friendly dashboard providing an overview of ongoing and completed interventions.",
       button: "Download The Guide"
     },
     users: {
-      title: "Who Can Use ESI Flow?",
-      roles: {
-        personal: "Personal",
-        administrator: "Administrator",
-        technician: "Technician"
-      }
-    },
+        title: "Who Can Use",
+        roles: {
+          personal:{
+            1:"Personal",
+            2:"Staff members, students, and teachers can quickly report technical issues, track the status of their requests, and receive real-time updates on their resolution.",
+          } ,
+          administrator:{
+            1:"Administrator",
+            2:"Administrators handle reported issues, delegate tasks to technicians, monitor platform activity, and facilitate seamless communication between users and the technical team to ensure efficient problem resolution at ESI.",
+          } ,
+          technician:{
+            1:"Technician",
+            2:"Technicians diagnose and resolve reported issues, update their status, implement solutions, and ensure a reliable and efficient environment for students, teachers, and staff at ESI.",
+          } ,
+          
+        }
+      },
     faq: {
-      title: "Discover ESI Flow FAQs",
+      title:{
+        1:"Discover ESI",
+        2:"Flow FAQs"
+      },
       questions: [
         {
           question: "What is ESI Flow?",

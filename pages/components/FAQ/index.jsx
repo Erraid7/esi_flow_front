@@ -1,98 +1,83 @@
 import { useState, useRef, useEffect } from 'react';
-import Head from 'next/head';
 import { ArrowDown2, ArrowRight2 } from 'iconsax-react';
+import { useDarkMode } from '../../darkLightMode/darkModeContext';
+import { useLanguage } from '@/pages/translations/contexts/languageContext';
 
 export default function ESIFlowFAQs() {
-  const [openQuestion, setOpenQuestion] = useState('what');
-  const [heights, setHeights] = useState({});
-  const answerRefs = useRef({});
+  const [openQuestion, setOpenQuestion] = useState(null);
+  const { isDarkMode } = useDarkMode();
+  const { t, toggleLanguage } = useLanguage();
 
   const faqs = [
     {
       id: 'what',
-      question: 'What is ESI Flow?',
-      answer: 'ESI Flow is a platform that allows students and staff to report, track, and stay updated on technical issues within ESI.'
+      question: t('home','faq','questions',0,'question'),
+      answer: t('home','faq','questions',0,'answer'),
     },
     {
       id: 'who',
-      question: 'Who can use ESI Flow?',
-      answer: 'ESI Flow is available to all students and staff members with a valid institutional login. Faculty, administrators, and IT personnel have different permission levels within the system.'
+      question: t('home','faq','questions',1,'question'),
+      answer: t('home','faq','questions',1,'answer'),
     },
     {
       id: 'how',
-      question: 'How do I report a technical problem?',
-      answer: 'You can report a technical problem by logging into ESI Flow, clicking on "New Report" button, filling out the required form with details about your issue, and submitting it. You\'ll receive a confirmation email with a tracking number.'
+      question: t('home','faq','questions',2,'question'),
+      answer: t('home','faq','questions',2,'answer'),
     },
     {
       id: 'track',
-      question: 'Can I track the status of my report?',
-      answer: 'Yes, you can track the status of your report by logging into ESI Flow and navigating to "My Reports" section. You can also receive email notifications when there are updates to your reported issues.'
+      question: t('home','faq','questions',3,'question'),
+      answer: t('home','faq','questions',3,'answer'),
     }
   ];
-
-  // Measure heights of answer divs after initial render
-  useEffect(() => {
-    const newHeights = {};
-    Object.keys(answerRefs.current).forEach(id => {
-      if (answerRefs.current[id]) {
-        newHeights[id] = answerRefs.current[id].scrollHeight;
-      }
-    });
-    setHeights(newHeights);
-  }, []);
 
   const toggleQuestion = (id) => {
     setOpenQuestion(openQuestion === id ? null : id);
   };
 
   return (
-    <section className=" bg-[#F5F7F8] py-8 px-20" id='faq'>
-      <Head>
-        <title>ESI Flow FAQs</title>
-        <meta name="description" content="Frequently asked questions about ESI Flow" />
-      </Head>
+    <section
+      className="px-4 md:px-20 flex flex-col gap-8 bg-neutral-50 dark:bg-neutral-990 pb-24"
+      id="faq"
+    >
+      <h1 className="text-[40px] md:text-[80px] font-russo text-neutral-950 dark:text-neutral-100 leading-tight">
+        {t('home','faq','title',1)}
+        <br />
+        {t('home','faq','title',2)}
+      </h1>
 
-      <div className="mx-auto rounded-lg shadow-sm overflow-hidden">
-        <div className="px-6 py-8">
-          <h1 className="text-8xl font-bold text-gray-800 mb-8">
-            Discover ESI<br />
-            Flow FAQs
-          </h1>
-
-          <div className="space-y-2">
-            {faqs.map((faq) => (
-              <div key={faq.id} className="border border-gray-200 bg-white hover:bg-gray-50 transition-colors rounded-md overflow-hidden">
-                <button
-                  onClick={() => toggleQuestion(faq.id)}
-                  className="w-full px-4 py-5 text-left flex justify-between items-center"
-                >
-                  <span className="font-medium text-gray-900">{faq.question}</span>
-                  <span className="text-gray-500 transition-transform duration-300">
-                    {openQuestion === faq.id ? (
-                      <ArrowDown2 size="16" color="#254E7A" />
-                    ) : (
-                      <ArrowRight2 size="16" color="#254E7A" />
-                    )}
-                  </span>
-                </button>
-                <div 
-                  className="overflow-hidden transition-all duration-300 ease-in-out"
-                  style={{ 
-                    maxHeight: openQuestion === faq.id ? `${heights[faq.id] || 1000}px` : '0',
-                    opacity: openQuestion === faq.id ? 1 : 0
-                  }}
-                >
-                  <div 
-                    ref={el => answerRefs.current[faq.id] = el}
-                    className="px-4 pb-5"
-                  >
-                    <p className="text-gray-700">{faq.answer}</p>
-                  </div>
-                </div>
+      <div className="flex flex-col gap-2">
+        {faqs.map((faq) => (
+          <div
+            key={faq.id}
+            className="bg-white dark:bg-neutral-950 hover:bg-gray-50 dark:hover:bg-neutral-900 transition-colors rounded-md overflow-hidden"
+          >
+            <button
+              onClick={() => toggleQuestion(faq.id)}
+              className="w-full px-4 py-5 text-left flex justify-between items-center"
+            >
+              <span className="font-medium text-neutral-950 dark:text-neutral-100">
+                {faq.question}
+              </span>
+              <span className="transition-transform duration-300">
+                {openQuestion === faq.id ? (
+                  <ArrowDown2 size="16" color={isDarkMode ? "white" : "#254E7A"} />
+                ) : (
+                  <ArrowRight2 size="16" color={isDarkMode ? "white" : "#254E7A"} />
+                )}
+              </span>
+            </button>
+            <div
+              className={`overflow-hidden transition-all duration-500 ease-in-out ${openQuestion === faq.id ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
+            >
+              <div className="px-4 pb-5 w-full">
+                <p className="text-neutral-950 dark:text-neutral-100 text-sm md:text-base break-words">
+                  {faq.answer}
+                </p>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
     </section>
   );

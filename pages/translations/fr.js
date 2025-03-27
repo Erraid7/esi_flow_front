@@ -30,27 +30,43 @@
         button: "Connectez-vous"
       },
       discover: {
-        title: "Explorez ESI Flow",
+        title: "Explorez ESI",
         about: "À Propos d'ESI Flow",
         aboutDescription: "ESI Flow est une plateforme dédiée aux étudiants et au personnel de l'ESI, conçue pour signaler, suivre et résoudre efficacement les problèmes techniques. Notre objectif est de renforcer la communication, la transparence et la réactivité face aux incidents techniques.",
         mission: "Notre Engagement",
         missionDescription: "Faciliter la gestion des problèmes techniques grâce à un système centralisé et en temps réel. Avec ESI Flow, chaque problème est traité rapidement, garantissant un environnement d'apprentissage fluide et optimisé pour tous."
       },
       howItWorks: {
-        title: "Approche D'ESI Flow",
+        title:{
+          1:"Approche D'ESI",
+          2:"Flow"
+        },
         description: "ESI Flow facilite la gestion de la maintenance en organisant les signalements, en automatisant l'attribution des tâches aux techniciens et en envoyant des notifications en temps réel. Son tableau de bord interactif offre une vue d'ensemble claire des interventions, garantissant transparence et réactivité.",
         button: "Téléchargez le guide"
       },
       users: {
-        title: "À qui est destiné ESI Flow ?",
+        title: "À qui est destiné",
         roles: {
-          personal: "Personnel",
-          administrator: "Administrateur",
-          technician: "Technicien"
+          personal:{
+            1:"Personnel",
+            2:"Le personnel, les étudiants et les enseignants ont la possibilité de signaler facilement les problèmes techniques, de suivre l’avancement de leurs demandes et de recevoir des mises à jour en temps réel sur leur résolution.",
+          } ,
+          administrator:{
+            1:"Administrateur",
+            2:"Les administrateurs assurent la gestion des problèmes signalés, assignent les tâches aux techniciens, supervisent l'activité de la plateforme et facilitent la communication entre les utilisateurs et l'équipe technique afin d'assurer une résolution efficace des anomalies à l’ESI.",
+          } ,
+          technician:{
+            1:"Technicien",
+            2:"Les techniciens diagnostiquent et traitent les problèmes signalés, actualisent leur statut, déploient des solutions adaptées et garantissent un environnement stable et performant pour les étudiants, les enseignants et le personnel de l’ESI.",
+          } ,
+          
         }
       },
       faq: {
-        title: "FAQ d'ESI Flow",
+        title:{
+          1:"FAQ d'ESI",
+          2:"Flow"
+        },
         questions: [
           {
             question: "Qu'est-ce qu'ESI Flow ?",
