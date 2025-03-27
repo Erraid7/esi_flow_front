@@ -116,12 +116,11 @@ const Navbar = () => {
           {/* Desktop Login Button */}
           
         </div>
-        <a 
-            href="/login" 
+        <Link  href="../../login" 
             className="hidden md:block bg-primary-600 dark:bg-primary-300 dark:hover:bg-primary-400 hover:bg-primary-700 text-neutral-50 dark:text-neutral-950 font-medium text-base py-2 px-6 rounded-lg transition-colors"
           >
             {t('home', 'navbar', 'button')}
-          </a>
+          </Link>
 
         {/* Mobile Hamburger Button */}
         <div className="md:hidden">
@@ -187,12 +186,12 @@ const Navbar = () => {
             </Link>
 
             {/* Mobile Login Button */}
-            <a 
-              href="/login" 
+            <Link 
+              href="../../login" 
               className="w-3/5 text-center mt-2 bg-primary-600 dark:bg-primary-300 dark:hover:bg-primary-400 hover:bg-primary-700 text-neutral-50 dark:text-neutral-950 font-medium text-base py-2 rounded-lg transition-colors"
             >
               {t('home', 'navbar', 'button')}
-            </a>
+            </Link>
           </div>
         </div>
       )}

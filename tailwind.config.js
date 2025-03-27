@@ -40,6 +40,7 @@ module.exports = {
         'russo': ['"Russo One"', 'sans-serif'],
         'inter': ['Inter', 'sans-serif'],
       },
+      
     },
   },
   plugins: [],

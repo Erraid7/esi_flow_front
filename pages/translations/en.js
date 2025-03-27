@@ -93,5 +93,16 @@ export const en = {
         button: "Contact"
       }
     }
+  },
+  login:{
+    title: "Welcome back",
+    ph1: "Email",
+    input1: "Email or phone number",
+    ph2: "Password",
+    input2: "Enter password",
+    remember:"Remember me",
+    forgot:"Forgot password?",
+    button:"Sign in",
+
   }
 };

@@ -28,7 +28,7 @@ const Hero = () => {
       </p>
       
       {/* CTA Button */}
-      <Link href="/connect">
+      <Link href="../../login">
         <button className="bg-primary-600 hover:bg-primary-700 hover:dark:bg-primary-400 dark:bg-primary-300 dark:text-neutral-950 text-neutral-100 font-medium text-base py-2 md:py-3 px-6 md:px-14 rounded-lg transition-colors">
         {t('home', 'hero', 'button')}
         </button>

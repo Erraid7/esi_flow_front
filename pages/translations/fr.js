@@ -91,5 +91,16 @@
           button: "Contact"
         }
       }
-    }
+    },
+    login: {
+    title: "Bienvenue",
+    ph1: "Email",
+    input1: "Email ou numéro de téléphone",
+    ph2: "Mot de passe",
+    input2: "Entrer le mot de passe",
+    remember: "Se souvenir de moi",
+    forgot: "Mot de passe oublié ?",
+    button: "Se connecter",
+  }
+
   };
