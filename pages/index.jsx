@@ -13,19 +13,13 @@ export default function Home() {
   const { t, toggleLanguage } = useLanguage();
   
   return (
-   
-  
-    <>
-
-      
+    <div className="bg-neutral-50 dark:bg-neutral-990">
       <Nav />
       <Hero />
       <Explor/>
       <How />
       <WhoCanUse />
       <FAQ />
-     
- 
-    </>
+    </div>
   );
 }

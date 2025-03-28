@@ -3,32 +3,56 @@ import { useLanguage } from '../../translations/contexts/languageContext';
 import { useDarkMode } from '../../darkLightMode/darkModeContext';
 import {Sun1, Moon, LanguageCircle, HambergerMenu, CloseCircle} from 'iconsax-react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+
+// Define nav links with names and href
+const navLinks = [
+  { name: 'home', href: '#home', label: 'Home' },
+  { name: 'about', href: '#about', label: 'About' },
+  { name: 'guide', href: '#guide', label: 'Guide' },
+  { name: 'users', href: '#users', label: 'Users' },
+  { name: 'faq', href: '#faq', label: 'FAQ' },
+  { name: 'contact', href: '#contact', label: 'Contact' }
+];
 
 const Navbar = () => {
   const { t, toggleLanguage } = useLanguage();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [activeLink, setActiveLink] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const router = useRouter();
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Automatically update active link based on current route/section
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  // Update active link and scroll progress on scroll
   useEffect(() => {
-    const handleRouteChange = () => {
-      const hash = window.location.hash.substring(1); // Remove the # from the hash
-      setActiveLink(hash || 'home');
+    const handleScroll = () => {
+      // Update active link
+      const sections = navLinks.map((link) => document.getElementById(link.href.substring(1)));
+      const scrollPosition = window.scrollY + 100;
+
+      sections.forEach((section, index) => {
+        if (
+          section && 
+          section.offsetTop <= scrollPosition &&
+          section.offsetTop + section.offsetHeight > scrollPosition
+        ) {
+          setActiveLink(navLinks[index].name);
+        }
+      });
+
+      // Update scroll progress
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (window.scrollY / totalHeight) * 100;
+      setScrollProgress(progress);
     };
 
-    // Add event listener for hash changes
-    window.addEventListener('hashchange', handleRouteChange);
-    
-    // Initial check when component mounts
-    handleRouteChange();
-
-    // Cleanup event listener
-    return () => {
-      window.removeEventListener('hashchange', handleRouteChange);
-    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const linkStyle = (linkName) => `
@@ -40,6 +64,7 @@ const Navbar = () => {
   `;
 
   const handleLinkClick = (linkName) => {
+    scrollToSection(linkName);
     setActiveLink(linkName);
     setIsMobileMenuOpen(false);
   };
@@ -71,15 +96,19 @@ const Navbar = () => {
           <div className="flex items-center gap-12">
             {/* Desktop Links */}
             <div className="hidden md:flex justify-center items-center gap-9">
-              {['home', 'about', 'guide', 'users', 'faq', 'contact'].map((linkName, index) => (
-                <Link 
-                  key={linkName}
-                  href={`#${linkName}`} 
-                  className={linkStyle(linkName)}
-                  onClick={() => handleLinkClick(linkName)}
+              {navLinks.map((link) => (
+                <button 
+                  key={link.name}
+                  onClick={() => handleLinkClick(link.name)}
+                  className={linkStyle(link.name)}
                 >
-                  {t('home', 'navbar', index + 1)}
-                </Link>
+                  {t('home', 'navbar', link.name === 'home' ? 1 : 
+                     link.name === 'about' ? 2 : 
+                     link.name === 'guide' ? 3 : 
+                     link.name === 'users' ? 4 : 
+                     link.name === 'faq' ? 5 : 
+                     link.name === 'contact' ? 6 : 'button')}
+                </button>
               ))}
             </div>
             
@@ -142,15 +171,19 @@ const Navbar = () => {
         {isMobileMenuOpen && (
           <div className="fixed inset-x-0 top-16 bg-white dark:bg-neutral-990 md:hidden h-fit z-30">
             <div className="flex flex-col items-center gap-2 py-5">
-              {['home', 'about', 'guide', 'users', 'faq', 'contact'].map((linkName, index) => (
-                <Link 
-                  key={linkName}
-                  href={`#${linkName}`} 
-                  className={`pt-2 ${linkStyle(linkName)}`}
-                  onClick={() => handleLinkClick(linkName)}
+              {navLinks.map((link) => (
+                <button
+                  key={link.name}
+                  onClick={() => handleLinkClick(link.name)}
+                  className={`pt-2 ${linkStyle(link.name)}`}
                 >
-                  {t('home', 'navbar', index + 1)}
-                </Link>
+                  {t('home', 'navbar', link.name === 'home' ? 1 : 
+                     link.name === 'about' ? 2 : 
+                     link.name === 'guide' ? 3 : 
+                     link.name === 'users' ? 4 : 
+                     link.name === 'faq' ? 5 : 
+                     link.name === 'contact' ? 6 : 'button')}
+                </button>
               ))}
 
               {/* Mobile Login Button */}

@@ -40,7 +40,7 @@ export default function WhoCanUseESIFlow() {
     }
   ];
   return (
-    <section id="users" className="px-4 md:px-20  flex flex-col gap-8 bg-neutral-50 dark:bg-neutral-990 pb-12">
+    <section id="users" className="my-8 px-4 md:px-20  flex flex-col gap-8 bg-neutral-50 dark:bg-neutral-990 pb-12">
       
         <h1 className="text-[50px] md:text-[80px] font-russo text-neutral-950 dark:text-neutral-100 leading-tight">
         {t('home' , 'users' , 'title')}<br />
