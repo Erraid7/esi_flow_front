@@ -64,8 +64,8 @@
       },
       faq: {
         title:{
-          1:"FAQ d'ESI",
-          2:"Flow"
+          1:"Découvrez FAQ",
+          2:"D'ESI Flow",
         },
         questions: [
           {
@@ -83,7 +83,13 @@
           {
             question: "Puis-je suivre l'état de mon rapport ?",
             answer: "Oui, ESI Flow permet de suivre en temps réel l'avancement des problèmes signalés."
+          },
+
+            {question: "Quels types de problèmes puis-je signaler ?",
+            answer: " Vous pouvez signaler tout problème technique lié aux infrastructures, équipements ou services de l'ESI."
           }
+          
+        
         ],
         contact: {
           email: "esiflow@esi.dz",

@@ -85,7 +85,13 @@ export const en = {
         {
           question: "Can I track the status of my report?",
           answer: "Yes, ESI Flow provides real-time tracking so you can monitor the progress of your reported issues."
+        },
+
+        {
+          question: "What type of issues can I report?",
+          answer: "You can report any technical issues related to the ESI environment, including software bugs, hardware malfunctions, and network problems."
         }
+        
       ],
       contact: {
         email: "esiflow@esi.dz",

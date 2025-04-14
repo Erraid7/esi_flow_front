@@ -1,7 +1,7 @@
 // pages/index.jsx
 import Hero from './components/hero/pages';
 import WhoCanUse from './components/users';
-import FAQ from './components/faq/index';
+import FAQ from './components/faq/newindex';
 import Nav from './components/navbar/index';
 import Explor from './components/about/index';
 import How from './components/guide/index';

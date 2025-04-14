@@ -146,7 +146,7 @@ const Navbar = () => {
           {/* Desktop Login Button */}
           <Link  
               href="../../login" 
-              className="w-fit text-center px-8 bg-primary-600 dark:bg-primary-300 dark:hover:bg-primary-400 hover:bg-primary-700 text-neutral-50 dark:text-neutral-950 font-medium text-base py-2 rounded-lg transition-colors"
+              className="w-fit text-center px-8 bg-primary-600 dark:bg-primary-300 dark:hover:bg-primary-400 hover:bg-primary-700 text-neutral-50 dark:text-neutral-950 font-medium text-base py-2 rounded-lg transition-colors hidden md:block"
               >
               {t('home', 'navbar', 'button')}
             </Link>
