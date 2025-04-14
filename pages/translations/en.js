@@ -2,13 +2,6 @@ export const en = {
   common: {
     toggleLanguage: "Translate to French"
   },
-  login: {
-    title: "Login",
-    emailPlaceholder: "Email",
-    passwordPlaceholder: "Password",
-    button: "Login",
-    error: "Invalid credentials"
-  },
   home:{
     navbar:{
       1:"Home",
@@ -18,7 +11,6 @@ export const en = {
       5:"FAQ",
       6:"Contact",
       button:"Log In"
-
     },
     hero: {
       title:{
@@ -103,6 +95,75 @@ export const en = {
     remember:"Remember me",
     forgot:"Forgot password?",
     button:"Sign in",
-
+  },
+  // Add translations for UserEditForm component
+  userEdit: {
+    password: {
+      tooWeak: "Too weak",
+      weak: "Weak",
+      fair: "Fair",
+      good: "Good",
+      strong: "Strong",
+      strength: "Strength:"
+    },
+    breadcrumb: {
+      users: "Users",
+      edit: "Edit User"
+    },
+    title: "Edit User",
+    sections: {
+      basicInfo: "Basic Information",
+      accountSetup: "Account Setup"
+    },
+    fields: {
+      fullName: "Full Name",
+      email: "Email Address",
+      emailComment: "Changing the email will require a confirmation code*",
+      phone: "Phone Number",
+      phoneComment: "Changing the Phone Number will require a confirmation code*",
+      biography: "Biography",
+      profession: "Profession",
+      professionUpdate: "Update the profession of user",
+      role: "Role & Permissions",
+      roleUpdate: "Update the role of user",
+      roleDescription: "Admin role grants full access to all system features including user management, reports, and system configuration.",
+      password: "Password",
+      passwordPlaceholder: "Enter password",
+      passwordComment: "Password must be at least 8 characters with numbers and special characters",
+      confirmPassword: "Confirm Password",
+      confirmPasswordPlaceholder: "Confirm password"
+    },
+    passwordInfo: "Changing the Password will require a confirmation code sent to your email.*",
+    actions: {
+      save: "Save Changes",
+      saving: "Saving Changes...",
+      cancel: "Cancel"
+    },
+    toast: {
+      success: "User information updated successfully",
+      error: "Please fix the errors in the form"
+    },
+    validation: {
+      requiredField: "{field} is required",
+      validEmail: "Valid email is required",
+      phoneFormat: "Phone should be in format (XXX) XXX-XXXX",
+      passwordLength: "Password must be at least 8 characters",
+      passwordComplexity: "Password must include uppercase, numbers, and special characters",
+      passwordsMatch: "Passwords do not match"
+    }
+  },
+  // Add translations for SideNavbar
+  sideNav: {
+    items: {
+      dashboard: "Dashboard",
+      requests: "Requests",
+      equipment: "Equipment",
+      users: "Users",
+      reports: "Reports",
+      notifications: "Notifications",
+      settings: "Settings"
+    },
+    logout: "Logout",
+    personal: "Personal"
   }
 };
