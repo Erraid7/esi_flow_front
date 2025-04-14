@@ -40,6 +40,11 @@ module.exports = {
         'russo': ['"Russo One"', 'sans-serif'],
         'inter': ['Inter', 'sans-serif'],
       },
+    
+      fontFamily: {
+        russo: ["Russo One", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
+      },
       
     },
   },
