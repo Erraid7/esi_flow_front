@@ -556,9 +556,21 @@ export default function UserCreateForm() {
       document.body.style.overflow = "auto"
     }
   }, [isMobileMenuOpen])
+  const [switchValue, setSwitchValue] = useState(false);
+  const handleSwitchChange = (field, value) => { 
+    setSwitchValue(value);
+  }
+  const [requirePasswordSwitch, setRequirePasswordSwitch] = useState(false);
+
+  const handlepassChange = (field, value) => {
+    if (field === "role") {
+      setRequirePasswordSwitch(value);
+    }
+    // other logic...
+  };
 
   return (
-    <div className="flex min-h-screen bg-red-500 ">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
@@ -567,7 +579,7 @@ export default function UserCreateForm() {
 
       {/* Main content */}
       <div className="flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
-        <div className="px-4 sm:px-10 lg:px-20">
+        <div className="px-4 sm:px-10 lg:px-20 w-full">
           <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
             <div className="text-sm flex items-center font-inter">
               <span>{t("userEdit", "breadcrumb", "users")}</span>
@@ -636,7 +648,7 @@ export default function UserCreateForm() {
             <FormSection title={t("userEdit", "sections", "accountSetup")}>
            
 
-              <div className="flex flex-row md:gap-3 md:flex-col">
+              <div className="flex  gap-3 flex-col">
                 <PasswordField
                   title={t("userEdit", "fields", "password")}
                   placeholder={t("userEdit", "fields", "passwordPlaceholder")}
@@ -668,26 +680,61 @@ export default function UserCreateForm() {
           
             </FormSection>
             <FormSection>
-            <DropdownField
-                  
-                  value={t("userEdit", "sendMail")}
-                  onChange={(value) => handleInputChange("role", value)}
-                  icon={<span className="text-neutral-50 dark:text-neutral-990 font-russo text-base ">AD</span>}
-                  iconBg="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9"
-                  updateText={t("userEdit", "sendMailComment")}
-                 
-                  options={roleOptions}
-                />
- <DropdownField
-                  
-                  value={t("userEdit", "requirePassword")}
-                  onChange={(value) => handleInputChange("role", value)}
-                  icon={<span className="text-neutral-50 dark:text-neutral-990 font-russo text-base ">AD</span>}
-                  iconBg="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9"
-                  updateText={t("userEdit", "requirePasswordComment")}
-                 
-                  options={roleOptions}
-                />
+                <div className="flex flex-col gap-6">
+                                {/* Send Email Toggle */}
+            <div className="flex items-center justify-between">
+  <div className="flex items-center gap-3">
+    <div className="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9">
+      <span className="text-neutral-50 dark:text-neutral-990 font-russo text-base">AD</span>
+    </div>
+    <div>
+      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+        {t("userEdit", "sendMail")}
+      </p>
+      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+        {t("userEdit", "sendMailComment")}
+      </p>
+    </div>
+  </div>
+
+  <label className="inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="sr-only peer"
+      checked={switchValue}
+      onChange={(e) => handleSwitchChange("role", e.target.checked)}
+    />
+    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2EA95C] relative" />
+  </label>
+</div>
+  {/* Password Toggle */}
+  <div className="flex items-center justify-between">
+  <div className="flex items-center gap-3">
+    <div className="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9">
+      <span className="text-neutral-50 dark:text-neutral-990 font-russo text-base">AD</span>
+    </div>
+    <div>
+      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+        {t("userEdit", "requirePassword")}
+      </p>
+      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+        {t("userEdit", "requirePasswordComment")}
+      </p>
+    </div>
+  </div>
+
+  <label className="inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="sr-only peer"
+      checked={requirePasswordSwitch}
+      onChange={(e) => handlepassChange("role", e.target.checked)}
+    />
+    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2EA95C] relative" />
+  </label>
+</div>
+                </div>
+
 
     </FormSection>
      
