@@ -20,6 +20,8 @@ import {
   X,
   Check,
   AlertTriangle,
+  ShieldHalf 
+
 } from "lucide-react"
 
 // Toast Notification Component
@@ -684,9 +686,8 @@ export default function UserCreateForm() {
                                 {/* Send Email Toggle */}
   <div className="flex items-center justify-between">
   <div className="flex items-center gap-3">
-    <div className="flex items-center justify-center bg-primary-500 outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9">
-      <span className="text-neutral-50 dark:text-neutral-990 font-russo text-base">PS
-      </span>
+    <div className="flex items-center justify-center bg-card-bg   rounded-lg h-10 w-10">
+    <Mail size={25}  className="text-[#151720] fill-primary-500 " />
     </div>
     <div>
       <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
@@ -705,14 +706,16 @@ export default function UserCreateForm() {
       checked={switchValue}
       onChange={(e) => handleSwitchChange("role", e.target.checked)}
     />
-    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2EA95C] relative" />
+    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500  relative" />
   </label>
 </div>
   {/* Password Toggle */}
   <div className="flex items-center justify-between">
   <div className="flex items-center gap-3">
-    <div className="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9">
-      <span className="text-neutral-50 dark:text-neutral-990 font-russo text-base">AD</span>
+  <div className="flex items-center justify-center bg-card-bg   rounded-lg h-10 w-10">
+  <ShieldHalf strokeWidth={2} size={25}  className="text-[#0f0f11] fill-primary-500 "  />
+   
+   
     </div>
     <div>
       <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
@@ -804,39 +807,4 @@ export default function UserCreateForm() {
   )
 }
 
-// Missing import definition for info icon
-const Info = ({ size, className }) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="16" x2="12" y2="12" />
-      <line x1="12" y1="8" x2="12.01" y2="8" />
-    </svg>
-  )
-}
-const Switch = ({ checked, onCheckedChange }) => {
-  return (
-    <label className="inline-flex items-center cursor-pointer">
-      <input
-        type="checkbox"
-        className="sr-only"
-        checked={checked}
-        onChange={(e) => onCheckedChange(e.target.checked)}
-      />
-      <div className={`w-11 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out ${checked ? "bg-blue-500" : ""}`}>
-        <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${checked ? "translate-x-5" : ""}`}></div>
-      </div>
-    </label>
-  );
-};
+
