@@ -144,7 +144,7 @@ export const en = {
       error: "Please fix the errors in the form"
     },
     validation: {
-      requiredField: "{field} is required",
+      requiredField: "this field is required",
       validEmail: "Valid email is required",
       phoneFormat: "Phone should be in format (XXX) XXX-XXXX",
       passwordLength: "Password must be at least 8 characters",
@@ -152,7 +152,6 @@ export const en = {
       passwordsMatch: "Passwords do not match"
     }
   },
-  // Add translations for SideNavbar
   sideNav: {
     items: {
       dashboard: "Dashboard",
@@ -161,9 +160,26 @@ export const en = {
       users: "Users",
       reports: "Reports",
       notifications: "Notifications",
-      settings: "Settings"
+      settings: "Settings",
     },
     logout: "Logout",
-    personal: "Personal"
-  }
+    personal: "Personal",
+    roles: {
+      admin: "Administrator",
+      technician: "Technician",
+      user: "User",
+    },
+  },
+  dashboard: {
+    sidebar: {
+      dashboard: "Dashboard",
+      requests: "Requests",
+      tasks: "Tasks",
+      equipment: "Equipment",
+      users: "Users",
+      reports: "Reports",
+      notifications: "Notifications",
+      settings: "Settings",
+    },
+  },
 };

@@ -140,8 +140,8 @@ export const fr = {
     },
     passwordInfo: "La modification du mot de passe nécessitera un code de confirmation envoyé à votre email.*",
     actions: {
-      save: "Enregistrer les modifications",
-      saving: "Enregistrement en cours...",
+      save: "Enregistrer",
+      saving: "en cours...",
       cancel: "Annuler"
     },
     toast: {
@@ -149,7 +149,7 @@ export const fr = {
       error: "Veuillez corriger les erreurs dans le formulaire"
     },
     validation: {
-      requiredField: "{field} est requis",
+      requiredField: "le champs est requis",
       validEmail: "Un email valide est requis",
       phoneFormat: "Le téléphone doit être au format (XXX) XXX-XXXX",
       passwordLength: "Le mot de passe doit comporter au moins 8 caractères",
@@ -170,5 +170,17 @@ export const fr = {
     },
     logout: "Déconnexion",
     personal: "Personnel"
-  }
+  },
+  dashboard: {
+    sidebar: {
+      dashboard: "Tableau de bord",
+      requests: "Demandes",
+      tasks: "Tâches",
+      equipment: "Équipement",
+      users: "Utilisateurs",
+      reports: "Rapports",
+      notifications: "Notifications",
+      settings: "Paramètres",
+    },
+  },
 };

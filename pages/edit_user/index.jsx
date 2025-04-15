@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useLanguage } from "../translations/contexts/languageContext"
+import Sidebar from "../components/sidebar"
 import {
   User,
   Shield,
@@ -53,120 +54,7 @@ const Toast = ({ message, type, visible, onClose }) => {
   )
 }
 
-// SideNavbar Component
-const SideNavbar = ({ activeItem, isMobileMenuOpen, toggleMobileMenu }) => {
-  const navItems = [
-    { name: "Dashboard", icon: <Home size={18} /> },
-    { name: "Requests", icon: <Mail size={18} /> },
-    { name: "Equipment", icon: <Shield size={18} /> },
-    { name: "Users", icon: <User size={18} /> },
-    { name: "Reports", icon: <BarChart2 size={18} /> },
-    { name: "Notifications", icon: <Bell size={18} /> },
-    { name: "Settings", icon: <Settings size={18} /> },
-  ]
 
-  return (
-    <>
-      {/* Mobile Menu Toggle */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 bg-white dark:bg-neutral-900 z-30 border-b border-gray-200 dark:border-neutral-800 px-4 py-3 flex justify-between items-center">
-        <div className="flex items-center">
-          <img src="/api/placeholder/80/30" alt="ESI FLOW" className="h-6" />
-        </div>
-        <button
-          onClick={toggleMobileMenu}
-          className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800 focus:outline-none"
-        >
-          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      {/* Sidebar - Desktop */}
-      <div className="hidden lg:block w-64 bg-neutral-50 dark:bg-neutral-900 border-r border-gray-200 dark:border-neutral-800 h-screen">
-        <div className="p-3 flex items-center justify-center mt-3">
-          <img src="/home/hero/logo12.svg" alt="" className="dark:hidden h-1/2 w-1/2" />
-        </div>
-
-        <nav className="mt-3 px-3">
-          {navItems.map((item) => (
-            <div
-              key={item.name}
-              className={`px-4 py-3 mb-1 rounded-md flex items-center transition-colors duration-150 ${
-                activeItem === item.name
-                  ? "text-blue-600 bg-blue-50 dark:bg-blue-900/30 font-medium"
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
-              }`}
-            >
-              <span className="mr-3">{item.icon}</span>
-              <span>{item.name}</span>
-            </div>
-          ))}
-        </nav>
-
-        <div className="absolute bottom-0 left-0 p-4">
-          <div className="flex items-center">
-            <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white">
-              <span>AD</span>
-            </div>
-            <div className="ml-3">
-              <div className="text-sm font-medium dark:text-neutral-100">DOULAMI Amira</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Personal</div>
-            </div>
-            <button className="ml-2 p-2 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400">
-              <LogOut size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className={`lg:hidden fixed inset-0 z-20 transform ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out`}
-      >
-        <div className="absolute inset-0 bg-gray-600 opacity-75" onClick={toggleMobileMenu}></div>
-
-        <div className="relative bg-white dark:bg-neutral-900 w-80 h-full overflow-y-auto">
-          <div className="p-6 border-b border-gray-200 dark:border-neutral-800 flex justify-between items-center">
-            <img src="/api/placeholder/80/30" alt="ESI FLOW" className="h-6" />
-            <button onClick={toggleMobileMenu}>
-              <X size={20} className="text-gray-500 dark:text-gray-400" />
-            </button>
-          </div>
-
-          <nav className="mt-6 px-3">
-            {navItems.map((item) => (
-              <div
-                key={item.name}
-                className={`px-4 py-3 mb-1 rounded-md flex items-center ${
-                  activeItem === item.name
-                    ? "text-blue-600 bg-blue-50 dark:bg-blue-900/30 font-medium"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
-                }`}
-                onClick={toggleMobileMenu}
-              >
-                <span className="mr-3">{item.icon}</span>
-                <span>{item.name}</span>
-              </div>
-            ))}
-          </nav>
-
-          <div className="absolute bottom-0 left-0 w-full border-t border-gray-200 dark:border-neutral-800 p-4">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white">
-                <span>AD</span>
-              </div>
-              <div className="ml-3">
-                <div className="text-sm font-medium dark:text-neutral-100">DOULAMI Amira</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Personal</div>
-              </div>
-              <button className="ml-auto p-2 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400">
-                <LogOut size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
 
 // FormField Component
 const FormField = ({
@@ -432,8 +320,43 @@ const FormSection = ({ title, children }) => {
 export default function UserEditForm() {
   const { t, toggleLanguage } = useLanguage()
 
+  // Define isMobile state using a window check that works with SSR
+  const [isMobile, setIsMobile] = useState(false)
+  
   // State for mobile menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeItem, setActiveItem] = useState("dashboard")
+
+  // Example user object
+  const currentUser = {
+    name: "MEHDAOUI Lokman",
+    role: "admin", // Can be "admin", "technician", or "user"
+    initials: "AD"
+  }
+
+  // Check if we're on mobile on mount and when window size changes
+  useEffect(() => {
+    // Function to update the mobile state
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768) // Adjust breakpoint as needed
+    }
+    
+    // Set initial value
+    checkIsMobile()
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIsMobile)
+    
+    // Clean up
+    return () => window.removeEventListener('resize', checkIsMobile)
+  }, [])
+
+  const handleNavigate = (itemKey) => {
+    setActiveItem(itemKey)
+    // Additional navigation logic here
+  }
+
+  
 
   // State for toast notifications
   const [toast, setToast] = useState({
@@ -494,18 +417,15 @@ export default function UserEditForm() {
 
     // Required fields
     if (!user.fullName.trim())
-      newErrors.fullName = t("userEdit", "validation", "requiredField", { field: t("userEdit", "fields", "fullName") })
+      newErrors.fullName = t("userEdit", "validation", "requiredField")
     if (!user.email.trim())
-      newErrors.email = t("userEdit", "validation", "requiredField", { field: t("userEdit", "fields", "email") })
+      newErrors.email = t("userEdit", "validation", "requiredField")
+    if (!user.phone.trim())
+        newErrors.phone = t("userEdit", "validation", "requiredField")
 
     // Email format
     if (user.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) {
       newErrors.email = t("userEdit", "validation", "validEmail")
-    }
-
-    // Phone format
-    if (user.phone && !/^$$\d{3}$$ \d{3}-\d{4}$/.test(user.phone)) {
-      newErrors.phone = "Phone should be in format (XXX) XXX-XXXX"
     }
 
     // Password validation
@@ -565,11 +485,17 @@ export default function UserEditForm() {
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
-      {/* Sidebar */}
-      <SideNavbar activeItem="Users" isMobileMenuOpen={isMobileMenuOpen} toggleMobileMenu={toggleMobileMenu} />
+      {/* Show sidebar for desktop or when mobile menu is open */}
+          <Sidebar 
+            activeItem={activeItem}
+            userRole={currentUser.role}
+            userName={currentUser.name}
+            userInitials={currentUser.initials}
+            onNavigate={handleNavigate}
+          />
 
       {/* Main content */}
-      <div className="flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
+      <div className="pt-14 md:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
         <div className="px-4 sm:px-10 lg:px-20">
           <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
             <div className="text-sm flex items-center font-inter">
@@ -609,6 +535,7 @@ export default function UserEditForm() {
                   icon={<Phone size={16} />}
                   comment={t("userEdit", "fields", "phoneComment")}
                   error={errors.phone}
+                  required={true}
                 />
 
                 <FormField
@@ -691,7 +618,7 @@ export default function UserEditForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`h-10 w-32 mr-3 text-sm bg-primary-500 text-neutral-50 font-inter font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
+                className={`h-10 min-w-32 w-fit px-2 mr-3 text-sm bg-primary-500 text-neutral-50 font-inter font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
               >
                 {isSubmitting ? (
                   <span className="flex items-center">
@@ -730,13 +657,6 @@ export default function UserEditForm() {
               </button>
             </div>
           </form>
-          {/* add toggel traslation button */}
-            <button
-                className="mt-4 h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-inter font-semibold bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
-                onClick={toggleLanguage}
-            >
-                {t("userEdit", "actions", "toggleLanguage")}
-            </button>
         </div>
       </div>
     </div>
