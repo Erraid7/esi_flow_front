@@ -104,5 +104,95 @@ export const en = {
     forgot:"Forgot password?",
     button:"Sign in",
 
-  }
+  },
+  dashboard: {
+    title: "ESI Flow Dashboard",
+    overview: "Dashboard Overview",
+    activeRequests: "Active requests / tech/users",
+    cards: {
+      users: {
+        title: "Number of users",
+        count: "2.4k users",
+        button: "View Trends",
+      },
+      technicians: {
+        title: "Technician Number",
+        count: "107 technicians",
+        button: "View Details",
+      },
+      requests: {
+        title: "Active requests",
+        count: "99.7% this month",
+        button: "View Report",
+      },
+    },
+    charts: {
+      priority: {
+        title: "Priority Request",
+        high: "High priority",
+        medium: "Medium priority",
+        low: "Low priority",
+      },
+      equipment: {
+        title: "Equipment Status",
+        cancelled: "Cancelled",
+        inProgress: "In Progress",
+        completed: "Completed",
+        toDo: "To Do",
+        pending: "Pending",
+        button: "Manage equipment",
+      },
+      pieChart: {
+        title: "Equipment Status",
+        working: "Working",
+        needMaintenance: "Need maintenance",
+        outOfService: "Out of Service",
+      },
+    },
+    notifications: {
+      title: "My notification",
+      button: "View notifications",
+    },
+    createUser: {
+      title: "Create new user",
+      description: "Click and discover notification here",
+      button: "Create",
+    },
+    maintenance: {
+      title: "Recent Maintenance Tasks",
+      search: "Search tasks...",
+      addButton: "Add New Task",
+      columns: {
+        name: "Task name",
+        location: "Location",
+        person: "Person",
+        priority: "Priority",
+        deadline: "Deadline",
+        status: "Status",
+      },
+      noTasks: "No tasks found matching your filters",
+      pagination: {
+        showing: "Showing",
+        to: "to",
+        of: "of",
+        results: "results",
+        previous: "Previous",
+        next: "Next",
+      },
+      perPage: {
+        show: "Show",
+        tasksPerPage: "tasks per page",
+      },
+    },
+    sidebar: {
+      dashboard: "Dashboard",
+      requests: "Requests",
+      equipment: "Equipment",
+      users: "Users",
+      reports: "Reports",
+      notifications: "Notifications",
+      settings: "Settings",
+    },
+  },
+  
 };
