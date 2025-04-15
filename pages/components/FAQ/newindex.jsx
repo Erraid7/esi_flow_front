@@ -56,7 +56,7 @@ export default function FaqSection() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-20">
+    <div className="w-full  mx-auto px-4 md:px-20">
       <div className="mb-12">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-russo text-neutral-990 dark:text-neutral-100 leading-tight">
           {t('home', 'faq', 'title', 1)}<br />{t('home', 'faq', 'title', 2)}

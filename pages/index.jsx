@@ -6,8 +6,7 @@ import Nav from './components/navbar/index';
 import Explor from './components/about/index';
 import How from './components/guide/index';
 import { useLanguage } from './translations/contexts/languageContext';
-
-
+import Contact from './components/contact/index';
 
 export default function Home() {
   const { t, toggleLanguage } = useLanguage();
@@ -20,6 +19,7 @@ export default function Home() {
       <How />
       <WhoCanUse />
       <FAQ />
+      <Contact />
     </div>
   );
 }
