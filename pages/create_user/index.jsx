@@ -682,10 +682,11 @@ export default function UserCreateForm() {
             <FormSection>
                 <div className="flex flex-col gap-6">
                                 {/* Send Email Toggle */}
-            <div className="flex items-center justify-between">
+  <div className="flex items-center justify-between">
   <div className="flex items-center gap-3">
-    <div className="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9">
-      <span className="text-neutral-50 dark:text-neutral-990 font-russo text-base">AD</span>
+    <div className="flex items-center justify-center bg-primary-500 outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9">
+      <span className="text-neutral-50 dark:text-neutral-990 font-russo text-base">PS
+      </span>
     </div>
     <div>
       <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
