@@ -1,11 +1,12 @@
 // pages/index.jsx
-import Hero from './components/hero/pages';
-import WhoCanUse from './components/users';
-import FAQ from './components/faq/index';
-import Nav from './components/navbar/index';
-import Explor from './components/about/index';
-import How from './components/guide/index';
+import Hero from './components/home/hero/pages';
+import WhoCanUse from './components/home/users';
+import FAQ from './components/home/faq/index';
+import Nav from './components/home/navbar/index';
+import Explor from './components/home/about/index';
+import How from './components/home/guide/index';
 import { useLanguage } from './translations/contexts/languageContext';
+import Contact from './components/home/contact/index';
 
 
 
@@ -17,9 +18,10 @@ export default function Home() {
       <Nav />
       <Hero />
       <Explor/>
-      <How />
+      <How /> 
       <WhoCanUse />
       <FAQ />
-    </div>
+      <Contact/>
+    </div> 
   );
 }

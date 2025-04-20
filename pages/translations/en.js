@@ -104,5 +104,179 @@ export const en = {
     forgot:"Forgot password?",
     button:"Sign in",
 
-  }
+  },
+  dashboard: {
+    title: "ESI Flow Dashboard",
+    overview: "Dashboard Overview",
+    activeRequests: "Active requests / tech/users",
+    cards: {
+      users: {
+        title: "Number of users",
+        count: "2.4k users",
+        button: "View Trends",
+      },
+      technicians: {
+        title: "Technician Number",
+        count: "107 technicians",
+        button: "View Details",
+      },
+      requests: {
+        title: "Active requests",
+        count: "99.7% this month",
+        button: "View Report",
+      },
+    },
+    charts: {
+      priority: {
+        title: "Priority Request",
+        high: "High priority",
+        medium: "Medium priority",
+        low: "Low priority",
+      },
+      equipment: {
+        title: "Equipment Status",
+        cancelled: "Cancelled",
+        inProgress: "In Progress",
+        completed: "Completed",
+        toDo: "To Do",
+        pending: "Pending",
+        button: "Manage equipment",
+      },
+      pieChart: {
+        title: "Equipment Status",
+        working: "Working",
+        needMaintenance: "Need maintenance",
+        outOfService: "Out of Service",
+      },
+    },
+    notifications: {
+      title: "My notification",
+      button: "View notifications",
+    },
+    createUser: {
+      title: "Create new user",
+      description: "Click and discover notification here",
+      button: "Create",
+    },
+    maintenance: {
+      title: "Recent Maintenance Tasks",
+      search: "Search tasks...",
+      addButton: "Add New Task",
+      columns: {
+        name: "Task name",
+        location: "Location",
+        person: "Person",
+        priority: "Priority",
+        deadline: "Deadline",
+        status: "Status",
+      },
+      noTasks: "No tasks found matching your filters",
+      pagination: {
+        showing: "Showing",
+        to: "to",
+        of: "of",
+        results: "results",
+        previous: "Previous",
+        next: "Next",
+      },
+      perPage: {
+        show: "Show",
+        tasksPerPage: "tasks per page",
+      },
+    },
+    sidebar: {
+      dashboard: "Dashboard",
+      requests: "Requests",
+      equipment: "Equipment",
+      users: "Users",
+      reports: "Reports",
+      notifications: "Notifications",
+      settings: "Settings",
+    },
+  },
+   // Add translations for UserEditForm component
+   userEdit: {
+    password: {
+      tooWeak: "Too weak",
+      weak: "Weak",
+      fair: "Fair",
+      good: "Good",
+      strong: "Strong",
+      strength: "Strength:"
+    },
+    breadcrumb: {
+      users: "Users",
+      edit: "Edit User"
+    },
+    title: "Edit User",
+    sections: {
+      basicInfo: "Basic Information",
+      accountSetup: "Account Setup"
+    },
+    fields: {
+      fullName: "Full Name",
+      email: "Email Address",
+      emailComment: "Changing the email will require a confirmation code*",
+      phone: "Phone Number",
+      phoneComment: "Changing the Phone Number will require a confirmation code*",
+      biography: "Biography",
+      profession: "Profession",
+      professionUpdate: "Update the profession of user",
+      role: "Role & Permissions",
+      roleUpdate: "Update the role of user",
+      roleDescription: "Admin role grants full access to all system features including user management, reports, and system configuration.",
+      password: "Password",
+      passwordPlaceholder: "Enter password",
+      passwordComment: "Password must be at least 8 characters with numbers and special characters",
+      confirmPassword: "Confirm Password",
+      confirmPasswordPlaceholder: "Confirm password"
+    },
+    passwordInfo: "Changing the Password will require a confirmation code sent to your email.*",
+    actions: {
+      save: "Save Changes",
+      create: "Create User",
+      saving: "Saving Changes...",
+      cancel: "Cancel"
+    },
+    toast: {
+      success: "User information updated successfully",
+      error: "Please fix the errors in the form"
+    },
+    validation: {
+      requiredField: "this field is required",
+      validEmail: "Valid email is required",
+      phoneFormat: "Phone should be in format (XXX) XXX-XXXX",
+      passwordLength: "Password must be at least 8 characters",
+      passwordComplexity: "Password must include uppercase, numbers, and special characters",
+      passwordsMatch: "Passwords do not match"
+    }
+  },
+  sideNav: {
+    items: {
+      dashboard: "Dashboard",
+      requests: "Requests",
+      equipment: "Equipment",
+      users: "Users",
+      reports: "Reports",
+      notifications: "Notifications",
+      settings: "Settings",
+    },
+    logout: "Logout",
+    personal: "Personal",
+    roles: {
+      admin: "Administrator",
+      technician: "Technician",
+      user: "User",
+    },
+  },
+  sidebar: {
+    dashboard: "Dashboard",
+    requests: "Requests",
+    tasks: "Tasks",
+    equipment: "Equipment",
+    users: "Users",
+    reports: "Reports",
+    notifications: "Notifications",
+    settings: "Settings",
+  },
 };

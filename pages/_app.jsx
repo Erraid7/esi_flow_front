@@ -15,10 +15,10 @@ function MyApp({ Component, pageProps }) {
         <meta name="description" content="Your website description here" />
       </Head>
       <LanguageProvider>
-      <DarkModeProvider>
-        <Component {...pageProps} />
-      </DarkModeProvider>
-    </LanguageProvider>
+        <DarkModeProvider>
+          <Component {...pageProps} />
+        </DarkModeProvider>
+      </LanguageProvider>
     </>
   );
 }
