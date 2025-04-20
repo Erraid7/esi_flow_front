@@ -17,6 +17,12 @@ export const DarkModeProvider = ({ children }) => {
         (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       setIsDarkMode(true);
       document.documentElement.classList.add('dark');
+    }else if (savedTheme === 'light') {
+      setIsDarkMode(false);
+      document.documentElement.classList.remove('dark');
+    } else {
+      // Default to light mode if no preference is set
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 

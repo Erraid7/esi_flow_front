@@ -359,10 +359,6 @@ export default function UserCreateForm() {
     }
   }
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
-
   const showToast = (message, type = "success") => {
     setToast({
       visible: true,
@@ -520,7 +516,7 @@ export default function UserCreateForm() {
       />
 
       {/* Main content */}
-      <div className="flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
+      <div className="pt-14 md:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
         <div className="px-4 sm:px-10 lg:px-20 w-full">
           <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
             <div className="text-sm flex items-center font-inter">

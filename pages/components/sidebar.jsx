@@ -96,7 +96,7 @@ const Sidebar = ({
   return (
     <>
       {/* Mobile Header - always visible on mobile */}
-      <header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-card-bg shadow-md z-40 flex items-center justify-between px-4">
+<header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-card-bg backdrop-blur-sm shadow-md z-40 flex items-center justify-between px-4">
         <button 
           onClick={toggleMobileMenu} 
           className="p-2 rounded-md text-neutral-990 dark:text-neutral-50"

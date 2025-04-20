@@ -453,10 +453,6 @@ export default function UserEditForm() {
     }
   }
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
-
   const showToast = (message, type = "success") => {
     setToast({
       visible: true,

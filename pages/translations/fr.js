@@ -96,6 +96,10 @@ export const fr = {
           question: "Puis-je suivre l'état de mon rapport ?",
           answer: "Oui, ESI Flow permet de suivre en temps réel l'avancement des problèmes signalés.",
         },
+        {
+          question: "Comment contacter le support technique ?",
+          answer: "Vous pouvez contacter le support technique via la plateforme ESI Flow ou par email à l'adresse fournie.",
+        }
       ],
       contact: {
         email: "esiflow@esi.dz",
@@ -205,7 +209,8 @@ export const fr = {
     },
     breadcrumb: {
       users: "Utilisateurs",
-      edit: "Modifier l'utilisateur"
+      edit: "Modifier l'utilisateur",
+      create: "Créer un utilisateur"
     },
     title: "Modifier l'utilisateur",
     sections: {

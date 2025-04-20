@@ -13,36 +13,26 @@ export default function FaqSection() {
     {
       id: 'faq-1',
       number: '01',
-      question: t('home', 'faq', 'questions', 0, 'question'),
-      answer: t('home', 'faq', 'questions', 0, 'answer'),
       isOpen: false,
     },
     {
       id: 'faq-2',
       number: '02',
-      question: t('home', 'faq', 'questions', 1, 'question'),
-      answer: t('home', 'faq', 'questions', 1, 'answer'),
       isOpen: false,
     },
     {
       id: 'faq-3',
       number: '03',
-      question: t('home', 'faq', 'questions', 2, 'question'),
-      answer: t('home', 'faq', 'questions', 2, 'answer'),
       isOpen: false,
     },
     {
       id: 'faq-4',
       number: '04',
-      question: t('home', 'faq', 'questions', 3, 'question'),
-      answer: t('home', 'faq', 'questions', 3, 'answer'),
       isOpen: false,
     },
     {
       id: 'faq-5',
       number: '05',
-      question: t('home', 'faq', 'questions', 4, 'question'),
-      answer: t('home', 'faq', 'questions', 4, 'answer'),
       isOpen: false,
     },
   ]);
@@ -87,7 +77,7 @@ export default function FaqSection() {
                   {item.number}
                 </span>
                 <h3 className="text-base md:text-lg lg:text-xl font-medium text-neutral-900 dark:text-neutral-100">
-                  {item.question}
+                  {t('home', 'faq', 'questions', index, 'question')}
                 </h3>
               </div>
               <div
@@ -123,7 +113,7 @@ export default function FaqSection() {
                 transform: item.isOpen ? 'translateY(0)' : 'translateY(-20px)'
               }}>
                 <p className="text-sm md:text-base text-neutral-800 dark:text-neutral-200">
-                  {item.answer}
+                  {t('home', 'faq', 'questions', index, 'answer')}
                 </p>
               </div>
             </div>

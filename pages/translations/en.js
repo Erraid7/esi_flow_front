@@ -85,6 +85,10 @@ export const en = {
         {
           question: "Can I track the status of my report?",
           answer: "Yes, ESI Flow provides real-time tracking so you can monitor the progress of your reported issues."
+        },
+        {
+          question: "How do I contact support?",
+          answer: "You can reach out to our support team via the contact information provided on the ESI Flow platform."
         }
       ],
       contact: {
@@ -206,7 +210,8 @@ export const en = {
     },
     breadcrumb: {
       users: "Users",
-      edit: "Edit User"
+      edit: "Edit User",
+      create: "Create User"
     },
     title: "Edit User",
     sections: {

@@ -10,6 +10,16 @@ const LanguageContext = createContext();
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState('en');
 
+  // Initialize language based on user preference from localStorage
+  React.useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    } else {
+      localStorage.setItem('language', language);
+    }
+  }, []);
+
   // Function to get nested translations
   const t = (...keys) => {
     let currentTranslation = translations[language];
@@ -28,6 +38,9 @@ export const LanguageProvider = ({ children }) => {
   // Toggle language between English and French
   const toggleLanguage = () => {
     setLanguage(prevLanguage => prevLanguage === 'en' ? 'fr' : 'en');
+    const newLanguage = language === 'en' ? 'fr' : 'en';
+    localStorage.setItem('language', newLanguage);
+    document.documentElement.lang = newLanguage; // Update the document language
   };
 
   return (
