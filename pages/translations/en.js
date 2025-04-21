@@ -256,10 +256,12 @@ export const en = {
       passwordsMatch: "Passwords do not match"
     }
   },
+  // Add translations for side nav component
   sideNav: {
     items: {
       dashboard: "Dashboard",
       requests: "Requests",
+      tasks: "Tasks",
       equipment: "Equipment",
       users: "Users",
       reports: "Reports",
@@ -274,14 +276,84 @@ export const en = {
       user: "User",
     },
   },
-  sidebar: {
-    dashboard: "Dashboard",
-    requests: "Requests",
-    tasks: "Tasks",
-    equipment: "Equipment",
-    users: "Users",
-    reports: "Reports",
-    notifications: "Notifications",
-    settings: "Settings",
-  },
+  // Add this to your existing en object
+  equipmentEdit: {
+    breadcrumb: {
+      equipment: "Equipment",
+      add: "Add Record",
+      edit: "Edit Equipment"
+    },
+    title: {
+      add: "Add Maintenance Record",
+      edit: "Edit Equipment"
+    },
+    sections: {
+      equipmentInfo: "Equipment Information",
+      recordDetails: "Record Details"
+    },
+    fields: {
+      code: "Code Inventaire",
+      codePlaceholder: "Enter code",
+      type: "Type",
+      typePlaceholder: "Select equipment type",
+      category: "Category",
+      categoryPlaceholder: "Select equipment category",
+      acquisition: "Acquisition Date",
+      commissioning: "Date of commissioning",
+      location: "Location",
+      locationPlaceholder: "Specify location",
+      status: "Status",
+      statusPlaceholder: "Select status",
+      description: "Description",
+      descriptionPlaceholder: "Enter detailed description of maintenance performed"
+    },
+    typeOptions: [
+      "Mechanical", 
+      "Electrical", 
+      "Hydraulic", 
+      "Pneumatic", 
+      "Electronic", 
+      "Other"
+    ],
+    categoryOptions: [
+      "Production", 
+      "Maintenance", 
+      "Safety", 
+      "Quality Control", 
+      "Logistics", 
+      "Office"
+    ],
+    statusOptions: [
+      "Operational", 
+      "Under Maintenance", 
+      "Out of Service", 
+      "Pending Installation", 
+      "Retired"
+    ],
+    actions: {
+      create: "Create",
+      update: "Update",
+      cancel: "cancel",
+      saving: "Saving...",
+      creating: "Creating...",
+      updating: "Updating..."
+    },
+    toast: {
+      addSuccess: "Equipment added successfully",
+      updateSuccess: "Equipment updated successfully",
+      error: "Please fill in all required fields",
+      loadError: "Failed to load equipment data"
+    },
+    validation: {
+      requiredField: "{field} is required",
+      codeRequired: "Inventory code is required",
+      typeRequired: "Equipment type is required",
+      categoryRequired: "Category is required",
+      acquisitionRequired: "Acquisition date is required",
+      commissioningRequired: "Commissioning date is required",
+      locationRequired: "Location is required",
+      statusRequired: "Status is required"
+    },
+    loading: "Loading equipment data..."
+  }
 };

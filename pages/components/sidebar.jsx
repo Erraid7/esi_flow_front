@@ -179,7 +179,7 @@ const Sidebar = ({
                 }}
               >
                 <span className="mr-3">{item.icon}</span>
-                <span>{t("sidebar", item.key)}</span>
+                <span>{t("sideNav", "items" , item.key)}</span>
               </div>
             ))}
           </nav>

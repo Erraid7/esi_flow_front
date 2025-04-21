@@ -4,20 +4,13 @@ import { useState, useEffect, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
 import {
-  User,
-  Shield,
   Mail,
   Phone,
   School,
   ChevronDown,
   Eye,
   EyeOff,
-  Settings,
-  BarChart2,
   Bell,
-  Home,
-  LogOut,
-  Menu,
   X,
   Check,
   AlertTriangle,
