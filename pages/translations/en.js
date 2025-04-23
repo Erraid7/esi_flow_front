@@ -206,7 +206,8 @@ export const en = {
     },
     breadcrumb: {
       users: "Users",
-      edit: "Edit User"
+      edit: "Edit User",
+      create: "Create New User"
     },
     title: "Edit User",
     sections: {
@@ -249,7 +250,12 @@ export const en = {
       passwordLength: "Password must be at least 8 characters",
       passwordComplexity: "Password must include uppercase, numbers, and special characters",
       passwordsMatch: "Passwords do not match"
-    }
+    },
+    sendMail: "Send Email Invitation",
+    sendMailComment: "User will receive login credentials via email",
+    requirePassword: "Require Password Change",
+    requirePasswordComment: "User must change password on first login", 
+    
   },
   sideNav: {
     items: {

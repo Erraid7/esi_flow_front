@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useLanguage } from "../../translations/contexts/languageContext"
+import { useLanguage } from "../../../pages/translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
 import axios from "axios"
 import { Mail, Phone, School, ChevronDown, Eye, EyeOff, Bell, X, Check, AlertTriangle, ShieldHalf } from "lucide-react"

@@ -205,7 +205,8 @@ export const fr = {
     },
     breadcrumb: {
       users: "Utilisateurs",
-      edit: "Modifier l'utilisateur"
+      edit: "Modifier l'utilisateur",
+      create: "Créer un nouvel utilisateur"
     },
     title: "Modifier l'utilisateur",
     sections: {
@@ -248,7 +249,11 @@ export const fr = {
       passwordLength: "Le mot de passe doit comporter au moins 8 caractères",
       passwordComplexity: "Le mot de passe doit inclure des majuscules, des chiffres et des caractères spéciaux",
       passwordsMatch: "Les mots de passe ne correspondent pas"
-    }
+    },
+    sendMail: "Envoyer une invitation par e-mail",
+    sendMailComment: "L'utilisateur recevra ses identifiants de connexion par e-mail",
+    requirePassword: "Exiger un changement de mot de passe",
+    requirePasswordComment: "L'utilisateur devra changer son mot de passe lors de la première connexion",    
   },
   // Traductions pour SideNavbar
   sideNav: {

@@ -1,10 +1,12 @@
 "use client"
 
 import { useRef, useState, useEffect, useCallback } from "react"
+import { useParams, useRouter } from "next/navigation"
 import axios from "axios"
-import { useLanguage } from "../../translations/contexts/languageContext"
+import { useLanguage } from "../../../pages/translations/contexts/languageContext"
+
 import Sidebar from "../../components/sidebar"
-import { Calendar, Info, MapPin, AlertTriangle, Check, ChevronDown, X } from "lucide-react"
+import { Calendar, Info, MapPin, AlertTriangle, Check, ChevronDown, X, Loader2 } from "lucide-react"
 
 // Toast Notification Component
 const Toast = ({ message, type, visible, onClose }) => {
@@ -185,7 +187,6 @@ const DropdownField = ({
   )
 }
 
-// DateField Component
 const DateField = ({ title, value, onChange, error = null, required = false, placeholder = "MM/DD/YYYY" }) => {
   return (
     <div className="flex flex-col gap-2">
@@ -204,7 +205,7 @@ const DateField = ({ title, value, onChange, error = null, required = false, pla
           className={`w-full text-sm px-4 py-3 pr-10 border ${
             error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-950"
           } rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all text-neutral-950 dark:text-neutral-100
-            [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer`}
+          [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer`}
         />
         <Calendar
           size={18}
@@ -232,9 +233,31 @@ const FormSection = ({ title, children }) => {
   )
 }
 
+// Helper function to format dates for input fields
+const formatDateForInput = (dateString) => {
+  if (!dateString) return ""
+
+  try {
+    // Parse the date string from the backend
+    const date = new Date(dateString)
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) return ""
+
+    // Format as YYYY-MM-DD for the date input
+    return date.toISOString().split("T")[0]
+  } catch (error) {
+    console.error("Error formatting date:", error)
+    return ""
+  }
+}
+
 // Main Component
-export default function EquipmentAddForm() {
+export default function EquipmentEditForm() {
   const { t } = useLanguage()
+  const params = useParams()
+  const router = useRouter()
+  const equipmentId = params?.id || ""
 
   // State for toast notifications
   const [toast, setToast] = useState({
@@ -243,8 +266,12 @@ export default function EquipmentAddForm() {
     type: "success",
   })
 
+  // Loading state
+  const [isLoading, setIsLoading] = useState(true)
+
   // Form state
   const [equipment, setEquipment] = useState({
+    id: "",
     inventorie_code: "",
     type: "",
     category: "",
@@ -303,6 +330,34 @@ export default function EquipmentAddForm() {
 
   const statusOptions = ["working", "needs_maintenance", "out_of_service"]
 
+  // Fetch equipment data
+  useEffect(() => {
+    const fetchEquipment = async () => {
+      if (!equipmentId) return
+
+      setIsLoading(true)
+      try {
+        const response = await axios.get(`http://localhost:5000/equipments/${equipmentId}`)
+
+        // Format dates for the date input fields
+        const formattedData = {
+          ...response.data,
+          acquisition_date: formatDateForInput(response.data.acquisition_date),
+          date_of_commissioning: formatDateForInput(response.data.date_of_commissioning),
+        }
+
+        setEquipment(formattedData)
+      } catch (error) {
+        console.error("Error fetching equipment:", error)
+        showToast("Failed to load equipment data", "error")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchEquipment()
+  }, [equipmentId])
+
   const handleInputChange = useCallback(
     (field, value) => {
       setEquipment((prev) => ({ ...prev, [field]: value }))
@@ -330,7 +385,7 @@ export default function EquipmentAddForm() {
     const newErrors = {}
 
     // Required fields
-    if (!equipment.inventorie_code.trim()) newErrors.inventorie_code = t("equipmentEdit", "validation", "codeRequired")
+    if (!equipment.inventorie_code?.trim()) newErrors.inventorie_code = t("equipmentEdit", "validation", "codeRequired")
     if (!equipment.type) newErrors.type = t("equipmentEdit", "validation", "typeRequired")
     if (!equipment.category) newErrors.category = t("equipmentEdit", "validation", "categoryRequired")
     if (!equipment.acquisition_date)
@@ -353,44 +408,29 @@ export default function EquipmentAddForm() {
       setIsSubmitting(true)
 
       try {
-        // Create equipment data object matching backend requirements
-        const equipmentData = {
-          inventorie_code: equipment.inventorie_code,
-          type: equipment.type,
-          category: equipment.category,
-          acquisition_date: equipment.acquisition_date,
-          date_of_commissioning: equipment.date_of_commissioning,
-          localisation: equipment.localisation,
-          eqp_status: equipment.eqp_status,
-          documentation: equipment.documentation,
-        }
-
-        // Send data to backend using axios
-        const response = await axios.post("http://localhost:5000/equipments", equipmentData)
+        // Send update request to the API
+        await axios.put(`http://localhost:5000/equipments/${equipmentId}`, equipment)
 
         // Show success message
-        showToast("Equipment added successfully", "success")
+        showToast("Equipment updated successfully", "success")
 
-        // Reset form
-        setEquipment({
-          inventorie_code: "",
-          type: "",
-          category: "",
-          acquisition_date: "",
-          date_of_commissioning: "",
-          localisation: "",
-          eqp_status: "",
-          documentation: "",
-        })
+        // Redirect to equipment list after a short delay
+        setTimeout(() => {
+          router.push("/equipment/list")
+        }, 2000)
       } catch (error) {
-        console.error("Error adding equipment:", error)
-        showToast(error.response?.data?.error || "Failed to add equipment", "error")
+        console.error("Error updating equipment:", error)
+        showToast(error.response?.data?.error || "Failed to update equipment", "error")
       } finally {
         setIsSubmitting(false)
       }
     } else {
       showToast("Please fill in all required fields", "error")
     }
+  }
+
+  const handleCancel = () => {
+    router.push("/equipment/list")
   }
 
   // Current user for sidebar
@@ -420,140 +460,148 @@ export default function EquipmentAddForm() {
             <div className="text-sm flex items-center font-inter">
               <span>{t("equipmentEdit", "breadcrumb", "equipment")}</span>
               <span className="mx-2 text-lg">›</span>
-              <span>{t("equipmentEdit", "breadcrumb", "add")}</span>
+              <span>{t("equipmentEdit", "breadcrumb", "edit")}</span>
             </div>
-            <h1 className="text-xl lg:text-2xl font-russo">{t("equipmentEdit", "title", "add")}</h1>
+            <h1 className="text-xl lg:text-2xl font-russo">{t("equipmentEdit", "title", "edit")}</h1>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-            {/* Equipment Information */}
-            <FormSection title={t("equipmentEdit", "sections", "equipmentInfo")}>
-              <div className="flex flex-col gap-4">
-                <FormField
-                  title={t("equipmentEdit", "fields", "code")}
-                  placeholder={t("equipmentEdit", "fields", "codePlaceholder")}
-                  value={equipment.inventorie_code}
-                  onChange={(e) => handleInputChange("inventorie_code", e.target.value)}
-                  error={errors.inventorie_code}
-                  required={true}
-                />
-              </div>
-            </FormSection>
-
-            {/* Record Details */}
-            <FormSection title={t("equipmentEdit", "sections", "recordDetails")}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <DropdownField
-                  title={t("equipmentEdit", "fields", "type")}
-                  value={equipment.type}
-                  onChange={(value) => handleInputChange("type", value)}
-                  options={typeOptions}
-                  error={errors.type}
-                  required={true}
-                  placeholder={t("equipmentEdit", "fields", "typePlaceholder")}
-                />
-
-                <DropdownField
-                  title={t("equipmentEdit", "fields", "category")}
-                  value={equipment.category}
-                  onChange={(value) => handleInputChange("category", value)}
-                  options={categoryOptions}
-                  error={errors.category}
-                  required={true}
-                  placeholder={t("equipmentEdit", "fields", "categoryPlaceholder")}
-                />
-
-                <DateField
-                  title={t("equipmentEdit", "fields", "acquisition")}
-                  value={equipment.acquisition_date}
-                  onChange={(e) => handleInputChange("acquisition_date", e.target.value)}
-                  error={errors.acquisition_date}
-                  required={true}
-                />
-
-                <DateField
-                  title={t("equipmentEdit", "fields", "commissioning")}
-                  value={equipment.date_of_commissioning}
-                  onChange={(e) => handleInputChange("date_of_commissioning", e.target.value)}
-                  error={errors.date_of_commissioning}
-                  required={true}
-                />
-
-                <FormField
-                  title={t("equipmentEdit", "fields", "location")}
-                  placeholder={t("equipmentEdit", "fields", "locationPlaceholder")}
-                  value={equipment.localisation}
-                  onChange={(e) => handleInputChange("localisation", e.target.value)}
-                  icon={<MapPin size={16} />}
-                  error={errors.localisation}
-                  required={true}
-                />
-
-                <DropdownField
-                  title={t("equipmentEdit", "fields", "status")}
-                  value={equipment.eqp_status}
-                  onChange={(value) => handleInputChange("eqp_status", value)}
-                  options={statusOptions}
-                  error={errors.eqp_status}
-                  required={true}
-                  placeholder={t("equipmentEdit", "fields", "statusPlaceholder")}
-                />
-              </div>
-
-              <FormField
-                title='Documentation'
-                placeholder={t("equipmentEdit", "fields", "descriptionPlaceholder")}
-                value={equipment.documentation}
-                onChange={(e) => handleInputChange("documentation", e.target.value)}
-                isTextarea={true}
-                error={errors.documentation}
-              />
-            </FormSection>
-
-            {/* Form Actions */}
-            <div className="flex justify-end mt-8">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`h-10 w-32 mr-3 text-sm bg-blue-500 text-white font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    {t("equipmentEdit", "actions", "creating")}
-                  </span>
-                ) : (
-                  t("equipmentEdit", "actions", "create")
-                )}
-              </button>
-
-              <button
-                type="button"
-                className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
-              >
-                {t("equipmentEdit", "actions", "cancel")}
-              </button>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+              <span className="ml-2 text-neutral-600 dark:text-neutral-300">{t("equipmentEdit", "loading")}</span>
             </div>
-          </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+              {/* Equipment Information */}
+              <FormSection title={t("equipmentEdit", "sections", "equipmentInfo")}>
+                <div className="flex flex-col gap-4">
+                  <FormField
+                    title={t("equipmentEdit", "fields", "code")}
+                    placeholder={t("equipmentEdit", "fields", "codePlaceholder")}
+                    value={equipment.inventorie_code}
+                    onChange={(e) => handleInputChange("inventorie_code", e.target.value)}
+                    error={errors.inventorie_code}
+                    required={true}
+                  />
+                </div>
+              </FormSection>
+
+              {/* Record Details */}
+              <FormSection title={t("equipmentEdit", "sections", "recordDetails")}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <DropdownField
+                    title={t("equipmentEdit", "fields", "type")}
+                    value={equipment.type}
+                    onChange={(value) => handleInputChange("type", value)}
+                    options={typeOptions}
+                    error={errors.type}
+                    required={true}
+                    placeholder={t("equipmentEdit", "fields", "typePlaceholder")}
+                  />
+
+                  <DropdownField
+                    title={t("equipmentEdit", "fields", "category")}
+                    value={equipment.category}
+                    onChange={(value) => handleInputChange("category", value)}
+                    options={categoryOptions}
+                    error={errors.category}
+                    required={true}
+                    placeholder={t("equipmentEdit", "fields", "categoryPlaceholder")}
+                  />
+
+                  <DateField
+                    title={t("equipmentEdit", "fields", "acquisition")}
+                    value={equipment.acquisition_date}
+                    onChange={(e) => handleInputChange("acquisition_date", e.target.value)}
+                    error={errors.acquisition_date}
+                    required={true}
+                  />
+
+                  <DateField
+                    title={t("equipmentEdit", "fields", "commissioning")}
+                    value={equipment.date_of_commissioning}
+                    onChange={(e) => handleInputChange("date_of_commissioning", e.target.value)}
+                    error={errors.date_of_commissioning}
+                    required={true}
+                  />
+
+                  <FormField
+                    title={t("equipmentEdit", "fields", "location")}
+                    placeholder={t("equipmentEdit", "fields", "locationPlaceholder")}
+                    value={equipment.localisation}
+                    onChange={(e) => handleInputChange("localisation", e.target.value)}
+                    icon={<MapPin size={16} />}
+                    error={errors.localisation}
+                    required={true}
+                  />
+
+                  <DropdownField
+                    title={t("equipmentEdit", "fields", "status")}
+                    value={equipment.eqp_status}
+                    onChange={(value) => handleInputChange("eqp_status", value)}
+                    options={statusOptions}
+                    error={errors.eqp_status}
+                    required={true}
+                    placeholder={t("equipmentEdit", "fields", "statusPlaceholder")}
+                  />
+                </div>
+
+                <FormField
+                  title={t("equipmentEdit", "fields", "documentation")}
+                  placeholder={t("equipmentEdit", "fields", "descriptionPlaceholder")}
+                  value={equipment.documentation}
+                  onChange={(e) => handleInputChange("documentation", e.target.value)}
+                  isTextarea={true}
+                  error={errors.documentation}
+                />
+              </FormSection>
+
+              {/* Form Actions */}
+              <div className="flex justify-end mt-8">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`h-10 w-32 mr-3 text-sm bg-blue-500 text-white font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      {t("equipmentEdit", "actions", "updating")}
+                    </span>
+                  ) : (
+                    t("equipmentEdit", "actions", "update")
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
+                >
+                  {t("equipmentEdit", "actions", "cancel")}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>
