@@ -3,26 +3,8 @@
 import { useState, useEffect, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import {
-  User,
-  Shield,
-  Mail,
-  Phone,
-  School,
-  ChevronDown,
-  Eye,
-  EyeOff,
-  Settings,
-  BarChart2,
-  Bell,
-  Home,
-  LogOut,
-  Menu,
-  X,
-  Check,
-  AlertTriangle,
-  ShieldHalf
-} from "lucide-react"
+import axios from "axios"
+import { Mail, Phone, School, ChevronDown, Eye, EyeOff, Bell, X, Check, AlertTriangle, ShieldHalf } from "lucide-react"
 
 // Toast Notification Component
 const Toast = ({ message, type, visible, onClose }) => {
@@ -336,7 +318,7 @@ export default function UserCreateForm() {
     phone: "",
     role: "",
     profession: "",
-    bio: ""
+    bio: "",
   })
 
   // Password state
@@ -348,7 +330,30 @@ export default function UserCreateForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Available options for dropdowns
-  const professionOptions = ["Teacher", "Administrator", "Engineer", "Technician", "Manager", "Other"]
+  const professionOptions = [
+    "teacher",
+    "security",
+    "cleaning",
+    "student",
+    "researcher",
+    "IT Technician",
+    "Network Technician",
+    "Server Administrator",
+    "Security Technician",
+    "Electrical Technician",
+    "Mechanical Technician",
+    "Multimedia Technician",
+    "Lab Technician",
+    "HVAC Technician",
+    "Plumber",
+    "Carpenter",
+    "Painter",
+    "Gardener",
+    "Driver",
+    "Office Equipment Technician",
+    "other",
+  ]
+
   const roleOptions = ["admin", "technician", "personal"]
 
   const handleInputChange = (field, value) => {
@@ -388,7 +393,9 @@ export default function UserCreateForm() {
     if (!user.role)
       newErrors.role = t("userEdit", "validation", "requiredField", { field: t("userEdit", "fields", "role") })
     if (!user.profession)
-      newErrors.profession = t("userEdit", "validation", "requiredField", { field: t("userEdit", "fields", "profession") })
+      newErrors.profession = t("userEdit", "validation", "requiredField", {
+        field: t("userEdit", "fields", "profession"),
+      })
     if (!user.bio.trim())
       newErrors.bio = t("userEdit", "validation", "requiredField", { field: t("userEdit", "fields", "bio") })
     if (!password)
@@ -433,23 +440,11 @@ export default function UserCreateForm() {
           phone: user.phone,
           bio: user.bio,
           role: user.role,
-          profession: user.profession
+          profession: user.profession,
         }
 
-        // Send POST request to your API endpoint
-        const response = await fetch('/api/users/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to register user')
-        }
+        // Using axios to send the request to our API route
+        const response = await axios.post("http://localhost:5000/auth/register", userData)
 
         // Show success message
         showToast("User created successfully", "success")
@@ -461,13 +456,16 @@ export default function UserCreateForm() {
           phone: "",
           role: "",
           profession: "",
-          bio: ""
+          bio: "",
         })
         setPassword("")
         setConfirmPassword("")
       } catch (error) {
         console.error("Registration error:", error)
-        showToast(error.message || "Failed to create user", "error")
+
+        // Get error message from axios response if available
+        const errorMessage = error.response?.data?.message || "Failed to create user"
+        showToast(errorMessage, "error")
       } finally {
         setIsSubmitting(false)
       }
@@ -488,22 +486,22 @@ export default function UserCreateForm() {
       document.body.style.overflow = "auto"
     }
   }, [isMobileMenuOpen])
-  
-  const [switchValue, setSwitchValue] = useState(false);
-  const handleSwitchChange = (field, value) => { 
-    setSwitchValue(value);
+
+  const [switchValue, setSwitchValue] = useState(false)
+  const handleSwitchChange = (field, value) => {
+    setSwitchValue(value)
   }
-  
-  const [requirePasswordSwitch, setRequirePasswordSwitch] = useState(false);
+
+  const [requirePasswordSwitch, setRequirePasswordSwitch] = useState(false)
   const handlepassChange = (field, value) => {
-    setRequirePasswordSwitch(value);
-  };
+    setRequirePasswordSwitch(value)
+  }
 
   // Current user for sidebar
   const currentUser = {
     name: "MEHDAOUI Lokman",
     role: "admin",
-    initials: "AD"
+    initials: "AD",
   }
 
   return (
@@ -512,7 +510,7 @@ export default function UserCreateForm() {
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
       {/* Show sidebar for desktop or when mobile menu is open */}
-      <Sidebar 
+      <Sidebar
         activeItem={"users"}
         userRole={currentUser.role}
         userName={currentUser.name}
@@ -592,7 +590,7 @@ export default function UserCreateForm() {
                   error={errors.role}
                   required={true}
                 />
-                
+
                 <DropdownField
                   title={t("userEdit", "fields", "profession")}
                   value={user.profession}
@@ -639,63 +637,67 @@ export default function UserCreateForm() {
                 />
               </div>
             </FormSection>
-            
+
             <FormSection>
-                <div className="flex flex-col gap-6">
-                  {/* Send Email Toggle */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
-                        <Mail size={25} className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                          {t("userEdit", "sendMail")}
-                        </p>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          {t("userEdit", "sendMailComment")}
-                        </p>
-                      </div>
+              <div className="flex flex-col gap-6">
+                {/* Send Email Toggle */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
+                      <Mail size={25} className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500" />
                     </div>
-
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        checked={switchValue}
-                        onChange={(e) => handleSwitchChange("role", e.target.checked)}
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
-                    </label>
-                  </div>
-                  
-                  {/* Password Toggle */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
-                        <ShieldHalf strokeWidth={2} size={25} className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                          {t("userEdit", "requirePassword")}
-                        </p>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          {t("userEdit", "requirePasswordComment")}
-                        </p>
-                      </div>
+                    <div>
+                      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                        {t("userEdit", "sendMail")}
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        {t("userEdit", "sendMailComment")}
+                      </p>
                     </div>
-
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        checked={requirePasswordSwitch}
-                        onChange={(e) => handlepassChange("role", e.target.checked)}
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
-                    </label>
                   </div>
+
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={switchValue}
+                      onChange={(e) => handleSwitchChange("role", e.target.checked)}
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
+                  </label>
                 </div>
+
+                {/* Password Toggle */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
+                      <ShieldHalf
+                        strokeWidth={2}
+                        size={25}
+                        className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                        {t("userEdit", "requirePassword")}
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        {t("userEdit", "requirePasswordComment")}
+                      </p>
+                    </div>
+                  </div>
+
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={requirePasswordSwitch}
+                      onChange={(e) => handlepassChange("role", e.target.checked)}
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
+                  </label>
+                </div>
+              </div>
             </FormSection>
 
             {/* Form Actions */}
@@ -745,4 +747,5 @@ export default function UserCreateForm() {
         </div>
       </div>
     </div>
-)}
+  )
+}

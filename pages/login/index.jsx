@@ -57,7 +57,19 @@ const Login = () => {
         },
         withCredentials: true,
       });
+
+      const user = response.data.user; // Adjust based on your backend response
+
+if (user) {
+  localStorage.setItem("token", JSON.stringify(user)); // Store user info in localStorage
+}
+
+
       
+//       console.log("Login successful:", token);
+
+
+localStorage.setItem("token", JSON.stringify(user)); // Store user info in localStorage
       // Redirection based on role
       if (response.data.role === 'admin') {
         router.push('/dashboard/admin');
@@ -66,7 +78,7 @@ const Login = () => {
       } else {
         router.push('/user');
       }
-      
+         
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setError(error.response.data.message || "Invalid credentials.");

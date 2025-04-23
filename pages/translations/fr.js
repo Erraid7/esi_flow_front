@@ -274,4 +274,84 @@ export const fr = {
     notifications: "Notifications",
     settings: "Paramètres",
   },
+   // Add this to your fr object
+   equipmentEdit: {
+    breadcrumb: {
+      equipment: "Équipement",
+      add: "Ajouter un enregistrement",
+      edit: "Modifier l'équipement"
+    },
+    title: {
+      add: "Ajouter un enregistrement de maintenance",
+      edit: "Modifier l'équipement"
+    },
+    sections: {
+      equipmentInfo: "Informations sur l'équipement",
+      recordDetails: "Détails de l'enregistrement"
+    },
+    fields: {
+      code: "Code Inventaire",
+      codePlaceholder: "Entrer le code",
+      type: "Type",
+      typePlaceholder: "Sélectionner le type d'équipement",
+      category: "Catégorie",
+      categoryPlaceholder: "Sélectionner la catégorie d'équipement",
+      acquisition: "Date d'acquisition",
+      commissioning: "Date de mise en service",
+      location: "Emplacement",
+      locationPlaceholder: "Préciser l'emplacement",
+      status: "Statut",
+      statusPlaceholder: "Sélectionner le statut",
+      description: "Description",
+      descriptionPlaceholder: "Entrer une description détaillée de la maintenance effectuée"
+    },
+    typeOptions: [
+      "Mécanique", 
+      "Électrique", 
+      "Hydraulique", 
+      "Pneumatique", 
+      "Électronique", 
+      "Autre"
+    ],
+    categoryOptions: [
+      "Production", 
+      "Maintenance", 
+      "Sécurité", 
+      "Contrôle Qualité", 
+      "Logistique", 
+      "Bureau"
+    ],
+    statusOptions: [
+      "Opérationnel", 
+      "En maintenance", 
+      "Hors service", 
+      "Installation en attente", 
+      "Retiré"
+    ],
+    actions: {
+      create: "Créer",
+      update: "Mettre à jour",
+      cancel: "Annuler",
+      saving: "Enregistrement...",
+      creating: "Création...",
+      updating: "Mise à jour..."
+    },
+    toast: {
+      addSuccess: "Équipement ajouté avec succès",
+      updateSuccess: "Équipement mis à jour avec succès",
+      error: "Veuillez remplir tous les champs obligatoires",
+      loadError: "Échec du chargement des données d'équipement"
+    },
+    validation: {
+      requiredField: "{field} est requis",
+      codeRequired: "Le code d'inventaire est requis",
+      typeRequired: "Le type d'équipement est requis",
+      categoryRequired: "La catégorie est requise",
+      acquisitionRequired: "La date d'acquisition est requise",
+      commissioningRequired: "La date de mise en service est requise",
+      locationRequired: "L'emplacement est requis",
+      statusRequired: "Le statut est requis"
+    },
+    loading: "Chargement des données d'équipement..."
+  }
 }
