@@ -9,6 +9,7 @@ export const en = {
     button: "Login",
     error: "Invalid credentials"
   },
+  
   home:{
     navbar:{
       1:"Home",
@@ -355,5 +356,24 @@ export const en = {
       statusRequired: "Status is required"
     },
     loading: "Loading equipment data..."
-  }
+  },
+  forgotPassword : {
+    title: "Forget password",
+    description: "Enter your email that you used when you joined and we'll send you instructions to reset your password.",
+    emailLabel: "Email",
+    emailPlaceholder: "Enter your email",
+    cancelButton: "Cancel",
+    continueButton: "Continue"
+  },
+  verification : {
+    title: "Verification",
+    description: "Enter the 6-digit code that was sent to your email",
+    verifyButton: "Verify"
+  },
+  success : {
+    title: "Successfully",
+    description: "Your password has been reset successfully",
+    backButton: "Back To Sign in"
+  },
+
 };
