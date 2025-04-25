@@ -355,5 +355,96 @@ export const en = {
       statusRequired: "Status is required"
     },
     loading: "Loading equipment data..."
+  },
+  // Add translations for the request form component
+  requestForm: {
+    editTitle: "Edit Request",
+    breadcrumb: {
+      dashboard: "Dashboard",
+      myRequests: "My Requests",
+      newRequest: "New Request",
+      editRequest: "Edit Request"
+    },
+    title: "Request Form",
+    header: {
+      title: "Reporting Form",
+      description: "Please fill in the information below to submit your service request.",
+      editTitle: "Edit Request Form",
+      editDescription: "Update the information for this service request."
+    },
+    metadata: {
+      requestId: "Request ID",
+      createdAt: "Created",
+      lastUpdated: "Last Updated",
+      currentStatus: "Status"
+    },
+    fields: {
+      requestTitle: {
+        label: "Request Title",
+        placeholder: "Ex: Power outage in room 302"
+      },
+      location: {
+        label: "Location",
+        selectPlaceholder: "Select a location"
+      },
+      equipmentCode: {
+        label: "Equipment Code",
+        placeholder: "Ex: 123456",
+        noEquipmentMessage: "No equipment found for this location",
+        noMatchMessage: "No equipment matches your search"
+      },
+      description: {
+        label: "Problem Description",
+        placeholder: "Describe the problem in detail..."
+      },
+      urgencyLevel: {
+        label: "Urgency Level",
+        placeholder: "Select urgency level"
+      },
+      photos: {
+        label: "Photos (optional)",
+        addButton: "Add photos",
+        maxPhotos: "Maximum {count} photos"
+      },
+      status: {
+        label: "Status",
+        placeholder: "Select status"
+      }
+    },
+    urgencyLevels: {
+      low: "Low",
+      medium: "Medium",
+      high: "High"
+    },
+    statusOptions: {
+      pending: "Pending",
+      inProgress: "In Progress",
+      completed: "Completed",
+      cancelled: "Cancelled"
+    },
+    actions: {
+      submit: "Submit Request",
+      submitting: "Submitting...",
+      cancel: "Cancel",
+      update: "Update Request",
+      updating: "Updating..."
+    },
+    validation: {
+      titleRequired: "Request title is required",
+      locationRequired: "Location is required",
+      descriptionRequired: "Problem description is required",
+      urgencyLevelRequired: "Urgency level is required",
+      statusRequired: "Status is required",
+      equipmentRequired: "Equipment selection is required"
+    },
+    toast: {
+      success: "Request submitted successfully",
+      error: "Please fill in all required fields",
+      submitError: "Failed to submit request",
+      updateSuccess: "Request updated successfully",
+      updateError: "Failed to update request",
+      fetchError: "Failed to load request data",
+      equipmentFetchError: "Failed to load equipment data"
+    }
   }
 };

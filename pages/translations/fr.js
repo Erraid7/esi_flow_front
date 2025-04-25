@@ -349,5 +349,66 @@ export const fr = {
       statusRequired: "Le statut est requis"
     },
     loading: "Chargement des données d'équipement..."
+  },
+  // Translations for the request form
+  requestForm: {
+    breadcrumb: {
+      dashboard: "Tableau de bord",
+      myRequests: "Mes demandes",
+      newRequest: "Nouvelle demande"
+    },
+    title: "Formulaire de demande",
+    header: {
+      title: "Formulaire de signalement",
+      description: "Veuillez remplir les informations ci-dessous pour soumettre votre demande d'intervention."
+    },
+    fields: {
+      requestTitle: {
+        label: "Titre de la demande",
+        placeholder: "Ex: Panne d'électricité dans la salle 302"
+      },
+      location: {
+        label: "Localisation",
+        placeholder: "Ex: Bâtiment A, Étage 3, Salle 302"
+      },
+      equipmentCode: {
+        label: "Code d'équipement",
+        placeholder: "Ex: 123456"
+      },
+      description: {
+        label: "Description du problème",
+        placeholder: "Décrivez le problème rencontré en détail..."
+      },
+      urgencyLevel: {
+        label: "Niveau d'urgence",
+        placeholder: "Sélectionnez un niveau d'urgence"
+      },
+      photos: {
+        label: "Photos (optionnel)",
+        addButton: "Ajouter des photos",
+        maxPhotos: "Maximum {count} photos"
+      }
+    },
+    urgencyLevels: {
+      low: "Faible",
+      medium: "Moyen",
+      high: "Élevé"
+    },
+    actions: {
+      submit: "Soumettre la demande",
+      submitting: "Soumission...",
+      cancel: "Annuler"
+    },
+    validation: {
+      titleRequired: "Le titre de la demande est requis",
+      locationRequired: "La localisation est requise",
+      descriptionRequired: "La description du problème est requise",
+      urgencyLevelRequired: "Le niveau d'urgence est requis"
+    },
+    toast: {
+      success: "Demande soumise avec succès",
+      error: "Veuillez remplir tous les champs obligatoires",
+      submitError: "Échec de la soumission de la demande"
+    }
   }
 }
