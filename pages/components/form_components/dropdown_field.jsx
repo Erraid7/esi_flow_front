@@ -50,7 +50,7 @@ const DropdownField = ({
   
         <div className="relative">
           <div
-            className={`flex items-center justify-between border ${error ? "border-red-300 bg-red-50 dark:bg-red-900/20" : "border-none"} rounded-lg p-3 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shadow-sm dark:shadow-neutral-800`}
+            className={`flex items-center justify-between border ${error ? "border-red-300 bg-red-50 dark:bg-red-900/20" : "border-none"} rounded-lg px-4 py-3 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shadow-sm shadow-neutral-300 dark:shadow-neutral-800`}
             onClick={toggleDropdown}
           >
             <div className="flex items-center">

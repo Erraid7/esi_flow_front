@@ -446,5 +446,123 @@ export const en = {
       fetchError: "Failed to load request data",
       equipmentFetchError: "Failed to load equipment data"
     }
+  },
+  // Add translations for task forms
+  taskForm: {
+    breadcrumb: {
+      dashboard: "Dashboard",
+      tasks: "Tasks",
+      addTask: "Add New Task",
+      editTask: "Edit Task"
+    },
+    title: {
+      add: "Add New Task",
+      edit: "Edit Task"
+    },
+    metadata: {
+      taskId: "Task ID",
+      createdAt: "Created",
+      lastUpdated: "Last Updated",
+      createdBy: "Created By"
+    },
+    sections: {
+      taskDetails: "Task Details",
+      requestInfo: "Request Information"
+    },
+    fields: {
+      name: {
+        label: "Task Name",
+        placeholder: "Enter task name"
+      },
+      assignTo: {
+        label: "Assign To",
+        placeholder: "Select personnel or team",
+        noPersonnelMessage: "No personnel available",
+        noMatchMessage: "No matching personnel found"
+      },
+      taskType: {
+        label: "Task Type",
+        placeholder: "Select task type"
+      },
+      deadline: {
+        label: "Deadline"
+      },
+      status: {
+        label: "Status",
+        placeholder: "Select status"
+      },
+      report: {
+        label: "Report",
+        placeholder: "Provide detailed description of the maintenance task"
+      },
+      equipmentCode: {
+        label: "Equipment Code",
+        placeholder: "Ex: 123456",
+        noEquipmentMessage: "No equipment available",
+        noMatchMessage: "No matching equipment found"
+      },
+      location: {
+        label: "Location",
+        placeholder: "Specify location",
+        comment: "Filter equipment by location or leave empty"
+      },
+      description: {
+        label: "Description",
+        placeholder: "Provide detailed description of the maintenance task"
+      },
+      priority: {
+        label: "Priority",
+        placeholder: "Select priority"
+      },
+      photos: {
+        label: "Photos (optional)",
+        addButton: "Add photos",
+        maxPhotos: "Maximum 3 photos"
+      }
+    },
+    taskTypes: [
+      "Maintenance",
+      "Repair",
+      "Installation",
+    ],
+    statusOptions: [
+      "To Do",
+      "In Progress",
+      "Pending",
+      "Completed",
+      "Cancelled"
+    ],
+    priorityOptions: [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    actions: {
+      create: "Create",
+      update: "Update",
+      cancel: "Cancel",
+      creating: "Creating...",
+      updating: "Updating..."
+    },
+    validation: {
+      nameRequired: "Task name is required",
+      assignToRequired: "Assignment is required",
+      statusRequired: "Status is required",
+      deadlineRequired: "Deadline is required",
+      equipmentCodeRequired: "Equipment code is required",
+      priorityRequired: "Priority is required",
+      taskTypeRequired: "Task type is required",
+      locationRequired: "Location is required"
+    },
+    toast: {
+      createSuccess: "Task created successfully",
+      updateSuccess: "Task updated successfully",
+      error: "Please fill in all required fields",
+      loadError: "Failed to load task data",
+      equipmentError: "Failed to load equipment data",
+      userError: "Failed to load users data"
+    },
+    loading: "Loading task data..."
   }
 };

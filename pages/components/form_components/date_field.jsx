@@ -17,7 +17,7 @@ const DateField = ({ title, value, onChange, error = null, required = false, pla
             onChange={onChange}
             placeholder={placeholder}
             className={`w-full text-sm px-4 py-3 pr-10 border ${
-              error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-950"
+              error ? "border-red-300 bg-red-50 dark:bg-red-900/20" : "border-none bg-neutral-100 dark:bg-neutral-950"
             } rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all text-neutral-950 dark:text-neutral-100
             [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer`}
           />

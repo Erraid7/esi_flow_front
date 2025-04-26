@@ -3,13 +3,12 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import { Calendar, MapPin, Users, ChevronDown, AlertCircle, Plus, X } from 'lucide-react'
+import { MapPin } from "lucide-react"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
 import AutocompleteField from "../../components/form_components/autocomplete_field"
 import PhotoUpload from "../../components/form_components/photoupload_field"
 import Toast from "../../components/form_components/toast"
-import FormSection from "../../components/form_components/form_section"
 import DateField from "@/pages/components/form_components/date_field"
 
 // Mock equipment data
@@ -44,15 +43,18 @@ const mockUsersData = [
 ]
 
 // Main Component
-export default function TaskAddForm({ request = {
-    id: null,
-    title: "Maintenance Request",
-    urgencyLevel: "medium",
-    equipmentCode: "EQ-123456",
-    location: "Building A, Floor 3",
-    description: "Fix the electrical system in Building A, Floor 3.",
-    photos: [],
-} }) {
+export default function TaskAddForm({
+  request = null
+//   {
+//     id: null,
+//     title: "Maintenance Request",
+//     urgencyLevel: "medium",
+//     equipmentCode: "EQ-123456",
+//     location: "Building A, Floor 3",
+//     description: "Fix the electrical system in Building A, Floor 3.",
+//     photos: [],
+//   }
+}) {
   const { t } = useLanguage()
   const formInitialized = useRef(false)
 
@@ -96,9 +98,24 @@ export default function TaskAddForm({ request = {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Available options for dropdowns
-  const statusOptions = ["Not Started", "In Progress", "On Hold", "Completed", "Cancelled"]
-  const priorityOptions = ["Low", "Medium", "High", "Critical"]
-  const tasktypes = ["Maintenance", "Repair", "Installation", "Inspection"]
+  const statusOptions = [
+    t("taskForm", "statusOptions", 0),
+    t("taskForm", "statusOptions", 1),
+    t("taskForm", "statusOptions", 2),
+    t("taskForm", "statusOptions", 3),
+    t("taskForm", "statusOptions", 4),
+  ]
+  const priorityOptions = [
+    t("taskForm", "priorityOptions", 0),
+    t("taskForm", "priorityOptions", 1),
+    t("taskForm", "priorityOptions", 2),
+    t("taskForm", "priorityOptions", 3),
+  ]
+  const taskTypes = [
+    t("taskForm", "taskTypes", 0),
+    t("taskForm", "taskTypes", 1),
+    t("taskForm", "taskTypes", 2),
+  ]
 
   // Initialize form with request data if provided - ONLY ONCE
   useEffect(() => {
@@ -114,7 +131,7 @@ export default function TaskAddForm({ request = {
         description: request.description || "",
         priority: mapUrgencyToPriority(request.urgencyLevel) || "Medium",
       }
-      
+
       setTask(initialTask)
       formInitialized.current = true
 
@@ -125,7 +142,7 @@ export default function TaskAddForm({ request = {
 
       // Find equipment if code is provided
       if (request.equipmentCode) {
-        const equipment = mockEquipmentData.find(eq => eq.code === request.equipmentCode)
+        const equipment = mockEquipmentData.find((eq) => eq.code === request.equipmentCode)
         if (equipment) {
           setSelectedEquipment(equipment)
         }
@@ -136,13 +153,13 @@ export default function TaskAddForm({ request = {
   // Map urgency level to priority
   const mapUrgencyToPriority = (urgencyLevel) => {
     if (!urgencyLevel) return null
-    
+
     const urgencyMap = {
       [t("requestForm", "urgencyLevels", "low")]: "Low",
       [t("requestForm", "urgencyLevels", "medium")]: "Medium",
-      [t("requestForm", "urgencyLevels", "high")]: "High"
+      [t("requestForm", "urgencyLevels", "high")]: "High",
     }
-    
+
     return urgencyMap[urgencyLevel] || "Medium"
   }
 
@@ -155,26 +172,26 @@ export default function TaskAddForm({ request = {
         await new Promise((resolve) => setTimeout(resolve, 300))
 
         let filteredEquipment = [...mockEquipmentData]
-        
+
         // If location is provided, filter equipment by location
         if (task.location.trim()) {
           const locationLower = task.location.toLowerCase()
-          filteredEquipment = mockEquipmentData.filter(
-            equipment => equipment.location.toLowerCase().includes(locationLower)
+          filteredEquipment = mockEquipmentData.filter((equipment) =>
+            equipment.location.toLowerCase().includes(locationLower),
           )
         }
 
         setEquipmentList(filteredEquipment)
       } catch (error) {
         console.error("Error filtering equipment:", error)
-        showToast("Failed to load equipment data", "error")
+        showToast(t("taskForm", "toast", "equipmentError"), "error")
       } finally {
         setIsLoadingEquipment(false)
       }
     }
 
     filterEquipment()
-  }, [task.location])
+  }, [task.location, t])
 
   // Filter users based on search term
   useEffect(() => {
@@ -189,23 +206,23 @@ export default function TaskAddForm({ request = {
         } else {
           const searchTermLower = userSearchTerm.toLowerCase()
           const filteredUsers = mockUsersData.filter(
-            user => 
-              user.name.toLowerCase().includes(searchTermLower) || 
+            (user) =>
+              user.name.toLowerCase().includes(searchTermLower) ||
               user.location.toLowerCase().includes(searchTermLower) ||
-              user.code.toLowerCase().includes(searchTermLower)
+              user.code.toLowerCase().includes(searchTermLower),
           )
           setUsersList(filteredUsers)
         }
       } catch (error) {
         console.error("Error filtering users:", error)
-        showToast("Failed to load users data", "error")
+        showToast(t("taskForm", "toast", "userError"), "error")
       } finally {
         setIsLoadingUsers(false)
       }
     }
 
     filterUsers()
-  }, [userSearchTerm])
+  }, [userSearchTerm, t])
 
   const handleInputChange = useCallback(
     (field, value) => {
@@ -222,16 +239,16 @@ export default function TaskAddForm({ request = {
     (code, equipment) => {
       setTask((prev) => {
         // If location is empty and equipment is selected, auto-populate location
-        if ( equipment) {
+        if (equipment) {
           return {
             ...prev,
             equipmentCode: code,
-            location: equipment.location
+            location: equipment.location,
           }
         }
         return { ...prev, equipmentCode: code }
       })
-      
+
       setSelectedEquipment(equipment || null)
 
       // Clear error if present
@@ -274,18 +291,19 @@ export default function TaskAddForm({ request = {
   const validateForm = useCallback(() => {
     const newErrors = {}
 
-    // Required fields
-    if (!task.name.trim()) newErrors.name = "Task name is required"
-    if (!task.assignTo) newErrors.assignTo = "Assignment is required"
-    if (!task.status) newErrors.status = "Status is required"
-    if (!task.deadline) newErrors.deadline = "Deadline is required"
-    if (!task.equipmentCode) newErrors.equipmentCode = "Equipment code is required"
-    if (!task.priority) newErrors.priority = "Priority is required"
-    if (!task.type) newErrors.type = "Task type is required"
-    if (!task.location.trim()) newErrors.location = "Location is required"
+    // Required fields with translated error messages
+    if (!task.name.trim()) newErrors.name = t("taskForm", "validation", "nameRequired")
+    if (!task.assignTo) newErrors.assignTo = t("taskForm", "validation", "assignToRequired")
+    if (!task.status) newErrors.status = t("taskForm", "validation", "statusRequired")
+    if (!task.deadline) newErrors.deadline = t("taskForm", "validation", "deadlineRequired")
+    if (!task.equipmentCode) newErrors.equipmentCode = t("taskForm", "validation", "equipmentCodeRequired")
+    if (!task.priority) newErrors.priority = t("taskForm", "validation", "priorityRequired")
+    if (!task.type) newErrors.type = t("taskForm", "validation", "taskTypeRequired")
+    if (!task.location.trim()) newErrors.location = t("taskForm", "validation", "locationRequired")
+    if (!task.description.trim()) newErrors.description = t("taskForm", "validation", "descriptionRequired")
 
     return newErrors
-  }, [task])
+  }, [task, t])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -340,7 +358,7 @@ export default function TaskAddForm({ request = {
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
         // Show success message
-        showToast("Task created successfully", "success")
+        showToast(t("taskForm", "toast", "createSuccess"), "success")
 
         // Reset form
         setTask({
@@ -361,12 +379,12 @@ export default function TaskAddForm({ request = {
         formInitialized.current = false
       } catch (error) {
         console.error("Error creating task:", error)
-        showToast(error.message || "Failed to create task", "error")
+        showToast(error.message || t("taskForm", "toast", "error"), "error")
       } finally {
         setIsSubmitting(false)
       }
     } else {
-      showToast("Please fill in all required fields", "error")
+      showToast(t("taskForm", "toast", "error"), "error")
     }
   }
 
@@ -395,78 +413,79 @@ export default function TaskAddForm({ request = {
         <div className="px-4 sm:px-10 lg:px-20 w-full">
           <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
             <div className="text-sm flex items-center font-inter">
-              <span>Dashboard</span>
+              <span>{t("taskForm", "breadcrumb", "dashboard")}</span>
               <span className="mx-2 text-lg">›</span>
-              <span>Tasks</span>
+              <span>{t("taskForm", "breadcrumb", "tasks")}</span>
               <span className="mx-2 text-lg">›</span>
-              <span>Add New Task</span>
+              <span>{t("taskForm", "breadcrumb", "addTask")}</span>
             </div>
-            <h1 className="text-xl lg:text-2xl font-russo">Add New Task</h1>
+            <h1 className="text-xl lg:text-2xl font-russo">{t("taskForm", "title", "add")}</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-8">
             {/* Task Details Section */}
             <div className="space-y-6">
-              <h2 className="text-lg font-russo text-neutral-950 dark:text-neutral-100">Task Details</h2>
-              
+              <h2 className="text-lg font-russo text-neutral-950 dark:text-neutral-100">
+                {t("taskForm", "sections", "taskDetails")}
+              </h2>
+
               <FormField
-                title="Task Name"
-                placeholder="Enter task name"
+                title={t("taskForm", "fields", "name", "label")}
+                placeholder={t("taskForm", "fields", "name", "placeholder")}
                 value={task.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
                 error={errors.name}
                 required={true}
               />
-                <div className="grid grid-cols-2 gap-4">
-                    <AutocompleteField
-                    title="Assign To"
-                    placeholder="Select personnel or team"
-                    value={task.assignTo}
-                    onChange={handleUserSelect}
-                    options={usersList}
-                    error={errors.assignTo}
-                    required={true}
-                    loading={isLoadingUsers}
-                    emptyMessage="No personnel available"
-                    noMatchMessage="No matching personnel found"
-                    />
+              <div className="grid grid-cols-2 gap-4">
+                <AutocompleteField
+                  title={t("taskForm", "fields", "assignTo", "label")}
+                  placeholder={t("taskForm", "fields", "assignTo", "placeholder")}
+                  value={task.assignTo}
+                  onChange={handleUserSelect}
+                  options={usersList}
+                  error={errors.assignTo}
+                  required={true}
+                  loading={isLoadingUsers}
+                  emptyMessage={t("taskForm", "fields", "assignTo", "noPersonnelMessage")}
+                  noMatchMessage={t("taskForm", "fields", "assignTo", "noMatchMessage")}
+                />
 
-                    {/* drop down for the task type */}
-                    <DropdownField
-                        title="Task Type"
-                        value={task.type}
-                        onChange={(value) => handleInputChange("type", value)}
-                        options={tasktypes}
-                        error={errors.type}
-                        required={true}
-                        placeholder="Select task type"
-                    />
-                </div>
-                
+                {/* drop down for the task type */}
+                <DropdownField
+                  title={t("taskForm", "fields", "taskType", "label")}
+                  value={task.type}
+                  onChange={(value) => handleInputChange("type", value)}
+                  options={taskTypes}
+                  error={errors.type}
+                  required={true}
+                  placeholder={t("taskForm", "fields", "taskType", "placeholder")}
+                />
+              </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <DateField
-                        title="Deadline"
-                        value={task.deadline}
-                        onChange={(e) => handleInputChange("deadline", e.target.value)}
-                        error={errors.deadline}
-                        required={true}
-                    />
+              <div className="grid grid-cols-2 gap-4">
+                <DateField
+                  title={t("taskForm", "fields", "deadline", "label")}
+                  value={task.deadline}
+                  onChange={(e) => handleInputChange("deadline", e.target.value)}
+                  error={errors.deadline}
+                  required={true}
+                />
 
-                  <DropdownField
-                    title="Status"
-                    value={task.status}
-                    onChange={(value) => handleInputChange("status", value)}
-                    options={statusOptions}
-                    error={errors.status}
-                    required={true}
-                    placeholder="Select status"
-                  />
-                </div>
+                <DropdownField
+                  title={t("taskForm", "fields", "status", "label")}
+                  value={task.status}
+                  onChange={(value) => handleInputChange("status", value)}
+                  options={statusOptions}
+                  error={errors.status}
+                  required={true}
+                  placeholder={t("taskForm", "fields", "status", "placeholder")}
+                />
+              </div>
 
               <FormField
-                title="Report"
-                placeholder="Provide detailed description of the maintenance task"
+                title={t("taskForm", "fields", "report", "label")}
+                placeholder={t("taskForm", "fields", "report", "placeholder")}
                 value={task.report}
                 onChange={(e) => handleInputChange("report", e.target.value)}
                 isTextarea={true}
@@ -476,57 +495,60 @@ export default function TaskAddForm({ request = {
 
             {/* Request Information Section */}
             <div className="space-y-6 mt-4">
-              <h2 className="text-lg font-russo text-neutral-950 dark:text-neutral-100">Request Information</h2>
-              
+              <h2 className="text-lg font-russo text-neutral-950 dark:text-neutral-100">
+                {t("taskForm", "sections", "requestInfo")}
+              </h2>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <AutocompleteField
-                  title="Equipment Code"
-                  placeholder="Ex: 123456"
+                  title={t("taskForm", "fields", "equipmentCode", "label")}
+                  placeholder={t("taskForm", "fields", "equipmentCode", "placeholder")}
                   value={task.equipmentCode}
                   onChange={handleEquipmentSelect}
                   options={equipmentList}
                   error={errors.equipmentCode}
                   required={true}
                   loading={isLoadingEquipment}
-                  emptyMessage="No equipment available"
-                  noMatchMessage="No matching equipment found"
+                  emptyMessage={t("taskForm", "fields", "equipmentCode", "noEquipmentMessage")}
+                  noMatchMessage={t("taskForm", "fields", "equipmentCode", "noMatchMessage")}
                 />
 
                 <FormField
-                  title="Location"
-                  placeholder="Specify location"
+                  title={t("taskForm", "fields", "location", "label")}
+                  placeholder={t("taskForm", "fields", "location", "placeholder")}
                   value={task.location}
                   onChange={(e) => handleInputChange("location", e.target.value)}
                   icon={<MapPin size={16} />}
                   error={errors.location}
-                  comment="Filter equipment by location or leave empty"
+                  comment={t("taskForm", "fields", "location", "comment")}
                 />
               </div>
 
               <FormField
-                title="Description"
-                placeholder="Provide detailed description of the maintenance task"
+                title={t("taskForm", "fields", "description", "label")}
+                placeholder={t("taskForm", "fields", "description", "placeholder")}
                 value={task.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 isTextarea={true}
                 error={errors.description}
+                required={true}
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <DropdownField
-                  title="Priority"
+                  title={t("taskForm", "fields", "priority", "label")}
                   value={task.priority}
                   onChange={(value) => handleInputChange("priority", value)}
                   options={priorityOptions}
                   error={errors.priority}
                   required={true}
-                  placeholder="Select priority"
+                  placeholder={t("taskForm", "fields", "priority", "placeholder")}
                 />
 
                 <PhotoUpload
-                  title="Photos (optional)"
-                  addButtonText="Ajouter des photos"
-                  maxPhotosText="Maximum 3 photos"
+                  title={t("taskForm", "fields", "photos", "label")}
+                  addButtonText={t("taskForm", "fields", "photos", "addButton")}
+                  maxPhotosText={t("taskForm", "fields", "photos", "maxPhotos")}
                   photos={photos}
                   setPhotos={setPhotos}
                   maxPhotos={3}
@@ -564,10 +586,10 @@ export default function TaskAddForm({ request = {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Creating...
+                    {t("taskForm", "actions", "creating")}
                   </span>
                 ) : (
-                  "Create"
+                  t("taskForm", "actions", "create")
                 )}
               </button>
 
@@ -575,7 +597,7 @@ export default function TaskAddForm({ request = {
                 type="button"
                 className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
               >
-                Cancel
+                {t("taskForm", "actions", "cancel")}
               </button>
             </div>
           </form>
