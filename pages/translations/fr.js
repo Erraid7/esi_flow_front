@@ -105,6 +105,34 @@ export const fr = {
     },
   },
   dashboard: {
+    // Include any existing dashboard translations you have and add:
+  technician: {
+    title: "Tableau de bord du technicien",
+    mostFrequentIssues: "Problèmes les plus fréquents",
+    highPriority: "Haute priorité",
+    mediumPriority: "Priorité moyenne",
+    lowPriority: "Faible priorité",
+    lastTaskProgress: "Progression de la dernière tâche",
+    clickAndDiscover: "Cliquez et découvrez, notification ici",
+    makeReport: "Faire le rapport",
+  },
+
+  personal: {
+    title: "Tableau de bord personnel",
+    requestStatus: "État de mes demandes",
+    requestStatuses: {
+      completed: "Terminé",
+      pending: "En attente",
+      toDo: "À faire",
+      inProgress: "En cours",
+      canceled: "Annulé"
+    },
+    lastRequestProgress: "Progression de la dernière demande",
+    clickAndDiscover: "Cliquez et découvrez, notification ici",
+    myNotification: "Mes notifications",
+    viewNotification: "Voir les notifications"
+  },
+  
     title: "Tableau de Bord ESI Flow",
     overview: "Aperçu du Tableau de Bord",
     activeRequests: "Demandes actives / tech/utilisateurs",

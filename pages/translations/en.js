@@ -106,6 +106,31 @@ export const en = {
 
   },
   dashboard: {
+    technician: {
+      title: "Technician Dashboard",
+      mostFrequentIssues: "Most frequent issues",
+      highPriority: "High priorty",
+      mediumPriority: "Meduim priority",
+      lowPriority: "Low priority",
+      lastTaskProgress: "Last Task Progress",
+      clickAndDiscover: "click and discover, notification here",
+      makeReport: "Make a report",
+    },
+    personal: {
+      title: "Personal Dashboard",
+      requestStatus: "Status of my requests",
+      requestStatuses: {
+        completed: "Completed",
+        pending: "Pending",
+        toDo: "To Do",
+        inProgress: "In Progress",
+        canceled: "Canceled"
+      },
+      lastRequestProgress: "Last request Progress",
+      clickAndDiscover: "click and discover, notification here",
+      myNotification: "My notification",
+      viewNotification: "view notification"
+    },
     title: "ESI Flow Dashboard",
     overview: "Dashboard Overview",
     activeRequests: "Active requests / tech/users",
