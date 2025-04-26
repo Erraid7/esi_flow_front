@@ -355,5 +355,214 @@ export const en = {
       statusRequired: "Status is required"
     },
     loading: "Loading equipment data..."
+  },
+  // Add translations for the request form component
+  requestForm: {
+    editTitle: "Edit Request",
+    breadcrumb: {
+      dashboard: "Dashboard",
+      myRequests: "My Requests",
+      newRequest: "New Request",
+      editRequest: "Edit Request"
+    },
+    title: "Request Form",
+    header: {
+      title: "Reporting Form",
+      description: "Please fill in the information below to submit your service request.",
+      editTitle: "Edit Request Form",
+      editDescription: "Update the information for this service request."
+    },
+    metadata: {
+      requestId: "Request ID",
+      createdAt: "Created",
+      lastUpdated: "Last Updated",
+      currentStatus: "Status"
+    },
+    fields: {
+      requestTitle: {
+        label: "Request Title",
+        placeholder: "Ex: Power outage in room 302"
+      },
+      location: {
+        label: "Location",
+        selectPlaceholder: "Select a location"
+      },
+      equipmentCode: {
+        label: "Equipment Code",
+        placeholder: "Ex: 123456",
+        noEquipmentMessage: "No equipment found for this location",
+        noMatchMessage: "No equipment matches your search"
+      },
+      description: {
+        label: "Problem Description",
+        placeholder: "Describe the problem in detail..."
+      },
+      urgencyLevel: {
+        label: "Urgency Level",
+        placeholder: "Select urgency level"
+      },
+      photos: {
+        label: "Photos (optional)",
+        addButton: "Add photos",
+        maxPhotos: "Maximum {count} photos"
+      },
+      status: {
+        label: "Status",
+        placeholder: "Select status"
+      }
+    },
+    urgencyLevels: {
+      low: "Low",
+      medium: "Medium",
+      high: "High"
+    },
+    statusOptions: {
+      pending: "Pending",
+      inProgress: "In Progress",
+      completed: "Completed",
+      cancelled: "Cancelled"
+    },
+    actions: {
+      submit: "Submit Request",
+      submitting: "Submitting...",
+      cancel: "Cancel",
+      update: "Update Request",
+      updating: "Updating..."
+    },
+    validation: {
+      titleRequired: "Request title is required",
+      locationRequired: "Location is required",
+      descriptionRequired: "Problem description is required",
+      urgencyLevelRequired: "Urgency level is required",
+      statusRequired: "Status is required",
+      equipmentRequired: "Equipment selection is required"
+    },
+    toast: {
+      success: "Request submitted successfully",
+      error: "Please fill in all required fields",
+      submitError: "Failed to submit request",
+      updateSuccess: "Request updated successfully",
+      updateError: "Failed to update request",
+      fetchError: "Failed to load request data",
+      equipmentFetchError: "Failed to load equipment data"
+    }
+  },
+  // Add translations for task forms
+  taskForm: {
+    breadcrumb: {
+      dashboard: "Dashboard",
+      tasks: "Tasks",
+      addTask: "Add New Task",
+      editTask: "Edit Task"
+    },
+    title: {
+      add: "Add New Task",
+      edit: "Edit Task"
+    },
+    metadata: {
+      taskId: "Task ID",
+      createdAt: "Created",
+      lastUpdated: "Last Updated",
+      createdBy: "Created By"
+    },
+    sections: {
+      taskDetails: "Task Details",
+      requestInfo: "Request Information"
+    },
+    fields: {
+      name: {
+        label: "Task Name",
+        placeholder: "Enter task name"
+      },
+      assignTo: {
+        label: "Assign To",
+        placeholder: "Select personnel or team",
+        noPersonnelMessage: "No personnel available",
+        noMatchMessage: "No matching personnel found"
+      },
+      taskType: {
+        label: "Task Type",
+        placeholder: "Select task type"
+      },
+      deadline: {
+        label: "Deadline"
+      },
+      status: {
+        label: "Status",
+        placeholder: "Select status"
+      },
+      report: {
+        label: "Report",
+        placeholder: "Provide detailed description of the maintenance task"
+      },
+      equipmentCode: {
+        label: "Equipment Code",
+        placeholder: "Ex: 123456",
+        noEquipmentMessage: "No equipment available",
+        noMatchMessage: "No matching equipment found"
+      },
+      location: {
+        label: "Location",
+        placeholder: "Specify location",
+        comment: "Filter equipment by location or leave empty"
+      },
+      description: {
+        label: "Description",
+        placeholder: "Provide detailed description of the maintenance task"
+      },
+      priority: {
+        label: "Priority",
+        placeholder: "Select priority"
+      },
+      photos: {
+        label: "Photos (optional)",
+        addButton: "Add photos",
+        maxPhotos: "Maximum 3 photos"
+      }
+    },
+    taskTypes: [
+      "Maintenance",
+      "Repair",
+      "Installation",
+    ],
+    statusOptions: [
+      "To Do",
+      "In Progress",
+      "Pending",
+      "Completed",
+      "Cancelled"
+    ],
+    priorityOptions: [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    actions: {
+      create: "Create",
+      update: "Update",
+      cancel: "Cancel",
+      creating: "Creating...",
+      updating: "Updating..."
+    },
+    validation: {
+      nameRequired: "Task name is required",
+      assignToRequired: "Assignment is required",
+      statusRequired: "Status is required",
+      deadlineRequired: "Deadline is required",
+      equipmentCodeRequired: "Equipment code is required",
+      priorityRequired: "Priority is required",
+      taskTypeRequired: "Task type is required",
+      locationRequired: "Location is required"
+    },
+    toast: {
+      createSuccess: "Task created successfully",
+      updateSuccess: "Task updated successfully",
+      error: "Please fill in all required fields",
+      loadError: "Failed to load task data",
+      equipmentError: "Failed to load equipment data",
+      userError: "Failed to load users data"
+    },
+    loading: "Loading task data..."
   }
 };

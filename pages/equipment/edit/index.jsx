@@ -1,235 +1,14 @@
 "use client"
 
-import { useRef } from "react"
 import { useState, useEffect, useCallback } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import { Calendar, Info, MapPin, AlertTriangle, Check, ChevronDown, X, Loader2 } from "lucide-react"
-
-// Toast Notification Component
-const Toast = ({ message, type, visible, onClose }) => {
-  useEffect(() => {
-    if (visible) {
-      const timer = setTimeout(() => {
-        onClose()
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [visible, onClose])
-
-  if (!visible) return null
-
-  const bgColor = type === "success" ? "bg-green-500" : type === "error" ? "bg-red-500" : "bg-blue-500"
-
-  const icon =
-    type === "success" ? <Check size={20} /> : type === "error" ? <AlertTriangle size={20} /> : <Info size={20} />
-
-  return (
-    <div
-      className={`fixed top-4 right-4 ${bgColor} text-white p-4 rounded shadow-lg flex items-center z-50 animate-fade-in`}
-    >
-      <div className="mr-3">{icon}</div>
-      <p>{message}</p>
-      <button onClick={onClose} className="ml-4">
-        <X size={16} />
-      </button>
-    </div>
-  )
-}
-
-// FormField Component
-const FormField = ({
-  title,
-  placeholder,
-  value,
-  onChange,
-  icon,
-  comment,
-  type = "text",
-  onIconClick,
-  isTextarea = false,
-  error = null,
-  required = false,
-  className = "",
-}) => {
-  return (
-    <div className={`flex flex-col gap-2 ${className}`}>
-      {title && (
-        <label className="block text-sm font-inter text-neutral-950 dark:text-neutral-100">
-          {title} {required && <span className="text-red-500">*</span>}
-        </label>
-      )}
-
-      <div className="relative">
-        {isTextarea ? (
-          <textarea
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={`w-full text-sm px-4 py-3 border ${error ? "border-red-300 bg-red-50" : "border-none bg-[#E7E7E7] dark:bg-neutral-950"} rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all text-neutral-990 dark:text-neutral-100 min-h-24`}
-          />
-        ) : (
-          <input
-            type={type}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={`w-full text-sm px-4 py-3 border ${error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-950"} rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all text-neutral-990 dark:text-neutral-100 `}
-          />
-        )}
-
-        {icon && (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-950" onClick={onIconClick}>
-            {icon}
-          </div>
-        )}
-      </div>
-
-      {error && (
-        <p className="mt-1 text-sm text-red-600 flex items-center">
-          <AlertTriangle size={12} className="mr-1" />
-          {error}
-        </p>
-      )}
-
-      {comment && !error && <div className="text-xs text-neutral-800 mt-1">{comment}</div>}
-    </div>
-  )
-}
-
-// DropdownField Component with Click Outside
-const DropdownField = ({
-  title,
-  value,
-  onChange,
-  options = [],
-  error = null,
-  required = false,
-  placeholder = "Select an option",
-}) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const dropdownRef = useRef(null)
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen)
-  }
-
-  const handleSelect = (option) => {
-    onChange(option)
-    setIsOpen(false)
-  }
-
-  // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false)
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
-
-  return (
-    <div className="flex flex-col gap-2" ref={dropdownRef}>
-      {title && (
-        <label className="block text-sm font-inter text-neutral-950 dark:text-neutral-100">
-          {title} {required && <span className="text-red-500">*</span>}
-        </label>
-      )}
-
-      <div className="relative">
-        <div
-          className={`flex items-center justify-between border ${error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-950"} rounded-lg p-3 cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors shadow-sm`}
-          onClick={toggleDropdown}
-        >
-          <span
-            className={`text-sm ${value ? "text-neutral-990 dark:text-neutral-100" : "text-neutral-400 dark:text-neutral-400"}`}
-          >
-            {value || placeholder}
-          </span>
-          <ChevronDown
-            size={18}
-            className={`text-neutral-990 dark:text-neutral-100 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
-          />
-        </div>
-
-        {isOpen && options.length > 0 && (
-          <ul className="absolute w-full mt-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
-            {options.map((option, index) => (
-              <li
-                key={index}
-                className={`px-4 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer ${value === option ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : "dark:text-neutral-200"}`}
-                onClick={() => handleSelect(option)}
-              >
-                <div className="flex items-center">
-                  {value === option && <Check size={16} className="mr-2 text-blue-500" />}
-                  <span className={value === option ? "ml-0" : "ml-6"}>{option}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {error && (
-        <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
-          <AlertTriangle size={12} className="mr-1" />
-          {error}
-        </p>
-      )}
-    </div>
-  )
-}
-
-const DateField = ({ title, value, onChange, error = null, required = false, placeholder = "MM/DD/YYYY" }) => {
-  return (
-    <div className="flex flex-col gap-2">
-      {title && (
-        <label className="block text-sm font-inter text-neutral-950 dark:text-neutral-100">
-          {title} {required && <span className="text-red-500">*</span>}
-        </label>
-      )}
-
-      <div className="relative">
-        <input
-          type="date"
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className={`w-full text-sm px-4 py-3 pr-10 border ${
-            error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-950"
-          } rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all text-neutral-950 dark:text-neutral-100
-          [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer`}
-        />
-        <Calendar 
-          size={18} 
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-500 dark:text-neutral-400 pointer-events-none" 
-        />
-      </div>
-
-      {error && (
-        <p className="mt-1 text-sm text-red-600 flex items-center">
-          <AlertTriangle size={12} className="mr-1" />
-          {error}
-        </p>
-      )}
-    </div>
-  );
-};
-
-// Form Section Component
-const FormSection = ({ title, children }) => {
-    return (
-      <div className="flex flex-col gap-3">
-        {title && <h2 className="text-base lg:text-lg font-russo text-neutral-950 dark:text-neutral-100">{title}</h2>}
-        {children}
-      </div>
-    )
-  }
+import { MapPin, Loader2 } from "lucide-react"
+import Toast from "../../components/form_components/toast"
+import FormField from "../../components/form_components/form_field"
+import DropdownField from "../../components/form_components/dropdown_field"
+import FormSection from "../../components/form_components/form_section"
+import DateField from "../../components/form_components/date_field"
 
 // Main Component
 export default function EquipmentEditForm() {
@@ -411,7 +190,7 @@ export default function EquipmentEditForm() {
       />
 
       {/* Main content */}
-      <div className="pt-14 md:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
+      <div className="pt-14 lg:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
         <div className="px-4 sm:px-10 lg:px-20 w-full">
           <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
             <div className="text-sm flex items-center font-inter">
@@ -487,7 +266,7 @@ export default function EquipmentEditForm() {
                     placeholder={t("equipmentEdit", "fields", "locationPlaceholder")}
                     value={equipment.location}
                     onChange={(e) => handleInputChange("location", e.target.value)}
-                    icon={<MapPin size={16} />}
+                    icon={<MapPin size={18} />}
                     error={errors.location}
                     required={true}
                   />

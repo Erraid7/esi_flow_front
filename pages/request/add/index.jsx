@@ -1,485 +1,383 @@
 "use client"
 
-import { useState } from "react"
-import { AlertTriangle, ChevronDown, X, Upload } from "lucide-react"
+import { useState, useEffect, useCallback } from "react"
+import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import axios from "axios" // Import axios
+import { AlertCircle, MapPin } from 'lucide-react'
+import FormField from "../../components/form_components/form_field"
+import DropdownField from "../../components/form_components/dropdown_field"
+import AutocompleteField from "../../components/form_components/autocomplete_field"
+import PhotoUpload from "../../components/form_components/photoupload_field"
+import Toast from "../../components/form_components/toast"
+import FormSection from "../../components/form_components/form_section"
 
-// FormField Component
-const FormField = ({
-  title,
-  placeholder,
-  value,
-  onChange,
-  icon,
-  type = "text",
-  isTextarea = false,
-  error = null,
-  required = false,
-}) => {
-  return (
-    <div className="flex flex-col mb-3">
-      {title && (
-        <label className="block text-sm font-inter text-neutral-800 dark:text-neutral-200 mb-1">
-          {title} {required && <span className="text-red-500">*</span>}
-        </label>
-      )}
+// Mock equipment data
+const mockEquipmentData = [
+  { id: "1", code: "EQ-001", name: "Projector", location: "Building A, Floor 1" },
+  { id: "2", code: "EQ-002", name: "Smart Board", location: "Building A, Floor 1" },
+  { id: "3", code: "EQ-003", name: "Computer", location: "Building A, Floor 1" },
+  { id: "4", code: "EQ-004", name: "Printer", location: "Building A, Floor 2" },
+  { id: "5", code: "EQ-005", name: "Scanner", location: "Building A, Floor 2" },
+  { id: "6", code: "EQ-006", name: "Air Conditioner", location: "Building A, Floor 3" },
+  { id: "7", code: "EQ-007", name: "Projector", location: "Building A, Floor 3" },
+  { id: "8", code: "EQ-008", name: "Microscope", location: "Building B, Floor 1" },
+  { id: "9", code: "EQ-009", name: "Laboratory Equipment", location: "Building B, Floor 1" },
+  { id: "10", code: "EQ-010", name: "Whiteboard", location: "Building B, Floor 2" },
+  { id: "11", code: "EQ-011", name: "Sound System", location: "Building C, Floor 1" },
+  { id: "12", code: "EQ-012", name: "Gym Equipment", location: "Gymnasium" },
+  { id: "13", code: "EQ-013", name: "Coffee Machine", location: "Cafeteria" },
+  { id: "14", code: "EQ-014", name: "Book Scanner", location: "Library" },
+  { id: "15", code: "EQ-015", name: "Chemistry Equipment", location: "Laboratory" },
+]
 
-      <div className="relative">
-        {isTextarea ? (
-          <textarea
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={`w-full text-sm px-4 py-3 border ${error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-800"} rounded-lg shadow-sm focus:ring-2 focus:ring-primary-200 focus:border-primary-500 transition-all text-neutral-800 dark:text-neutral-200 min-h-24`}
-          />
-        ) : (
-          <input
-            type={type}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={`w-full text-sm px-4 py-3 border ${error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-800"} rounded-lg shadow-sm focus:ring-2 focus:ring-primary-200 focus:border-primary-500 transition-all text-neutral-800 dark:text-neutral-200`}
-          />
-        )}
+// Main Component
+export default function RequestAddForm() {
+  const { t } = useLanguage()
 
-        {icon && (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-700 dark:text-neutral-300" onClick={icon.onClick}>
-            {icon.element}
-          </div>
-        )}
-      </div>
-
-      {error && (
-        <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
-          <AlertTriangle size={12} className="mr-1" />
-          {error}
-        </p>
-      )}
-    </div>
-  )
-}
-
-// DropdownField Component
-const DropdownField = ({
-  title,
-  value,
-  onChange,
-  options = [],
-  placeholder,
-  error = null,
-  required = false,
-}) => {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen)
-  }
-
-  const handleSelect = (option) => {
-    onChange(option)
-    setIsOpen(false)
-  }
-
-  return (
-    <div className="flex flex-col mb-3">
-      {title && (
-        <label className="block text-sm font-inter text-neutral-800 dark:text-neutral-200 mb-1">
-          {title} {required && <span className="text-red-500">*</span>}
-        </label>
-      )}
-
-      <div className="relative">
-        <div
-          className="flex items-center justify-between bg-neutral-100 dark:bg-neutral-800 rounded-lg p-3 cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors shadow-sm"
-          onClick={toggleDropdown}
-        >
-          <span className="text-sm text-neutral-700 dark:text-neutral-200">
-            {value || placeholder}
-          </span>
-          <ChevronDown
-            size={18}
-            className={`text-neutral-700 dark:text-neutral-200 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
-          />
-        </div>
-
-        {isOpen && options.length > 0 && (
-          <ul className="absolute w-full mt-1 bg-white dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-md shadow-lg z-10">
-            {options.map((option, index) => (
-              <li
-                key={index}
-                className="px-4 py-2 hover:bg-primary-50 dark:hover:bg-primary-900/30 cursor-pointer text-neutral-800 dark:text-neutral-200"
-                onClick={() => handleSelect(option)}
-              >
-                {option}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {error && (
-        <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
-          <AlertTriangle size={12} className="mr-1" />
-          {error}
-        </p>
-      )}
-    </div>
-  )
-}
-
-// Image preview component
-const ImagePreview = ({ image, onRemove }) => {
-  return (
-    <div className="relative inline-block mr-2 mb-2">
-      <img 
-        src={URL.createObjectURL(image)} 
-        alt="Preview" 
-        className="h-20 w-20 object-cover rounded-md border border-neutral-200"
-      />
-      <button 
-        type="button"
-        onClick={onRemove}
-        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 h-6 w-6 flex items-center justify-center"
-      >
-        <X size={14} />
-      </button>
-    </div>
-  )
-}
-
-export default function AssistanceRequestForm() {
-  // Form state
-  const [formData, setFormData] = useState({
-    title: "",
-    localisation: "",
-    equipment_id: "",
-    description: "",
-    priority: ""
+  // State for toast notifications
+  const [toast, setToast] = useState({
+    visible: false,
+    message: "",
+    type: "success",
   })
-  
-  // For image uploads
-  const [images, setImages] = useState([])
+
+  // Form state
+  const [request, setRequest] = useState({
+    title: "",
+    location: "",
+    equipmentCode: "",
+    description: "",
+    urgencyLevel: "",
+  })
+
+  // Equipment state
+  const [equipmentList, setEquipmentList] = useState([])
+  const [isLoadingEquipment, setIsLoadingEquipment] = useState(false)
+  const [selectedEquipment, setSelectedEquipment] = useState(null)
+
+  // Photos state
+  const [photos, setPhotos] = useState([])
+  const [deletedPhotos, setDeletedPhotos] = useState([])
+
+  // Form validation
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitMessage, setSubmitMessage] = useState({ type: '', text: '' })
 
-  const handleInputChange = (field, value) => {
-    setFormData({ ...formData, [field]: value })
-    // Clear error for this field when user starts typing
-    if (errors[field]) {
-      setErrors({ ...errors, [field]: null })
+  // Available options for dropdowns with translations
+  const urgencyLevelOptions = [
+    t("requestForm", "urgencyLevels", "low"),
+    t("requestForm", "urgencyLevels", "medium"),
+    t("requestForm", "urgencyLevels", "high"),
+  ]
+
+  // Filter equipment based on location input
+  useEffect(() => {
+    const filterEquipment = async () => {
+      setIsLoadingEquipment(true)
+      try {
+        // Simulate API delay
+        await new Promise((resolve) => setTimeout(resolve, 300))
+
+        let filteredEquipment = [...mockEquipmentData]
+        
+        // If location is provided, filter equipment by location
+        if (request.location.trim()) {
+          const locationLower = request.location.toLowerCase()
+          filteredEquipment = mockEquipmentData.filter(
+            equipment => equipment.location.toLowerCase().includes(locationLower)
+          )
+        }
+
+        setEquipmentList(filteredEquipment)
+      } catch (error) {
+        console.error("Error filtering equipment:", error)
+        showToast(t("requestForm", "toast", "equipmentFetchError"), "error")
+      } finally {
+        setIsLoadingEquipment(false)
+      }
     }
-  }
 
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files)
-    
-    // Check if adding these files would exceed the limit
-    if (images.length + selectedFiles.length > 3) {
-      setErrors({ ...errors, images: "Maximum 3 photos allowed" })
-      return
-    }
-    
-    setImages([...images, ...selectedFiles])
-    
-    // Clear image error if it exists
-    if (errors.images) {
-      setErrors({ ...errors, images: null })
-    }
-  }
+    filterEquipment()
+  }, [request.location, t])
 
-  const removeImage = (index) => {
-    const updatedImages = [...images]
-    updatedImages.splice(index, 1)
-    setImages(updatedImages)
-  }
+  const handleInputChange = useCallback(
+    (field, value) => {
+      setRequest((prev) => ({ ...prev, [field]: value }))
+      // Clear error for this field when user starts typing
+      if (errors[field]) {
+        setErrors((prev) => ({ ...prev, [field]: null }))
+      }
+    },
+    [errors],
+  )
 
-  // Convert UI priority labels to backend format
-  const mapPriorityToBackend = (uiPriority) => {
-    const priorityMap = {
-      "Low - Peut attendre": "low",
-      "Medium - Dans les 48 heures": "medium",
-      "High - Intervention urgente": "high"
-    }
-    return priorityMap[uiPriority] || null
-  }
+  const handleEquipmentSelect = useCallback(
+    (code, equipment) => {
+      setRequest((prev) => {
+        // If location is empty and equipment is selected, auto-populate location
+        if (!prev.location && equipment) {
+          return {
+            ...prev,
+            equipmentCode: code,
+            location: equipment.location
+          }
+        }
+        return { ...prev, equipmentCode: code }
+      })
+      
+      setSelectedEquipment(equipment || null)
 
-  const validateForm = () => {
+      // Clear error if present
+      if (errors.equipmentCode) {
+        setErrors((prev) => ({ ...prev, equipmentCode: null }))
+      }
+    },
+    [errors],
+  )
+
+  const showToast = useCallback((message, type = "success") => {
+    setToast({
+      visible: true,
+      message,
+      type,
+    })
+  }, [])
+
+  const hideToast = useCallback(() => {
+    setToast((prev) => ({ ...prev, visible: false }))
+  }, [])
+
+  const validateForm = useCallback(() => {
     const newErrors = {}
-   
-    if (!formData.title.trim()) {
-      newErrors.title = "Ce champ est obligatoire"
-    }
-   
-    if (!formData.localisation.trim()) {
-      newErrors.localisation = "Ce champ est obligatoire"
-    }
 
-    if (!formData.equipment_id.trim()) {
-      newErrors.equipment_id = "Ce champ est obligatoire"
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = "Ce champ est obligatoire"
-    }
-
-    if (!formData.priority) {
-      newErrors.priority = "Veuillez sélectionner un niveau d'urgence"
-    }
-
-    if (images.length === 0) {
-      newErrors.images = "Au moins une photo est requise"
-    }
+    // Required fields with translated error messages
+    if (!request.title.trim()) newErrors.title = t("requestForm", "validation", "titleRequired")
+    if (!request.description.trim()) newErrors.description = t("requestForm", "validation", "descriptionRequired")
+    if (!request.urgencyLevel) newErrors.urgencyLevel = t("requestForm", "validation", "urgencyLevelRequired")
+    if (!request.equipmentCode) newErrors.equipmentCode = t("requestForm", "validation", "equipmentRequired")
+    // Location is now optional since it can be auto-populated
 
     return newErrors
-  }
+  }, [request, t])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-   
+
     const formErrors = validateForm()
     setErrors(formErrors)
 
     if (Object.keys(formErrors).length === 0) {
       setIsSubmitting(true)
-      setSubmitMessage({ type: '', text: '' })
-      
+
       try {
-        // Create FormData object to handle file uploads
-        const formDataToSend = new FormData()
-        
-        // Add text fields to FormData
-        formDataToSend.append('title', formData.title)
-        formDataToSend.append('localisation', formData.localisation)
-        formDataToSend.append('equipment_id', formData.equipment_id)
-        formDataToSend.append('description', formData.description)
-        formDataToSend.append('priority', mapPriorityToBackend(formData.priority))
-        
-        // Add images to FormData
-        // The backend expects a field named 'picture'
-        images.forEach(image => {
-          formDataToSend.append('picture', image)
-        })
-        
-        // Send POST request to backend API
-        const response = await axios.post('/requests', formDataToSend, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        
-        // Handle successful response
-        console.log('Request submitted successfully:', response.data)
-        setSubmitMessage({ 
-          type: 'success', 
-          text: 'Votre demande a été soumise avec succès!' 
-        })
-        console.log('Response:', response.data)
-        // Reset form after successful submission
-        setFormData({
-          title: "",
-          localisation: "",
-          equipment_id: "",
-          description: "",
-          priority: ""
-        })
-        setImages([])
-        
-      } catch (error) {
-        console.error('Error submitting request:', error)
-        
-        // Handle different types of errors
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          setSubmitMessage({ 
-            type: 'error', 
-            text: error.response.data.message || 'Une erreur est survenue lors de la soumission de votre demande.' 
-          })
-        } else if (error.request) {
-          // The request was made but no response was received
-          setSubmitMessage({ 
-            type: 'error', 
-            text: 'Impossible de se connecter au serveur. Veuillez vérifier votre connexion internet.' 
-          })
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          setSubmitMessage({ 
-            type: 'error', 
-            text: 'Une erreur est survenue lors de la préparation de votre demande.' 
-          })
+        // Create request data object matching backend requirements
+        const formData = new FormData()
+        formData.append("title", request.title)
+        formData.append("location", request.location)
+        formData.append("equipmentCode", request.equipmentCode)
+        formData.append("description", request.description)
+        formData.append("urgencyLevel", request.urgencyLevel)
+
+        // Append equipment details if available
+        if (selectedEquipment) {
+          formData.append("equipmentName", selectedEquipment.name)
+          formData.append("equipmentId", selectedEquipment.id)
         }
+
+        // Append photos if any
+        photos.forEach((photo, index) => {
+          formData.append(`photo${index}`, photo.file)
+        })
+
+        // Simulate API call
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        // Show success message
+        showToast(t("requestForm", "toast", "success"), "success")
+
+        // Reset form
+        setRequest({
+          title: "",
+          location: "",
+          equipmentCode: "",
+          description: "",
+          urgencyLevel: "",
+        })
+        setPhotos([])
+        setSelectedEquipment(null)
+      } catch (error) {
+        console.error("Error submitting request:", error)
+        showToast(error.message || t("requestForm", "toast", "submitError"), "error")
       } finally {
         setIsSubmitting(false)
       }
+    } else {
+      showToast(t("requestForm", "toast", "error"), "error")
     }
   }
 
-  // Updated urgency level options
-  const urgencyLevelOptions = [
-    "Low - Peut attendre",
-    "Medium - Dans les 48 heures",
-    "High - Intervention urgente"
-  ]
-
   // Current user for sidebar
   const currentUser = {
-    name: "MEHDAOUI Lokman",
-    role: "admin",
-    initials: "AD"
-  }  
+    name: "BOULAMI Amira",
+    role: "personal",
+    initials: "BA",
+  }
 
   return (
-    <div className="flex min-h-screen gap-3 bg-gray-50 dark:bg-neutral-900 ">
-      <Sidebar 
+    <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
+      {/* Toast Notification */}
+      <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
+
+      {/* Show sidebar */}
+      <Sidebar
         activeItem={"requests"}
         userRole={currentUser.role}
         userName={currentUser.name}
         userInitials={currentUser.initials}
       />
-      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-990 text-neutral-800 dark:text-neutral-200 w-full px-20 py-10">
-        <div className="p-4">
-          <div className="flex items-center gap-1 text-sm mb-2">
-            <span className="hover:underline cursor-pointer">Dashboard</span>
-            <span>&gt;</span>
-            <span className="hover:underline cursor-pointer">Tasks</span>
-            <span>&gt;</span>
-            <span>Nouvelle demande</span>
-          </div>
-         
-          <h1 className="text-2xl font-bold mb-3 text-neutral-900 dark:text-neutral-100">Demande d'assistance</h1>
-         
-          <div className="bg-neutral-50 dark:bg-neutral-990 rounded-lg p-4 mb-4">
-            {submitMessage.text && (
-              <div className={`mb-4 p-3 rounded-md ${submitMessage.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
-                {submitMessage.text}
-              </div>
-            )}
-            
-            <div className="flex flex-col items-start gap-1 mb-4 bg-card-bg rounded-sm p-4">
-              <div className="text-primary-500 dark:text-primary-400">
-                <AlertTriangle size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Formulaire de signalement</h2>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">Veuillez remplir les informations ci-dessous pour soumettre votre demande d'intervention.</p>
+
+      {/* Main content */}
+      <div className="pt-14 md:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
+        <div className="px-4 sm:px-10 lg:px-20 w-full">
+          <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
+            <div className="text-sm flex items-center font-inter">
+              <span>{t("requestForm", "breadcrumb", "dashboard")}</span>
+              <span className="mx-2 text-lg">›</span>
+              <span>{t("requestForm", "breadcrumb", "myRequests")}</span>
+              <span className="mx-2 text-lg">›</span>
+              <span>{t("requestForm", "breadcrumb", "newRequest")}</span>
             </div>
-           
-            <form onSubmit={handleSubmit}>
+            <h1 className="text-xl lg:text-2xl font-russo">{t("requestForm", "title")}</h1>
+          </div>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+            {/* Form Header */}
+            <FormSection
+              title={t("requestForm", "header", "title")}
+              description={t("requestForm", "header", "description")}
+              icon={<AlertCircle size={20} />}
+            >
+              {/* Empty section with just the title and description */}
+            </FormSection>
+
+            {/* Request Details */}
+            <div className="space-y-6">
               <FormField
-                title="Titre de la demande"
-                placeholder="Ex: Panne d'électricité dans la salle 129"
-                value={formData.title}
+                title={t("requestForm", "fields", "requestTitle", "label")}
+                placeholder={t("requestForm", "fields", "requestTitle", "placeholder")}
+                value={request.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 error={errors.title}
                 required={true}
               />
-             
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <AutocompleteField
+                  title={t("requestForm", "fields", "equipmentCode", "label")}
+                  placeholder={t("requestForm", "fields", "equipmentCode", "placeholder")}
+                  value={request.equipmentCode}
+                  onChange={handleEquipmentSelect}
+                  options={equipmentList}
+                  error={errors.equipmentCode}
+                  required={true}
+                  loading={isLoadingEquipment}
+                  emptyMessage={t("requestForm", "fields", "equipmentCode", "noEquipmentMessage")}
+                  noMatchMessage={t("requestForm", "fields", "equipmentCode", "noMatchMessage")}
+                />
+
+                <FormField
+                  title={t("requestForm", "fields", "location", "label")}
+                  placeholder={t("requestForm", "fields", "location", "placeholder")}
+                  value={request.location}
+                  onChange={(e) => handleInputChange("location", e.target.value)}
+                  icon={<MapPin size={16} />}
+                  error={errors.location}
+                  comment={t("requestForm", "fields", "location", "comment") || "Filter equipment by location or leave empty"}
+                />
+              </div>
+
               <FormField
-                title="Localisation"
-                placeholder="Ex: Bloc Pédagogique, Étage 1, Salle 129"
-                value={formData.localisation}
-                onChange={(e) => handleInputChange("localisation", e.target.value)}
-                error={errors.localisation}
-                required={true}
-              />
-             
-              <FormField
-                title="Equipment ID"
-                placeholder="Ex: 123456"
-                value={formData.equipment_id}
-                onChange={(e) => handleInputChange("equipment_id", e.target.value)}
-                error={errors.equipment_id}
-                required={true}
-              />
-             
-              <FormField
-                title="Description du problème"
-                placeholder="Décrivez le problème rencontré en détail..."
-                value={formData.description}
+                title={t("requestForm", "fields", "description", "label")}
+                placeholder={t("requestForm", "fields", "description", "placeholder")}
+                value={request.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 isTextarea={true}
                 error={errors.description}
                 required={true}
               />
-             
-              <DropdownField
-                title="Niveau d'urgence"
-                placeholder="Sélectionnez un niveau d'urgence"
-                value={formData.priority}
-                onChange={(value) => handleInputChange("priority", value)}
-                options={urgencyLevelOptions}
-                error={errors.priority}
-                required={true}
-              />
-             
-              <div className="mt-3 mb-3">
-                <h3 className="text-sm mb-1 text-neutral-800 dark:text-neutral-200">Photos <span className="text-red-500">*</span></h3>
-                <div className="flex items-center">
-                  <label className="cursor-pointer px-4 py-2 bg-primary-500 dark:bg-primary-400 text-white rounded-md hover:bg-primary-600 dark:hover:bg-primary-500 transition-colors flex items-center">
-                    <Upload size={16} className="mr-2" />
-                    Ajouter des photos
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleFileChange}
-                      className="hidden"
-                      disabled={images.length >= 3}
-                    />
-                  </label>
-                  <span className="ml-4 text-sm text-neutral-500 dark:text-neutral-400">
-                    {images.length}/3 photos (obligatoire)
-                  </span>
-                </div>
-                
-                {errors.images && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
-                    <AlertTriangle size={12} className="mr-1" />
-                    {errors.images}
-                  </p>
-                )}
-                
-                <div className="mt-3 flex flex-wrap">
-                  {images.map((image, index) => (
-                    <ImagePreview 
-                      key={index} 
-                      image={image} 
-                      onRemove={() => removeImage(index)} 
-                    />
-                  ))}
-                </div>
-              </div>
-             
-              <div className="flex justify-end gap-4 mt-6">
-                <button
-                  type="submit"
-                  className={`px-6 py-2 bg-primary-500 dark:bg-primary-400 text-white rounded-md hover:bg-primary-600 dark:hover:bg-primary-500 transition-colors flex items-center ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Soumission en cours...' : 'Soumettre la demande'}
-                </button>
-                <button
-                  type="button"
-                  className="px-6 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 rounded-md hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
-                  onClick={() => {
-                    setFormData({
-                      title: "",
-                      localisation: "",
-                      equipment_id: "",
-                      description: "",
-                      priority: ""
-                    })
-                    setImages([])
-                    setErrors({})
-                    setSubmitMessage({ type: '', text: '' })
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <PhotoUpload
+                  title={t("requestForm", "fields", "photos", "label")}
+                  addButtonText={t("requestForm", "fields", "photos", "addButton")}
+                  maxPhotosText={t("requestForm", "fields", "photos", "maxPhotos").replace("{count}", "3")}
+                  photos={photos}
+                  setPhotos={setPhotos}
+                  onDeletePhoto={(photoId) => {
+                    if (photoId) {
+                      setDeletedPhotos((prev) => [...prev, photoId])
+                    }
                   }}
-                >
-                  Annuler
-                </button>
+                  maxPhotos={3}
+                  error={errors.photos}
+                />
+
+                <DropdownField
+                  title={t("requestForm", "fields", "urgencyLevel", "label")}
+                  value={request.urgencyLevel}
+                  onChange={(value) => handleInputChange("urgencyLevel", value)}
+                  options={urgencyLevelOptions}
+                  error={errors.urgencyLevel}
+                  required={true}
+                  placeholder={t("requestForm", "fields", "urgencyLevel", "placeholder")}
+                />
               </div>
-            </form>
-          </div>
+            </div>
+
+            {/* Form Actions */}
+            <div className="flex justify-end mt-8">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`h-10 w-auto px-6 mr-3 text-sm bg-blue-500 text-white font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    {t("requestForm", "actions", "submitting")}
+                  </span>
+                ) : (
+                  t("requestForm", "actions", "submit")
+                )}
+              </button>
+
+              <button
+                type="button"
+                className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
+              >
+                {t("requestForm", "actions", "cancel")}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

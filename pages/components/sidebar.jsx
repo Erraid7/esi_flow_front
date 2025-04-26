@@ -82,7 +82,7 @@ const Sidebar = ({
 
   // When sidebar is open on mobile, add overlay and prevent scrolling
   useEffect(() => {
-    if (isMobileMenuOpen && window.innerWidth < 768) {
+    if (isMobileMenuOpen && window.innerWidth < 1024) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
@@ -96,7 +96,7 @@ const Sidebar = ({
   return (
     <>
       {/* Mobile Header - always visible on mobile */}
-<header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-card-bg backdrop-blur-sm shadow-md z-40 flex items-center justify-between px-4">
+<header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-card-bg backdrop-blur-sm shadow-md z-40 flex items-center justify-between px-4">
         <button 
           onClick={toggleMobileMenu} 
           className="p-2 rounded-md text-neutral-990 dark:text-neutral-50"
@@ -144,7 +144,7 @@ const Sidebar = ({
       {/* Overlay for mobile menu */}
       {isMobileMenuOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-[#0000007b] z-40 transition-all duration-300 ease-in-out"
+          className="lg:hidden fixed inset-0 bg-[#0000007b] z-40 transition-all duration-300 ease-in-out"
           onClick={toggleMobileMenu}
           aria-hidden="true"
         />
@@ -153,10 +153,10 @@ const Sidebar = ({
       {/* Main Sidebar */}
       <div 
         className={`fixed top-0 left-0 h-screen bg-neutral-50 dark:bg-neutral-990 shadow-lg transition-all duration-300 ease-in-out w-64 z-50 ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div className="bg-card-bg h-screen flex flex-col">
+        <div className="bg-card-bg h-screen flex flex-col justify-start">
           {/* Logo area - only visible on desktop */}
           <div className="mt-3 p-3 flex justify-center items-center">
             <img src="/logo-v.svg" alt="Logo" className='dark:hidden h-12 w-20' />
@@ -164,7 +164,7 @@ const Sidebar = ({
           </div>
 
           {/* Navigation */}
-          <nav className="mt-3 px-3 flex-1 overflow-y-auto">
+          <div className="mt-3 px-3 flex-1 overflow-y-auto">
             {navItems.map((item) => (
               <div
                 key={item.key}
@@ -182,10 +182,10 @@ const Sidebar = ({
                 <span>{t("sideNav", "items" , item.key)}</span>
               </div>
             ))}
-          </nav>
+          </div>
           
           {/* Language and dark mode toggles - only visible on desktop */}
-          <div className="hidden md:block px-4 py-3">
+          <div className="hidden lg:block px-4 py-3">
             <div className="flex items-center justify-center gap-4">
               {/* Dark Mode Toggle Button */}
               <button 
@@ -233,10 +233,10 @@ const Sidebar = ({
       </div>
 
       {/* Content spacing div to push content right when sidebar is present */}
-      <div className="hidden md:block w-64" />
+      <div className="hidden lg:block w-64" />
       
       {/* Mobile padding to account for the fixed header */}
-      <div className="md:hidden h-16" />
+      <div className="lg:hidden h-16" />
     </>
   );
 };
