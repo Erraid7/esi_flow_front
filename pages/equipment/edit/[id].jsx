@@ -9,10 +9,17 @@ import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
 import FormSection from "../../components/form_components/form_section"
 import DateField from "../../components/form_components/date_field"
+import axios from "axios"
+import { useParams, useRouter } from "next/navigation"
+
+
 
 // Main Component
 export default function EquipmentEditForm() {
   const { t } = useLanguage()
+  const params = useParams()
+  const router = useRouter()
+  const equipmentId = params?.id || "" // Get ID directly from params
 
   // State for toast notifications
   const [toast, setToast] = useState({
@@ -41,48 +48,91 @@ export default function EquipmentEditForm() {
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Available options for dropdowns
-  const typeOptions = ["Mechanical", "Electrical", "Hydraulic", "Pneumatic", "Electronic", "Other"]
-  const categoryOptions = ["Production", "Maintenance", "Safety", "Quality Control", "Logistics", "Office"]
-  const statusOptions = ["Operational", "Under Maintenance", "Out of Service", "Pending Installation", "Retired"]
+  // Available options for dropdowns - updated to match the model
+  const typeOptions = [
+    "Lightweight",
+    "Heavyweight",
+    "Motorcycle",
+    "Desktop",
+    "Laptop",
+    "Server",
+    "Router",
+    "Switch",
+    "Firewall",
+    "Projector",
+    "Printer",
+    "Scanner",
+    "Oscilloscope",
+    "3D Printer",
+    "Desk",
+    "Chair",
+    "Window",
+    "Door",
+    "Electromenager",
+    "Heating",
+    "Radiator",
+    "Air Conditioner",
+    "Other",
+  ]
+
+  const categoryOptions = [
+    "Vehicle",
+    "Computing Device",
+    "Networking Equipment",
+    "Storage Device",
+    "Multimedia Equipment",
+    "Office Equipment",
+    "Laboratory Equipment",
+    "Furniture",
+    "Building Component",
+    "Appliance",
+    "HVAC",
+    "Other",
+  ]
+
+  const statusOptions = ["working", "needs_maintenance", "out_of_service"]
 
   // Fetch equipment data
   useEffect(() => {
     const fetchEquipment = async () => {
+      if (!equipmentId) {
+        setIsLoading(false)
+        showToast("Equipment ID is missing", "error")
+        return
+      }
+
       setIsLoading(true)
       try {
-        // In a real application, you would get the equipment ID from the URL or props
-        // const equipmentId = params.id or props.equipmentId
-        const equipmentId = "123" // Mock ID for demonstration
+        // Fetch equipment data using the ID from the route
+        const response = await axios.get(`http://localhost:5000/equipments/${equipmentId}`)
+        const data = response.data
 
-        // Simulate API call to fetch equipment data
-        // In a real application, this would be a fetch call to your API
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Mock data for demonstration
-        const mockEquipmentData = {
-          id: equipmentId,
-          code: "EQ-2023-001",
-          type: "Mechanical",
-          category: "Production",
-          acquisitionDate: "2023-01-15",
-          commissioningDate: "2023-02-01",
-          location: "Building A, Floor 2",
-          status: "Operational",
-          description: "High-performance industrial equipment for manufacturing process.",
-        }
-
-        setEquipment(mockEquipmentData)
+        // Map the backend data to our form state
+        setEquipment({
+          id: data.id,
+          code: data.inventorie_code || "",
+          type: data.type || "",
+          category: data.category || "",
+          acquisitionDate: data.acquisition_date ? new Date(data.acquisition_date).toISOString().split("T")[0] : "",
+          commissioningDate: data.date_of_commissioning
+            ? new Date(data.date_of_commissioning).toISOString().split("T")[0]
+            : "",
+          location: data.localisation || "",
+          status: data.eqp_status || "",
+          description: data.documentation || "",
+        })
       } catch (error) {
         console.error("Error fetching equipment:", error)
-        showToast("Failed to load equipment data", "error")
+        showToast(error.response?.data?.message || "Failed to load equipment data", "error")
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchEquipment()
-  }, [])
+    if (equipmentId) {
+      fetchEquipment()
+    }
+  }, [equipmentId])
 
   const handleInputChange = useCallback(
     (field, value) => {
@@ -109,28 +159,27 @@ export default function EquipmentEditForm() {
 
   const validateForm = useCallback(() => {
     const newErrors = {}
-  
+
     // Required fields
-    if (!equipment.code.trim()) 
-      newErrors.code = t("equipmentEdit", "validation", "codeRequired")
-    if (!equipment.type) 
-      newErrors.type = t("equipmentEdit", "validation", "typeRequired")
-    if (!equipment.category) 
-      newErrors.category = t("equipmentEdit", "validation", "categoryRequired")
-    if (!equipment.acquisitionDate) 
-      newErrors.acquisitionDate = t("equipmentEdit", "validation", "acquisitionRequired")
-    if (!equipment.commissioningDate) 
+    if (!equipment.code.trim()) newErrors.code = t("equipmentEdit", "validation", "codeRequired")
+    if (!equipment.type) newErrors.type = t("equipmentEdit", "validation", "typeRequired")
+    if (!equipment.category) newErrors.category = t("equipmentEdit", "validation", "categoryRequired")
+    if (!equipment.acquisitionDate) newErrors.acquisitionDate = t("equipmentEdit", "validation", "acquisitionRequired")
+    if (!equipment.commissioningDate)
       newErrors.commissioningDate = t("equipmentEdit", "validation", "commissioningRequired")
-    if (!equipment.location.trim()) 
-      newErrors.location = t("equipmentEdit", "validation", "locationRequired")
-    if (!equipment.status) 
-      newErrors.status = t("equipmentEdit", "validation", "statusRequired")
-  
+    if (!equipment.location.trim()) newErrors.location = t("equipmentEdit", "validation", "locationRequired")
+    if (!equipment.status) newErrors.status = t("equipmentEdit", "validation", "statusRequired")
+
     return newErrors
   }, [equipment, t])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (!equipmentId) {
+      showToast("Equipment ID is missing", "error")
+      return
+    }
 
     const formErrors = validateForm()
     setErrors(formErrors)
@@ -141,32 +190,37 @@ export default function EquipmentEditForm() {
       try {
         // Create equipment data object matching backend requirements
         const equipmentData = {
-          id: equipment.id,
-          code: equipment.code,
+          inventorie_code: equipment.code,
           type: equipment.type,
           category: equipment.category,
-          acquisitionDate: equipment.acquisitionDate,
-          commissioningDate: equipment.commissioningDate,
-          location: equipment.location,
-          status: equipment.status,
-          description: equipment.description,
+          acquisition_date: equipment.acquisitionDate,
+          date_of_commissioning: equipment.commissioningDate,
+          localisation: equipment.location,
+          eqp_status: equipment.status,
+          documentation: equipment.description,
         }
 
-        // Simulate API call
-        // In a real application, this would be a PUT/PATCH request to your API
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Make the API call to update the equipment using the ID from the route
+        const response = await axios.put(`http://localhost:5000/equipments/${equipmentId}`, equipmentData)
 
         // Show success message
-        showToast("Equipment updated successfully", "success")
+        showToast(response.data.message || "Equipment updated successfully", "success")
+
+        // Optionally navigate back to equipment list after successful update
+        // setTimeout(() => router.push('/equipment'), 2000)
       } catch (error) {
         console.error("Error updating equipment:", error)
-        showToast(error.message || "Failed to update equipment", "error")
+        showToast(error.response?.data?.error || error.message || "Failed to update equipment", "error")
       } finally {
         setIsSubmitting(false)
       }
     } else {
       showToast("Please fill in all required fields", "error")
     }
+  }
+
+  const handleCancel = () => {
+    router.back()
   }
 
   // Current user for sidebar
@@ -330,6 +384,7 @@ export default function EquipmentEditForm() {
 
                 <button
                   type="button"
+                  onClick={handleCancel}
                   className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
                 >
                   {t("equipmentEdit", "actions", "cancel")}

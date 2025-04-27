@@ -1,15 +1,15 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import { MapPin} from "lucide-react"
+import { MapPin } from "lucide-react"
 import Toast from "../../components/form_components/toast"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
 import FormSection from "../../components/form_components/form_section"
 import DateField from "../../components/form_components/date_field"
-
+import axios from "axios"
 
 // Main Component
 export default function EquipmentAddForm() {
@@ -39,9 +39,50 @@ export default function EquipmentAddForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Available options for dropdowns
-  const typeOptions = ["Mechanical", "Electrical", "Hydraulic", "Pneumatic", "Electronic", "Other"]
-  const categoryOptions = ["Production", "Maintenance", "Safety", "Quality Control", "Logistics", "Office"]
-  const statusOptions = ["Operational", "Under Maintenance", "Out of Service", "Pending Installation", "Retired"]
+  const typeOptions = [
+    "Lightweight",
+    "Heavyweight",
+    "Motorcycle",
+    "Desktop",
+    "Laptop",
+    "Server",
+    "Router",
+    "Switch",
+    "Firewall",
+    "Projector",
+    "Printer",
+    "Scanner",
+    "Oscilloscope",
+    "3D Printer",
+    "Desk",
+    "Chair",
+    "Window",
+    "Door",
+    "Electromenager",
+    "Heating",
+    "Radiator",
+    "Air Conditioner",
+    "Other",
+  ]
+
+  // Update the categoryOptions array to match the backend ENUM
+  const categoryOptions = [
+    "Vehicle",
+    "Computing Device",
+    "Networking Equipment",
+    "Storage Device",
+    "Multimedia Equipment",
+    "Office Equipment",
+    "Laboratory Equipment",
+    "Furniture",
+    "Building Component",
+    "Appliance",
+    "HVAC",
+    "Other",
+  ]
+
+  // Update the statusOptions array to match the backend ENUM
+  const statusOptions = ["working", "needs_maintenance", "out_of_service"]
 
   const handleInputChange = useCallback(
     (field, value) => {
@@ -68,23 +109,17 @@ export default function EquipmentAddForm() {
 
   const validateForm = useCallback(() => {
     const newErrors = {}
-  
+
     // Required fields
-    if (!equipment.code.trim()) 
-      newErrors.code = t("equipmentEdit", "validation", "codeRequired")
-    if (!equipment.type) 
-      newErrors.type = t("equipmentEdit", "validation", "typeRequired")
-    if (!equipment.category) 
-      newErrors.category = t("equipmentEdit", "validation", "categoryRequired")
-    if (!equipment.acquisitionDate) 
-      newErrors.acquisitionDate = t("equipmentEdit", "validation", "acquisitionRequired")
-    if (!equipment.commissioningDate) 
+    if (!equipment.code.trim()) newErrors.code = t("equipmentEdit", "validation", "codeRequired")
+    if (!equipment.type) newErrors.type = t("equipmentEdit", "validation", "typeRequired")
+    if (!equipment.category) newErrors.category = t("equipmentEdit", "validation", "categoryRequired")
+    if (!equipment.acquisitionDate) newErrors.acquisitionDate = t("equipmentEdit", "validation", "acquisitionRequired")
+    if (!equipment.commissioningDate)
       newErrors.commissioningDate = t("equipmentEdit", "validation", "commissioningRequired")
-    if (!equipment.location.trim()) 
-      newErrors.location = t("equipmentEdit", "validation", "locationRequired")
-    if (!equipment.status) 
-      newErrors.status = t("equipmentEdit", "validation", "statusRequired")
-  
+    if (!equipment.location.trim()) newErrors.location = t("equipmentEdit", "validation", "locationRequired")
+    if (!equipment.status) newErrors.status = t("equipmentEdit", "validation", "statusRequired")
+
     return newErrors
   }, [equipment, t])
 
@@ -100,18 +135,19 @@ export default function EquipmentAddForm() {
       try {
         // Create equipment data object matching backend requirements
         const equipmentData = {
-          code: equipment.code,
+          inventorie_code: equipment.code,
           type: equipment.type,
           category: equipment.category,
-          acquisitionDate: equipment.acquisitionDate,
-          commissioningDate: equipment.commissioningDate,
-          location: equipment.location,
-          status: equipment.status,
-          description: equipment.description,
+          acquisition_date: equipment.acquisitionDate,
+          date_of_commissioning: equipment.commissioningDate,
+          localisation: equipment.location,
+          eqp_status: equipment.status,
+          documentation: equipment.description,
+          maintenance_history: [],
         }
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Make the actual API call to the backend
+        const response = await axios.post("http://localhost:5000/equipments", equipmentData)
 
         // Show success message
         showToast("Equipment added successfully", "success")
@@ -129,7 +165,7 @@ export default function EquipmentAddForm() {
         })
       } catch (error) {
         console.error("Error adding equipment:", error)
-        showToast(error.message || "Failed to add equipment", "error")
+        showToast(error.response?.data?.error || error.message || "Failed to add equipment", "error")
       } finally {
         setIsSubmitting(false)
       }
@@ -149,7 +185,7 @@ export default function EquipmentAddForm() {
     <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
-  
+
       {/* Show sidebar */}
       <Sidebar
         activeItem={"equipment"}
@@ -157,7 +193,7 @@ export default function EquipmentAddForm() {
         userName={currentUser.name}
         userInitials={currentUser.initials}
       />
-  
+
       {/* Main content */}
       <div className="pt-14 lg:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
         <div className="px-4 sm:px-10 lg:px-20 w-full">
@@ -169,7 +205,7 @@ export default function EquipmentAddForm() {
             </div>
             <h1 className="text-xl lg:text-2xl font-russo">{t("equipmentEdit", "title", "add")}</h1>
           </div>
-  
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-8">
             {/* Equipment Information */}
             <FormSection title={t("equipmentEdit", "sections", "equipmentInfo")}>
@@ -184,7 +220,7 @@ export default function EquipmentAddForm() {
                 />
               </div>
             </FormSection>
-  
+
             {/* Record Details */}
             <FormSection title={t("equipmentEdit", "sections", "recordDetails")}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -192,22 +228,22 @@ export default function EquipmentAddForm() {
                   title={t("equipmentEdit", "fields", "type")}
                   value={equipment.type}
                   onChange={(value) => handleInputChange("type", value)}
-                  options={typeOptions.map(type => t("equipmentEdit", "typeOptions", typeOptions.indexOf(type)))}
+                  options={typeOptions}
                   error={errors.type}
                   required={true}
                   placeholder={t("equipmentEdit", "fields", "typePlaceholder")}
                 />
-  
+
                 <DropdownField
                   title={t("equipmentEdit", "fields", "category")}
                   value={equipment.category}
                   onChange={(value) => handleInputChange("category", value)}
-                  options={categoryOptions.map(category => t("equipmentEdit", "categoryOptions", categoryOptions.indexOf(category)))}
+                  options={categoryOptions}
                   error={errors.category}
                   required={true}
                   placeholder={t("equipmentEdit", "fields", "categoryPlaceholder")}
                 />
-  
+
                 <DateField
                   title={t("equipmentEdit", "fields", "acquisition")}
                   value={equipment.acquisitionDate}
@@ -215,7 +251,7 @@ export default function EquipmentAddForm() {
                   error={errors.acquisitionDate}
                   required={true}
                 />
-  
+
                 <DateField
                   title={t("equipmentEdit", "fields", "commissioning")}
                   value={equipment.commissioningDate}
@@ -223,7 +259,7 @@ export default function EquipmentAddForm() {
                   error={errors.commissioningDate}
                   required={true}
                 />
-  
+
                 <FormField
                   title={t("equipmentEdit", "fields", "location")}
                   placeholder={t("equipmentEdit", "fields", "locationPlaceholder")}
@@ -233,18 +269,18 @@ export default function EquipmentAddForm() {
                   error={errors.location}
                   required={true}
                 />
-  
+
                 <DropdownField
                   title={t("equipmentEdit", "fields", "status")}
                   value={equipment.status}
                   onChange={(value) => handleInputChange("status", value)}
-                  options={statusOptions.map(status => t("equipmentEdit", "statusOptions", statusOptions.indexOf(status)))}
+                  options={statusOptions}
                   error={errors.status}
                   required={true}
                   placeholder={t("equipmentEdit", "fields", "statusPlaceholder")}
                 />
               </div>
-  
+
               <FormField
                 title={t("equipmentEdit", "fields", "description")}
                 placeholder={t("equipmentEdit", "fields", "descriptionPlaceholder")}
@@ -254,7 +290,7 @@ export default function EquipmentAddForm() {
                 error={errors.description}
               />
             </FormSection>
-  
+
             {/* Form Actions */}
             <div className="flex justify-end mt-8">
               <button
@@ -290,7 +326,7 @@ export default function EquipmentAddForm() {
                   t("equipmentEdit", "actions", "create")
                 )}
               </button>
-  
+
               <button
                 type="button"
                 className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
