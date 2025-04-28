@@ -268,12 +268,7 @@ export const fr = {
       settings: "Paramètres",
     },
     logout: "Déconnexion",
-    personal: "Personnel",
-    roles: {
-      admin: "Administrateur",
-      technician: "Technicien",
-      user: "Utilisateur",
-    }
+    personal: "Personnel"
   },
   // Add this to your fr object
   equipmentEdit: {
@@ -355,216 +350,37 @@ export const fr = {
     },
     loading: "Chargement des données d'équipement..."
   },
-  // Translations for the request form
-  requestForm: {
-    editTitle: "Modifier la demande",
-    breadcrumb: {
-      dashboard: "Tableau de bord",
-      myRequests: "Mes demandes",
-      newRequest: "Nouvelle demande",
-      editRequest: "Modifier la demande"
-    },
-    title: "Formulaire de demande",
-    header: {
-      title: "Formulaire de signalement",
-      description: "Veuillez remplir les informations ci-dessous pour soumettre votre demande d'intervention.",
-      editTitle: "Formulaire de modification de demande",
-      editDescription: "Mettez à jour les informations pour cette demande d'intervention."
-    },
-    metadata: {
-      requestId: "ID de la demande",
-      createdAt: "Créée le",
-      lastUpdated: "Dernière mise à jour",
-      currentStatus: "Statut"
-    },
-    fields: {
-      requestTitle: {
-        label: "Titre de la demande",
-        placeholder: "Ex: Panne d'électricité dans la salle 302"
+    userList: {
+      path: {
+        1: "Tableau de bord",
+        2: "Liste des utilisateurs"
       },
-      location: {
-        label: "Localisation",
-        placeholder: "Ex: Bâtiment A, Étage 3, Salle 302",
-        selectPlaceholder: "Sélectionnez un emplacement"
+      cards: {
+        titel: "Gestion des utilisateurs",
+        sub: {
+          1: "Utilisateurs totaux",
+          2: "Équipe de maintenance",
+          3: "Administrateurs"
+        }
       },
-      equipmentCode: {
-        label: "Code d'équipement",
-        placeholder: "Ex: 123456",
-        noEquipmentMessage: "Aucun équipement trouvé pour cet emplacement",
-        noMatchMessage: "Aucun équipement ne correspond à votre recherche"
+      searchbar: {
+        titel: "Tableau d'Utilisateurs",
+        placeholder: "Rechercher...",
+        buttons: {
+          1: "Exporter le tableau",
+          2: "Effacer les filtres",
+          3: "Ajouter un utilisateur"
+        }
       },
-      description: {
-        label: "Description du problème",
-        placeholder: "Décrivez le problème rencontré en détail..."
-      },
-      urgencyLevel: {
-        label: "Niveau d'urgence",
-        placeholder: "Sélectionnez un niveau d'urgence"
-      },
-      photos: {
-        label: "Photos (optionnel)",
-        addButton: "Ajouter des photos",
-        maxPhotos: "Maximum {count} photos"
-      },
-      status: {
-        label: "Statut",
-        placeholder: "Sélectionnez un statut"
+      tablehead: {
+        1: "Nom complet",
+        2: "Profession",
+        3: "E-mail",
+        4: "Numéro de téléphone",
+        5: "Rôle",
+        6: "Actions",
+        clearfilter: "Effacer le filtre"
       }
-    },
-    urgencyLevels: {
-      low: "Faible",
-      medium: "Moyen",
-      high: "Élevé"
-    },
-    statusOptions: {
-      pending: "En attente",
-      inProgress: "En cours",
-      completed: "Terminé",
-      cancelled: "Annulé"
-    },
-    actions: {
-      submit: "Soumettre la demande",
-      submitting: "Soumission...",
-      cancel: "Annuler",
-      update: "Mettre à jour la demande",
-      updating: "Mise à jour..."
-    },
-    validation: {
-      titleRequired: "Le titre de la demande est requis",
-      locationRequired: "La localisation est requise",
-      descriptionRequired: "La description du problème est requise",
-      urgencyLevelRequired: "Le niveau d'urgence est requis",
-      statusRequired: "Le statut est requis",
-      equipmentRequired: "La sélection d'équipement est requise"
-    },
-    toast: {
-      success: "Demande soumise avec succès",
-      error: "Veuillez remplir tous les champs obligatoires",
-      submitError: "Échec de la soumission de la demande",
-      updateSuccess: "Demande mise à jour avec succès",
-      updateError: "Échec de la mise à jour de la demande",
-      fetchError: "Échec du chargement des données de la demande",
-      equipmentFetchError: "Échec du chargement des données d'équipement"
-    },
-    loading: "Chargement des données de la demande..."
-  },
-  // Add translations for task forms
-  taskForm: {
-    breadcrumb: {
-      dashboard: "Tableau de bord",
-      tasks: "Tâches",
-      addTask: "Ajouter une nouvelle tâche",
-      editTask: "Modifier la tâche"
-    },
-    title: {
-      add: "Ajouter une nouvelle tâche",
-      edit: "Modifier la tâche"
-    },
-    metadata: {
-      taskId: "ID de la tâche",
-      createdAt: "Créée le",
-      lastUpdated: "Dernière mise à jour",
-      createdBy: "Créée par"
-    },
-    sections: {
-      taskDetails: "Détails de la tâche",
-      requestInfo: "Informations de la demande"
-    },
-    fields: {
-      name: {
-        label: "Nom de la tâche",
-        placeholder: "Entrez le nom de la tâche"
-      },
-      assignTo: {
-        label: "Assigner à",
-        placeholder: "Sélectionnez le personnel ou l'équipe",
-        noPersonnelMessage: "Aucun personnel disponible",
-        noMatchMessage: "Aucun personnel correspondant trouvé"
-      },
-      taskType: {
-        label: "Type de tâche",
-        placeholder: "Sélectionnez le type de tâche"
-      },
-      deadline: {
-        label: "Date limite"
-      },
-      status: {
-        label: "Statut",
-        placeholder: "Sélectionnez le statut"
-      },
-      report: {
-        label: "Rapport",
-        placeholder: "Fournissez une description détaillée de la tâche de maintenance"
-      },
-      equipmentCode: {
-        label: "Code d'équipement",
-        placeholder: "Ex: 123456",
-        noEquipmentMessage: "Aucun équipement disponible",
-        noMatchMessage: "Aucun équipement correspondant trouvé"
-      },
-      location: {
-        label: "Emplacement",
-        placeholder: "Précisez l'emplacement",
-        comment: "Filtrez l'équipement par emplacement ou laissez vide"
-      },
-      description: {
-        label: "Description",
-        placeholder: "Fournissez une description détaillée de la tâche de maintenance"
-      },
-      priority: {
-        label: "Priorité",
-        placeholder: "Sélectionnez la priorité"
-      },
-      photos: {
-        label: "Photos (optionnel)",
-        addButton: "Ajouter des photos",
-        maxPhotos: "Maximum 3 photos"
-      }
-    },
-    taskTypes: [
-      "Maintenance",
-      "Réparation",
-      "Installation",
-      "Inspection"
-    ],
-    statusOptions: [
-      "Non commencé",
-      "En cours",
-      "En attente",
-      "Terminé",
-      "Annulé"
-    ],
-    priorityOptions: [
-      "Faible",
-      "Moyen",
-      "Élevé",
-      "Critique"
-    ],
-    actions: {
-      create: "Créer",
-      update: "Mettre à jour",
-      cancel: "Annuler",
-      creating: "Création...",
-      updating: "Mise à jour..."
-    },
-    validation: {
-      nameRequired: "Le nom de la tâche est requis",
-      assignToRequired: "L'assignation est requise",
-      statusRequired: "Le statut est requis",
-      deadlineRequired: "La date limite est requise",
-      equipmentCodeRequired: "Le code d'équipement est requis",
-      priorityRequired: "La priorité est requise",
-      taskTypeRequired: "Le type de tâche est requis",
-      locationRequired: "L'emplacement est requis"
-    },
-    toast: {
-      createSuccess: "Tâche créée avec succès",
-      updateSuccess: "Tâche mise à jour avec succès",
-      error: "Veuillez remplir tous les champs obligatoires",
-      loadError: "Échec du chargement des données de la tâche",
-      equipmentError: "Échec du chargement des données d'équipement",
-      userError: "Échec du chargement des données des utilisateurs"
-    },
-    loading: "Chargement des données de la tâche..."
-  }
-};
+    }
+    
+}
