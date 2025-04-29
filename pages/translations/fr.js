@@ -570,5 +570,164 @@ export const fr = {
       userError: "Échec du chargement des données des utilisateurs"
     },
     loading: "Chargement des données de la tâche..."
-  }
+  },
+  
+  userList: {
+    path: {
+      1: "Tableau de bord",
+      2: "Liste des utilisateurs"
+    },
+    cards: {
+      titel: "Gestion des utilisateurs",
+      sub: {
+        1: "Utilisateurs totaux",
+        2: "Équipe de maintenance",
+        3: "Administrateurs"
+      }
+    },
+    searchbar: {
+      titel: "Tableau d'Utilisateurs",
+      placeholder: "Rechercher...",
+      buttons: {
+        1: "Exporter le tableau",
+        2: "Effacer les filtres",
+        3: "Ajouter un utilisateur"
+      }
+    },
+    tablehead: {
+      1: "Nom complet",
+      2: "Profession",
+      3: "E-mail",
+      4: "Numéro de téléphone",
+      5: "Rôle",
+      6: "Actions",
+      clearfilter: "Effacer le filtre"
+    },
+    deleteConfirm : "Confirmer la suppression",
+    deleteDescription : "Êtes-vous sûr de vouloir supprimer l'utilisateur {name} ? Cette action ne peut pas être annulée.",
+    deleteUserDetails : "Détails de l'utilisateur",
+    deleteUserName : "Nom :",
+    deleteUserEmail : "Email :",
+    deleteUserRole : "Rôle :",
+    deleteCancel : "Annuler",
+    deleteConfirmButton : "Supprimer l'utilisateur",
+    deleteError : "Échec de la suppression de l'utilisateur"
+  },
+  
+  requestList:{
+    path: {
+      dashboard: "Tableau de bord",
+      requests: "Demandes de maintenance",
+    },
+    cards: {
+      title: "Gestion des demandes de maintenance",
+      totalRequests: "Demandes totales",
+      pendingRequests: "Demandes en attente",
+      completedRequests: "Demandes terminées",
+    },
+    searchbar: {
+      title: "Liste des demandes de maintenance",
+      placeholder: "Rechercher des demandes...",
+      addButton: "Ajouter une demande",
+      buttons: {
+        export: "Exporter",
+        clearFilters: "Effacer les filtres",
+      },
+    },
+    columns: {
+      id: "ID de demande",
+      title: "Titre",
+      location: "Emplacement",
+      requestedBy: "Demandé par",
+      urgencyLevel: "Urgence",
+      status: "Statut",
+      createdAt: "Créé le",
+    },
+    tablehead: {
+      clearfilter: "Effacer le filtre",
+    },
+    toast: {
+      fetchError: "Échec du chargement des demandes",
+      deleteSuccess: "Demande supprimée avec succès",
+      deleteError: "Échec de la suppression de la demande",
+    },
+  },
+
+
+equipmentList: {
+        path: {
+          1: "Tableau de bord",
+          2: "Équipement",
+        },
+        cards: {
+          title: "Gestion des Équipements",
+          sub: {
+            1: "Équipement Total",
+            2: "Nécessite Maintenance",
+            3: "En Fonctionnement",
+            4: "Hors Service",
+          },
+        },
+        tablehead: {
+          1: "Code d'Inventaire",
+          2: "ID",
+          3: "Type",
+          4: "Catégorie",
+          5: "Emplacement",
+          6: "Date d'acquisition",
+          7: "Statut",
+        },
+        searchbar: {
+          title: "Table des Équipements",
+          buttons: {
+            1: "Rechercher",
+            2: "Réinitialiser",
+            3: "Ajouter Nouveau",
+          },
+        },
+      },
+      tasksList: {
+        path: {
+          1: "Tableau de bord",
+          2: "Tâches",
+        },
+        cards: {
+          title: "Gestion des Tâches",
+          sub: {
+            1: "En attente",
+            2: "En cours",
+            3: "Terminées",
+            4: "À faire",
+          },
+        },
+        tablehead: {
+          1: "Nom de la tâche",
+          2: "Emplacement",
+          3: "Responsable",
+          4: "Priorité",
+          5: "Échéance",
+          6: "Statut",
+        },
+        searchbar: {
+          title: "Tableau des Tâches",
+          placeholder: "Entrez du texte pour rechercher",
+          buttons: {
+            1: "Rechercher",
+            2: "Réinitialiser",
+            3: "Ajouter une Tâche",
+          },
+        },
+        status: {
+          1: "En attente",
+          2: "En cours",
+          3: "Terminées",
+          4: "À faire",
+        },
+        priority: {
+          1: "Faible",
+          2: "Moyenne",
+          3: "Élevée",
+        },
+      },
+      uniquetache:"task"
 };

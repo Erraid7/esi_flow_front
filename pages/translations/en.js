@@ -573,5 +573,166 @@ export const en = {
       userError: "Failed to load users data"
     },
     loading: "Loading task data..."
-  }
-};
+  },
+  
+  userList:{
+    path:{
+      1:"Dashboard",
+      2:"User List"
+    },
+    cards:{
+      titel:"User Management",
+      sub:{
+        1:"Total Users",
+        2:"Maintenance Team",
+        3:"Administrators"
+      }
+    },
+    searchbar:{
+      titel:"Users Table",
+      placeholder:"Search...",
+      buttons:{
+        1:"Export Table",
+        2:"Clear Filters",
+        3:"Add User"
+      }
+    },
+    tablehead:{
+      1:"Full Name",
+      2:"Profession",
+      3:"E-mail",
+      4:"Phone Number",
+      5:"Role",
+      6:"Actions",
+      clearfilter:"Clear filter",
+           // New translations for delete confirmation
+     deleteConfirm : "Confirm Deletion",
+     deleteDescription : "Are you sure you want to delete the user {name}? This action cannot be undone.",
+     deleteUserDetails : "User Details",
+     deleteUserName : "Name:",
+     deleteUserEmail : "Email:",
+     deleteUserRole : "Role:",
+     deleteCancel : "Cancel",
+     deleteConfirmButton : "Delete User",
+     deleteError : "Failed to delete user"
+    
+    }
+  },
+  
+  requestList:{
+    path: {
+      dashboard: "Dashboard",
+      requests: "Maintenance Requests",
+    },
+    cards: {
+      title: "Maintenance Request Management",
+      totalRequests: "Total Requests",
+      pendingRequests: "Pending Requests",
+      completedRequests: "Completed Requests",
+    },
+    searchbar: {
+      title: "Maintenance Request List",
+      placeholder: "Search requests...",
+      addButton: "Add Request",
+      buttons: {
+        export: "Export",
+        clearFilters: "Clear Filters",
+      },
+    },
+    columns: {
+      id: "Request ID",
+      title: "Title",
+      location: "Location",
+      requestedBy: "Requested By",
+      urgencyLevel: "Urgency",
+      status: "Status",
+      createdAt: "Created At",
+    },
+    tablehead: {
+      clearfilter: "Clear Filter",
+    },
+    toast: {
+      fetchError: "Failed to load requests",
+      deleteSuccess: "Request deleted successfully",
+      deleteError: "Failed to delete request",
+    },
+  },
+
+
+ equipmentList: {
+      path: {
+        1: "Dashboard",
+        2: "Equipment",
+      },
+      cards: {
+        title: "Equipment Management",
+        sub: {
+          1: "Total Equipment",
+          2: "Needs Maintenance",
+          3: "Working",
+          4: "Out of Service",
+        },
+      },
+      tablehead: {
+        1: "Inventory Code",
+        2: "ID",
+        3: "Type",
+        4: "Category",
+        5: "Location",
+        6: "Acquisition date",
+        7: "Status",
+      },
+      searchbar: {
+        title: "Equipment Table",
+        buttons: {
+          1: "Search",
+          2: "Reset",
+          3: "Add New",
+        },
+      },
+    },
+    tasksList: {
+      path: {
+        1: "Dashboard",
+        2: "Tasks",
+      },
+      cards: {
+        title: "Tasks Management",
+        sub: {
+          1: "Pending",
+          2: "In Progress",
+          3: "Completed",
+          4: "To Do",
+        },
+      },
+      tablehead: {
+        1: "Task name",
+        2: "Location",
+        3: "Responsible",
+        4: "Priority",
+        5: "Deadline",
+        6: "Status",
+      },
+      searchbar: {
+        title: "Task Table",
+        placeholder: "Enter text to search",
+        buttons: {
+          1: "Search",
+          2: "Reset",
+          3: "Add Task",
+        },
+      },
+      status: {
+        1: "Pending",
+        2: "In Progress",
+        3: "Completed",
+        4: "To Do",
+      },
+      priority: {
+        1: "Low",
+        2: "Medium",
+        3: "High",
+      },
+    },
+    uniquetache:"tache"
+}

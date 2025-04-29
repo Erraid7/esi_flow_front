@@ -3,36 +3,23 @@
 import { useState, useEffect, useCallback } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import { AlertCircle, MapPin } from 'lucide-react'
+import { AlertCircle, MapPin } from "lucide-react"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
 import AutocompleteField from "../../components/form_components/autocomplete_field"
 import PhotoUpload from "../../components/form_components/photoupload_field"
 import Toast from "../../components/form_components/toast"
 import FormSection from "../../components/form_components/form_section"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { parseCookies } from 'nookies' // Make sure to install: npm install nookies
 
-// Mock equipment data
-const mockEquipmentData = [
-  { id: "1", code: "EQ-001", name: "Projector", location: "Building A, Floor 1" },
-  { id: "2", code: "EQ-002", name: "Smart Board", location: "Building A, Floor 1" },
-  { id: "3", code: "EQ-003", name: "Computer", location: "Building A, Floor 1" },
-  { id: "4", code: "EQ-004", name: "Printer", location: "Building A, Floor 2" },
-  { id: "5", code: "EQ-005", name: "Scanner", location: "Building A, Floor 2" },
-  { id: "6", code: "EQ-006", name: "Air Conditioner", location: "Building A, Floor 3" },
-  { id: "7", code: "EQ-007", name: "Projector", location: "Building A, Floor 3" },
-  { id: "8", code: "EQ-008", name: "Microscope", location: "Building B, Floor 1" },
-  { id: "9", code: "EQ-009", name: "Laboratory Equipment", location: "Building B, Floor 1" },
-  { id: "10", code: "EQ-010", name: "Whiteboard", location: "Building B, Floor 2" },
-  { id: "11", code: "EQ-011", name: "Sound System", location: "Building C, Floor 1" },
-  { id: "12", code: "EQ-012", name: "Gym Equipment", location: "Gymnasium" },
-  { id: "13", code: "EQ-013", name: "Coffee Machine", location: "Cafeteria" },
-  { id: "14", code: "EQ-014", name: "Book Scanner", location: "Library" },
-  { id: "15", code: "EQ-015", name: "Chemistry Equipment", location: "Laboratory" },
-]
+// API base URL - adjust as needed for different environments
 
 // Main Component
 export default function RequestAddForm() {
   const { t } = useLanguage()
+  const router = useRouter()
 
   // State for toast notifications
   const [toast, setToast] = useState({
@@ -51,6 +38,7 @@ export default function RequestAddForm() {
   })
 
   // Equipment state
+  const [allEquipment, setAllEquipment] = useState([])
   const [equipmentList, setEquipmentList] = useState([])
   const [isLoadingEquipment, setIsLoadingEquipment] = useState(false)
   const [selectedEquipment, setSelectedEquipment] = useState(null)
@@ -58,47 +46,68 @@ export default function RequestAddForm() {
   // Photos state
   const [photos, setPhotos] = useState([])
   const [deletedPhotos, setDeletedPhotos] = useState([])
+  const [uploadingPhotos, setUploadingPhotos] = useState(false)
 
   // Form validation
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Available options for dropdowns with translations
-  const urgencyLevelOptions = [
-    t("requestForm", "urgencyLevels", "low"),
-    t("requestForm", "urgencyLevels", "medium"),
-    t("requestForm", "urgencyLevels", "high"),
-  ]
+  const urgencyLevelOptions = ["low", "medium", "high"]
 
-  // Filter equipment based on location input
+  // Fetch equipment data from API
   useEffect(() => {
-    const filterEquipment = async () => {
+    const fetchEquipment = async () => {
       setIsLoadingEquipment(true)
       try {
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 300))
-
-        let filteredEquipment = [...mockEquipmentData]
+        // Fetch equipment from your API
+        const response = await axios.get("http://localhost:5000/equipments")
+           console.log("API response:", response.data)
+        // Format equipment data for display
+        const formattedEquipment = response.data.map((equip) => ({
+          id: equip.id,
+          code: equip.inventorie_code || equip.code,
+          type: equip.type, 
+          location: equip.localisation || equip.location,
+        }))
         
-        // If location is provided, filter equipment by location
-        if (request.location.trim()) {
-          const locationLower = request.location.toLowerCase()
-          filteredEquipment = mockEquipmentData.filter(
-            equipment => equipment.location.toLowerCase().includes(locationLower)
-          )
-        }
-
-        setEquipmentList(filteredEquipment)
+        console.log("Equipment data fetched:", formattedEquipment[0])
+        setAllEquipment(formattedEquipment)
+        setEquipmentList(formattedEquipment)
       } catch (error) {
-        console.error("Error filtering equipment:", error)
+        console.error("Error fetching equipment:", error)
         showToast(t("requestForm", "toast", "equipmentFetchError"), "error")
+        // Fallback to empty list
+        setAllEquipment([])
+        setEquipmentList([])
       } finally {
         setIsLoadingEquipment(false)
       }
     }
 
+    fetchEquipment()
+  }, [t])
+
+  // Filter equipment based on location input
+  useEffect(() => {
+    const filterEquipment = () => {
+      if (!request.location.trim()) {
+        // If location is empty, show all equipment
+        setEquipmentList(allEquipment)
+        return
+      }
+
+      // Filter equipment by location
+      const locationLower = request.location.toLowerCase()
+      const filtered = allEquipment.filter(
+        (equipment) => equipment.location && equipment.location.toLowerCase().includes(locationLower),
+      )
+
+      setEquipmentList(filtered)
+    }
+
     filterEquipment()
-  }, [request.location, t])
+  }, [request.location, allEquipment])
 
   const handleInputChange = useCallback(
     (field, value) => {
@@ -115,16 +124,17 @@ export default function RequestAddForm() {
     (code, equipment) => {
       setRequest((prev) => {
         // If location is empty and equipment is selected, auto-populate location
-        if (!prev.location && equipment) {
+        console.log(equipment);
+        if (!prev.location && equipment && equipment.location) {
           return {
             ...prev,
             equipmentCode: code,
-            location: equipment.location
+            location: equipment.location,
           }
         }
         return { ...prev, equipmentCode: code }
       })
-      
+
       setSelectedEquipment(equipment || null)
 
       // Clear error if present
@@ -154,11 +164,45 @@ export default function RequestAddForm() {
     if (!request.title.trim()) newErrors.title = t("requestForm", "validation", "titleRequired")
     if (!request.description.trim()) newErrors.description = t("requestForm", "validation", "descriptionRequired")
     if (!request.urgencyLevel) newErrors.urgencyLevel = t("requestForm", "validation", "urgencyLevelRequired")
-    if (!request.equipmentCode) newErrors.equipmentCode = t("requestForm", "validation", "equipmentRequired")
-    // Location is now optional since it can be auto-populated
+    if (!selectedEquipment.id) newErrors.equipmentCode = t("requestForm", "validation", "equipmentRequired")
+    if (!request.location.trim()) newErrors.location = t("requestForm", "validation", "locationRequired")
 
     return newErrors
-  }, [request, t])
+  }, [request, selectedEquipment, photos, t])
+
+  // Function to upload a single photo and get its URL
+  const uploadPhoto = async (photo) => {
+    if (!photo || !photo.file) {
+      throw new Error("No photo to upload")
+    }
+
+    console.log(photo.file)
+
+    const formData = new FormData()
+    formData.append("image", photo.file)
+
+    try {
+      const response = await axios.post("http://localhost:5000/requests/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+
+      // Check the response structure and extract the URL
+      const imageUrl = response.data.imageUrl || response.data.url
+      
+      if (!imageUrl) {
+        console.error("Upload response missing URL:", response.data)
+        throw new Error("Upload response missing URL")
+      }
+      
+      return imageUrl
+    } catch (error) {
+      console.error("Photo upload error:", error)
+      throw new Error(`Failed to upload photo: ${error.message}`)
+    }
+  }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -170,27 +214,61 @@ export default function RequestAddForm() {
       setIsSubmitting(true)
 
       try {
-        // Create request data object matching backend requirements
-        const formData = new FormData()
-        formData.append("title", request.title)
-        formData.append("location", request.location)
-        formData.append("equipmentCode", request.equipmentCode)
-        formData.append("description", request.description)
-        formData.append("urgencyLevel", request.urgencyLevel)
+        // Step 1: Upload photos to get their URLs
+        let photoUrl = ""
 
-        // Append equipment details if available
-        if (selectedEquipment) {
-          formData.append("equipmentName", selectedEquipment.name)
-          formData.append("equipmentId", selectedEquipment.id)
+        if (photos.length > 0) {
+          // Upload the first photo
+          setUploadingPhotos(true)
+          photoUrl = await uploadPhoto(photos[0])
+          console.log("Photo uploaded successfully:", photoUrl)
         }
 
-        // Append photos if any
-        photos.forEach((photo, index) => {
-          formData.append(`photo${index}`, photo.file)
-        })
+        setUploadingPhotos(false)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Get token from localStorage
+        const storedTokenStr = localStorage.getItem('token');
+        let storedToken = null;
+
+        if (storedTokenStr) {
+          try {
+            storedToken = JSON.parse(storedTokenStr);
+            console.log("Retrieved token:", storedToken);
+          } catch (error) {
+            console.error("Error parsing token from localStorage:", error);
+            showToast("Authentication error. Please login again.", "error");
+            // Optional: redirect to login page
+            // router.push('/login');
+            return;
+          }
+        }
+
+        if (!storedToken || !storedToken.id) {
+          console.error("No valid user token found");
+          showToast("Please login to submit a request", "error");
+          // Optional: redirect to login page
+          // router.push('/login');
+          return;
+        } 
+     
+        
+        // Step 2: Create the request with the photo URL
+        const requestData = {
+          equipment_id: selectedEquipment.id,
+          title: request.title,
+          description: request.description,
+          localisation: request.location,
+          priority: request.urgencyLevel,
+          requesterId: storedToken.id,
+          picture: photoUrl, // Use the URL from the uploaded photo
+        }
+
+        console.log("Submitting request:", requestData)
+
+        // Submit the request to create a new request
+        const response = await axios.post("http://localhost:5000/requests", requestData)
+
+        console.log("Request created successfully:", response.data)
 
         // Show success message
         showToast(t("requestForm", "toast", "success"), "success")
@@ -202,18 +280,28 @@ export default function RequestAddForm() {
           equipmentCode: "",
           description: "",
           urgencyLevel: "",
+          requesterId: "",
         })
         setPhotos([])
         setSelectedEquipment(null)
+
+        // Navigate to requests list after successful submission
+        setTimeout(() => router.push('/requests'), 2000)
       } catch (error) {
         console.error("Error submitting request:", error)
-        showToast(error.message || t("requestForm", "toast", "submitError"), "error")
+        const errorMessage = error.response?.data?.message || t("requestForm", "toast", "submitError")
+        showToast(errorMessage, "error")
       } finally {
         setIsSubmitting(false)
+        setUploadingPhotos(false)
       }
     } else {
       showToast(t("requestForm", "toast", "error"), "error")
     }
+  }
+
+  const handleCancel = () => {
+    router.back()
   }
 
   // Current user for sidebar
@@ -221,6 +309,19 @@ export default function RequestAddForm() {
     name: "BOULAMI Amira",
     role: "personal",
     initials: "BA",
+  }
+
+  // Format equipment for display in the autocomplete
+  const formatEquipmentForDisplay = (equipment) => {
+    if (!equipment) return null
+    
+    return {
+      id: equipment.id,
+      code: equipment.code,
+      location: equipment.location,
+      name: equipment.type,
+      display: `${equipment.code} - ${equipment.type || 'Unknown Type'} (${equipment.location || 'Unknown Location'})`,
+    }
   }
 
   return (
@@ -277,7 +378,9 @@ export default function RequestAddForm() {
                   placeholder={t("requestForm", "fields", "equipmentCode", "placeholder")}
                   value={request.equipmentCode}
                   onChange={handleEquipmentSelect}
-                  options={equipmentList}
+                  options={equipmentList.map(formatEquipmentForDisplay)}
+                  displayKey="display"
+                  valueKey="code"
                   error={errors.equipmentCode}
                   required={true}
                   loading={isLoadingEquipment}
@@ -287,12 +390,13 @@ export default function RequestAddForm() {
 
                 <FormField
                   title={t("requestForm", "fields", "location", "label")}
-                  placeholder={t("requestForm", "fields", "location", "placeholder")}
+                  placeholder={t("taskForm", "fields", "location", "placeholder")}
                   value={request.location}
                   onChange={(e) => handleInputChange("location", e.target.value)}
                   icon={<MapPin size={16} />}
                   error={errors.location}
-                  comment={t("requestForm", "fields", "location", "comment") || "Filter equipment by location or leave empty"}
+                  required={true}
+                  comment={t("taskForm", "fields", "location", "comment") || "Filter equipment by location"}
                 />
               </div>
 
@@ -318,8 +422,9 @@ export default function RequestAddForm() {
                       setDeletedPhotos((prev) => [...prev, photoId])
                     }
                   }}
-                  maxPhotos={3}
+                  maxPhotos={1}
                   error={errors.photos}
+                  required={false}
                 />
 
                 <DropdownField
@@ -363,7 +468,9 @@ export default function RequestAddForm() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    {t("requestForm", "actions", "submitting")}
+                    {uploadingPhotos
+                      ? t("requestForm", "actions", "uploadingPhotos") || "Uploading photos..."
+                      : t("requestForm", "actions", "submitting")}
                   </span>
                 ) : (
                   t("requestForm", "actions", "submit")
@@ -372,6 +479,7 @@ export default function RequestAddForm() {
 
               <button
                 type="button"
+                onClick={handleCancel}
                 className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
               >
                 {t("requestForm", "actions", "cancel")}

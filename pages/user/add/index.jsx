@@ -4,298 +4,13 @@ import { useState, useEffect, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
 import axios from "axios"
-import { Mail, Phone, School, ChevronDown, Eye, EyeOff, Bell, X, Check, AlertTriangle, ShieldHalf } from "lucide-react"
+import { Mail, Phone, School, ShieldHalf } from "lucide-react"
 
-// Toast Notification Component
-const Toast = ({ message, type, visible, onClose }) => {
-  useEffect(() => {
-    if (visible) {
-      const timer = setTimeout(() => {
-        onClose()
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [visible, onClose])
-
-  if (!visible) return null
-
-  const bgColor = type === "success" ? "bg-green-500" : type === "error" ? "bg-red-500" : "bg-blue-500"
-
-  const icon =
-    type === "success" ? <Check size={20} /> : type === "error" ? <AlertTriangle size={20} /> : <Bell size={20} />
-
-  return (
-    <div
-      className={`fixed top-4 right-4 ${bgColor} text-white p-4 rounded shadow-lg flex items-center z-50 animate-fade-in`}
-    >
-      <div className="mr-3">{icon}</div>
-      <p>{message}</p>
-      <button onClick={onClose} className="ml-4">
-        <X size={16} />
-      </button>
-    </div>
-  )
-}
-
-// FormField Component
-const FormField = ({
-  title,
-  placeholder,
-  value,
-  onChange,
-  icon,
-  comment,
-  type = "text",
-  onIconClick,
-  isTextarea = false,
-  error = null,
-  required = false,
-  className = "",
-}) => {
-  return (
-    <div className={`flex flex-col gap-2 ${className}`}>
-      {title && (
-        <label className="block text-sm font-inter text-neutral-950 dark:text-neutral-100">
-          {title} {required && <span className="text-red-500">*</span>}
-        </label>
-      )}
-
-      <div className="relative">
-        {isTextarea ? (
-          <textarea
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={`w-full text-sm px-4 py-3 border ${error ? "border-red-300 bg-red-50" : "border-none bg-[#E7E7E7] dark:bg-neutral-950"} rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all text-neutral-990 dark:text-neutral-100 min-h-24`}
-          />
-        ) : (
-          <input
-            type={type}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={`w-full text-sm px-4 py-3 border ${error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-950"} rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all text-neutral-990 dark:text-neutral-100 `}
-          />
-        )}
-
-        {icon && (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-950" onClick={onIconClick}>
-            {icon}
-          </div>
-        )}
-      </div>
-
-      {error && (
-        <p className="mt-1 text-sm text-red-600 flex items-center">
-          <AlertTriangle size={12} className="mr-1" />
-          {error}
-        </p>
-      )}
-
-      {comment && !error && <div className="text-xs text-neutral-800 mt-1">{comment}</div>}
-    </div>
-  )
-}
-
-// DropdownField Component with Click Outside
-const DropdownField = ({
-  title,
-  value,
-  onChange,
-  icon,
-  iconBg,
-  updateText,
-  description,
-  options = [],
-  error = null,
-  required = false,
-}) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const dropdownRef = useRef(null)
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen)
-  }
-
-  const handleSelect = (option) => {
-    onChange(option)
-    setIsOpen(false)
-  }
-
-  // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false)
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
-
-  return (
-    <div className="flex flex-col gap-3" ref={dropdownRef}>
-      {title && (
-        <h2 className="text-lg font-russo text-neutral-990 dark:text-neutral-100">
-          {title} {required && <span className="text-red-500">*</span>}
-        </h2>
-      )}
-
-      <div className="relative">
-        <div
-          className={`flex items-center justify-between border ${error ? "border-red-300 bg-red-50 dark:bg-red-900/20" : "border-none"} rounded-lg p-3 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shadow-sm`}
-          onClick={toggleDropdown}
-        >
-          <div className="flex items-center">
-            {icon && <div className={`${iconBg}  mr-2`}>{icon}</div>}
-
-            <div className="flex items-start flex-col text-sm">
-              {value && <span className="text-neutral-990 dark:text-neutral-100">{value}</span>}
-              {!value && <span className="text-neutral-400 dark:text-neutral-200">{title}</span>}
-              <span className="text-xs text-neutral-500 dark:text-neutral-300">{updateText}</span>
-            </div>
-          </div>
-          <ChevronDown
-            size={18}
-            className={`text-neutral-990 dark:text-neutral-100 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
-          />
-        </div>
-
-        {isOpen && options.length > 0 && (
-          <ul className="absolute w-full mt-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
-            {options.map((option, index) => (
-              <li
-                key={index}
-                className={`px-4 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer ${value === option ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : "dark:text-neutral-200"}`}
-                onClick={() => handleSelect(option)}
-              >
-                <div className="flex items-center">
-                  {value === option && <Check size={16} className="mr-2 text-blue-500" />}
-                  <span className={value === option ? "ml-0" : "ml-6"}>{option}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {error && (
-        <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
-          <AlertTriangle size={12} className="mr-1" />
-          {error}
-        </p>
-      )}
-
-      {description && !error && <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{description}</p>}
-    </div>
-  )
-}
-
-// Password Field Component with Strength Meter
-const PasswordField = ({ title, placeholder, value, onChange, comment, error = null, required = false }) => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [strength, setStrength] = useState(0)
-
-  const { t, toggleLanguage } = useLanguage()
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
-
-  // Calculate password strength
-  useEffect(() => {
-    if (!value) {
-      setStrength(0)
-      return
-    }
-
-    let score = 0
-
-    // Length
-    if (value.length >= 8) score += 1
-    if (value.length >= 12) score += 1
-
-    // Complexity
-    if (/[A-Z]/.test(value)) score += 1
-    if (/[0-9]/.test(value)) score += 1
-    if (/[^A-Za-z0-9]/.test(value)) score += 1
-
-    setStrength(score)
-  }, [value])
-
-  const getStrengthLabel = () => {
-    if (strength === 0) return { label: t("userEdit", "password", "tooWeak"), color: "bg-gray-200" }
-    if (strength <= 2) return { label: t("userEdit", "password", "weak"), color: "bg-red-500" }
-    if (strength <= 3) return { label: t("userEdit", "password", "fair"), color: "bg-yellow-500" }
-    if (strength <= 4) return { label: t("userEdit", "password", "good"), color: "bg-blue-500" }
-    return { label: t("userEdit", "password", "strong"), color: "bg-green-500" }
-  }
-
-  const strengthInfo = getStrengthLabel()
-
-  return (
-    <div className="flex flex-col gap-2">
-      {title && (
-        <label className="block text-sm font-inter text-neutral-990 dark:text-neutral-100">
-          {title} {required && <span className="text-red-500">*</span>}
-        </label>
-      )}
-
-      <div className="relative">
-        <input
-          type={showPassword ? "text" : "password"}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          className={`w-full text-sm px-4 py-3 border ${error ? "border-red-300 bg-red-50" : "border-none bg-neutral-100 dark:bg-neutral-950"} rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all text-neutral-990 dark:text-neutral-100`}
-        />
-        <button
-          type="button"
-          onClick={togglePasswordVisibility}
-          className="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-950 dark:text-neutral-100 hover:text-neutral-990 dark:hover:text-neutral-50"
-        >
-          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-        </button>
-      </div>
-
-      {value && (
-        <div className="mt-2">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs text-gray-500 dark:text-gray-400">Strength: {strengthInfo.label}</span>
-          </div>
-          <div className="h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className={`h-full ${strengthInfo.color} transition-all duration-300 ease-in-out`}
-              style={{ width: `${(strength / 5) * 100}%` }}
-            ></div>
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <p className="mt-1 text-sm text-red-600 flex items-center">
-          <AlertTriangle size={12} className="mr-1" />
-          {error}
-        </p>
-      )}
-
-      {comment && !error && <div className="text-xs text-gray-500 mt-1">{comment}</div>}
-    </div>
-  )
-}
-
-// Form Section Component
-const FormSection = ({ title, children }) => {
-  return (
-    <div className="flex flex-col gap-3">
-      {title && <h2 className="text-base lg:text-lg font-russo text-neutral-950 dark:text-neutral-100">{title}</h2>}
-      {children}
-    </div>
-  )
-}
+import Toast from "../../components/form_components/toast"
+import FormField from "../../components/form_components/form_field"
+import DropdownField from "../../components/form_components/dropdown_field"
+import PasswordField from "../../components/form_components/password_field"
+import FormSection from "../../components/form_components/form_section"
 
 // Main Component
 export default function UserCreateForm() {
@@ -519,7 +234,7 @@ export default function UserCreateForm() {
       />
 
       {/* Main content */}
-      <div className="flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
+      <div className="pt-14 lg:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
         <div className="px-4 sm:px-10 lg:px-20 w-full">
           <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
             <div className="text-sm flex items-center font-inter">
@@ -548,7 +263,7 @@ export default function UserCreateForm() {
                   placeholder="Enter email address"
                   value={user.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  icon={<Mail size={16} />}
+                  icon={<Mail size={18} />}
                   error={errors.email}
                   required={true}
                 />
@@ -558,7 +273,7 @@ export default function UserCreateForm() {
                   placeholder="Enter phone number"
                   value={user.phone}
                   onChange={(e) => handleInputChange("phone", e.target.value)}
-                  icon={<Phone size={16} />}
+                  icon={<Phone size={18} />}
                   error={errors.phone}
                   required={true}
                 />
@@ -706,7 +421,7 @@ export default function UserCreateForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`h-10 w-32 mr-3 text-sm bg-primary-500 text-neutral-50 font-inter font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
+                className={`h-10 w-fit px-2 mr-3 text-sm bg-primary-500 text-neutral-50 font-inter font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center">
