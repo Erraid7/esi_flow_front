@@ -5,6 +5,7 @@ import { useDarkMode } from '../darkLightMode/darkModeContext';
 import { Eye, EyeSlash } from 'iconsax-react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { ForgotPasswordModal, VerificationModal, SuccessModal } from "./forgot-password-modals"
 
 
 
@@ -21,6 +22,12 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+   // States for forgot password flow
+   const [resetEmail, setResetEmail] = useState("")
+   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false)
+   const [showVerificationModal, setShowVerificationModal] = useState(false)
+   const [showSuccessModal, setShowSuccessModal] = useState(false) 
   
   // Define your backend URL - you should use environment variables for this in production
   const handleChange = (e) => {
@@ -79,6 +86,27 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  // Forgot password handlers
+  const handleForgotPasswordClick = (e) => {
+    e.preventDefault()
+    setResetEmail(formData.email || "")
+    setShowForgotPasswordModal(true)
+  }
+
+  const handleContinue = () => {
+    setShowForgotPasswordModal(false)
+    setShowVerificationModal(true)
+  }
+
+  const handleVerify = () => {
+    setShowVerificationModal(false)
+    setShowSuccessModal(true)
+  }
+
+  const handleBackToLogin = () => {
+    setShowSuccessModal(false)
+  }
 
   
   
@@ -170,9 +198,13 @@ const Login = () => {
                 <input type='checkbox' className='mr-2' />
                 {t('login', 'remember')}
               </label>
-              <Link href='/forgot-password' className='text-primary-600 dark:text-primary-300 hover:underline'>
-                {t('login', 'forgot')}
-              </Link>
+                <a
+                  href="#"
+                  onClick={handleForgotPasswordClick}
+                  className="text-primary-600 dark:text-primary-300 hover:underline"
+                >
+                  {t("login", "forgot")}
+                </a>
             </div>
 
             <button
@@ -192,6 +224,22 @@ const Login = () => {
           <img src="/logo-v-dark.svg" alt="ESI Flow" className='w-24 h-16 block lg:hidden' />
         </div>
       </div>
+
+      {/* Forgot Password Modals */}
+      {showForgotPasswordModal && (
+        <ForgotPasswordModal
+          email={resetEmail}
+          setEmail={setResetEmail}
+          onClose={() => setShowForgotPasswordModal(false)}
+          onContinue={handleContinue}
+        />
+      )}
+
+      {showVerificationModal && (
+        <VerificationModal onClose={() => setShowVerificationModal(false)} onVerify={handleVerify} />
+      )}
+
+      {showSuccessModal && <SuccessModal onClose={handleBackToLogin} />}
     </div>
   );
 };

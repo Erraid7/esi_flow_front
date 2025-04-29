@@ -564,5 +564,155 @@ export const en = {
       userError: "Failed to load users data"
     },
     loading: "Loading task data..."
+  },
+  forgotPassword : {
+    title: "Forget password",
+    description: "Enter your email that you used when you joined and we'll send you instructions to reset your password.",
+    emailLabel: "Email",
+    emailPlaceholder: "Enter your email",
+    cancelButton: "Cancel",
+    continueButton: "Continue"
+  },
+  verification : {
+    title: "Verification",
+    description: "Enter the 6-digit code that was sent to your email",
+    verifyButton: "Verify"
+  },
+  success : {
+    title: "Successfully",
+    description: "Your password has been reset successfully",
+    backButton: "Back To Sign in"
+  },
+  notifications: {
+    title: "Notifications",
+    breadcrumb: {
+      dashboard: "Dashboard",
+      notifications: "Notifications"
+    },
+    searchTitle: "Search Notifications",
+    searchPlaceholder: "Search by keyword, type or date",
+    filters: {
+      all: "All",
+      unread: "Unread",
+      urgent: "Urgent",
+      tasks: "Tasks",
+      info: "Info"
+    },
+    markAllAsRead: "Mark all as read",
+    groups: {
+      today: "Today",
+      yesterday: "Yesterday",
+      thisWeek: "This week"
+    },
+    timeFormat: {
+      minutesAgo: "{{count}} min ago",
+      hoursAgo: "{{count}} hour ago",
+      hoursAgo_plural: "{{count}} hours ago",
+      daysAgo: "{{count}} day ago",
+      daysAgo_plural: "{{count}} days ago"
+    },
+    noNotifications: "No notifications found",
+    checkBackLater: "Check back later for updates",
+    loadMore: "Load more",
+    loading: "Loading notifications...",
+    toast: {
+      fetchError: "Failed to load notifications",
+      markedAllRead: "All notifications marked as read",
+      loadingMore: "Loading more notifications..."
+    },
+    mockData: {
+      taskAssigned: "New task assigned: HVAC unit malfunction",
+      taskAssignedDesc: "Cooling system malfunction in conference room",
+      equipmentAlert: "Equipment alert: CVC system at full capacity",
+      equipmentAlertDesc: "Increased energy consumption detected in building DE",
+      filterReplacement: "Reminder: Air filter replacement required",
+      filterReplacementDesc: "Dust accumulation in library ventilation ducts",
+      taskCompleted: "Task completed: System pressure normalization",
+      taskCompletedDesc: "Routine check resolved high pressure issue in boiler",
+      newEquipment: "New equipment added: Cooling tower",
+      newEquipmentDesc: "Building A • ID: HVAC-2310",
+      maintenanceUpdate: "Maintenance calendar updated",
+      maintenanceUpdateDesc: "System • 3 tasks rescheduled",
+      newEquipments: "New equipment added: Radiators",
+      newEquipmentsDesc: "Amphitheater AP2 • ID: RAD-AP2-004",
+      maintenanceReport: "Maintenance report available",
+      maintenanceReportDesc: "System • Q2 maintenance summary",
+      softwareUpdate: "Software update available",
+      softwareUpdateDesc: "System • Version 2.4.1",
+      todayDeadline: "Due today at 5PM",
+      tomorrowDeadline: "Due tomorrow"
+    }
+  },
+  requestList:{
+    path: {
+      dashboard: "Dashboard",
+      requests: "Maintenance Requests",
+    },
+    cards: {
+      title: "Maintenance Request Management",
+      totalRequests: "Total Requests",
+      pendingRequests: "Pending Requests",
+      completedRequests: "Completed Requests",
+    },
+    searchbar: {
+      title: "Maintenance Request List",
+      placeholder: "Search requests...",
+      addButton: "Add Request",
+      buttons: {
+        export: "Export",
+        clearFilters: "Clear Filters",
+      },
+    },
+    columns: {
+      id: "Request ID",
+      title: "Title",
+      location: "Location",
+      requestedBy: "Requested By",
+      urgencyLevel: "Urgency",
+      status: "Status",
+      createdAt: "Created At",
+    },
+    tablehead: {
+      clearfilter: "Clear Filter",
+    },
+    toast: {
+      fetchError: "Failed to load requests",
+      deleteSuccess: "Request deleted successfully",
+      deleteError: "Failed to delete request",
+    },
+  },
+  userList:{
+    path:{
+      1:"Dashboard",
+      2:"User List"
+    },
+    cards:{
+      titel:"User Management",
+      sub:{
+        1:"Total Users",
+        2:"Maintenance Team",
+        3:"Administrators"
+      }
+    },
+    searchbar:{
+      titel:"Users Table",
+      placeholder:"Search...",
+      buttons:{
+        1:"Export Table",
+        2:"Clear Filters",
+        3:"Add User"
+      }
+    },
+    tablehead:{
+      1:"Full Name",
+      2:"Profession",
+      3:"E-mail",
+      4:"Phone Number",
+      5:"Role",
+      6:"Actions",
+      clearfilter:"Clear filter"
+
+    
+    }
   }
 };

@@ -566,5 +566,155 @@ export const fr = {
       userError: "Échec du chargement des données des utilisateurs"
     },
     loading: "Chargement des données de la tâche..."
+  },
+  forgotPassword :{
+    title: "Mot de passe oublié",
+    description: "Entrez l'email que vous avez utilisé lors de votre inscription et nous vous enverrons les instructions pour réinitialiser votre mot de passe.",
+    emailLabel: "Email",
+    emailPlaceholder: "Entrez votre email",
+    cancelButton: "Annuler",
+    continueButton: "Continuer"
+  },
+  
+  verification : {
+    title: "Vérification",
+    description: "Entrez le code à 6 chiffres qui a été envoyé à votre email",
+    verifyButton: "Vérifier"
+  },
+
+  success :{
+    title: "Succès",
+    description: "Votre mot de passe a été réinitialisé avec succès",
+    backButton: "Retour à la connexion"
+  },
+  notifications: {
+    title: "Notifications",
+    breadcrumb: {
+      dashboard: "Tableau de bord",
+      notifications: "Notifications"
+    },
+    searchTitle: "Recherche de Notifications",
+    searchPlaceholder: "Recherchez des notifications par mot-clé, type ou date",
+    filters: {
+      all: "Tout",
+      unread: "Non lus",
+      urgent: "Urgent",
+      tasks: "Tâches",
+      info: "Infos"
+    },
+    markAllAsRead: "Marquer tout comme lu",
+    groups: {
+      today: "Aujourd'hui",
+      yesterday: "Hier",
+      thisWeek: "Cette semaine"
+    },
+    timeFormat: {
+      minutesAgo: "il y a {{count}} min",
+      hoursAgo: "il y a {{count}} heure",
+      hoursAgo_plural: "il y a {{count}} heures",
+      daysAgo: "il y a {{count}} jour",
+      daysAgo_plural: "il y a {{count}} jours"
+    },
+    noNotifications: "Aucune notification trouvée",
+    checkBackLater: "Revenez plus tard pour les mises à jour",
+    loadMore: "Charger plus",
+    loading: "Chargement des notifications...",
+    toast: {
+      fetchError: "Échec du chargement des notifications",
+      markedAllRead: "Toutes les notifications ont été marquées comme lues",
+      loadingMore: "Chargement de plus de notifications..."
+    },
+    mockData: {
+      taskAssigned: "Nouvelle tâche assignée: Défaillance de l'unité de climatisation",
+      taskAssignedDesc: "Dysfonctionnement du système de refroidissement dans la salle de conférence",
+      equipmentAlert: "Alerte équipement: Le système CVC fonctionne à pleine capacité",
+      equipmentAlertDesc: "Augmentation de la consommation d'énergie détectée dans le bâtiment DE",
+      filterReplacement: "Rappel de tâche: Remplacement du filtre à air requis",
+      filterReplacementDesc: "Accumulation de poussière dans les bouches d'aération de la bibliothèque",
+      taskCompleted: "Tâche accomplie: Normalisation de la pression du système de chaudière",
+      taskCompletedDesc: "Un contrôle de routine a permis de résoudre le problème de haute pression dans la chauffe CP3",
+      newEquipment: "Nouvel équipement ajouté: Tour de refroidissement",
+      newEquipmentDesc: "Bâtiment A • ID: HVAC-2310",
+      maintenanceUpdate: "Mise à jour du calendrier de maintenance",
+      maintenanceUpdateDesc: "Système • 3 tâches replanifiées",
+      newEquipments: "Nouveaux équipements ajoutés: Radiateurs",
+      newEquipmentsDesc: "Amphithéâtre AP2 • ID: RAD-AP2-004",
+      maintenanceReport: "Rapport de maintenance disponible",
+      maintenanceReportDesc: "Système • Résumé de la maintenance du deuxième trimestre",
+      softwareUpdate: "Mise à jour logicielle disponible",
+      softwareUpdateDesc: "Système • Version 2.4.1",
+      todayDeadline: "À faire pour aujourd'hui à 17h",
+      tomorrowDeadline: "À faire pour demain"
+    }
+  },
+  requestList:{
+    path: {
+      dashboard: "Tableau de bord",
+      requests: "Demandes de maintenance",
+    },
+    cards: {
+      title: "Gestion des demandes de maintenance",
+      totalRequests: "Demandes totales",
+      pendingRequests: "Demandes en attente",
+      completedRequests: "Demandes terminées",
+    },
+    searchbar: {
+      title: "Liste des demandes de maintenance",
+      placeholder: "Rechercher des demandes...",
+      addButton: "Ajouter une demande",
+      buttons: {
+        export: "Exporter",
+        clearFilters: "Effacer les filtres",
+      },
+    },
+    columns: {
+      id: "ID de demande",
+      title: "Titre",
+      location: "Emplacement",
+      requestedBy: "Demandé par",
+      urgencyLevel: "Urgence",
+      status: "Statut",
+      createdAt: "Créé le",
+    },
+    tablehead: {
+      clearfilter: "Effacer le filtre",
+    },
+    toast: {
+      fetchError: "Échec du chargement des demandes",
+      deleteSuccess: "Demande supprimée avec succès",
+      deleteError: "Échec de la suppression de la demande",
+    },
+  },
+  userList: {
+    path: {
+      1: "Tableau de bord",
+      2: "Liste des utilisateurs"
+    },
+    cards: {
+      titel: "Gestion des utilisateurs",
+      sub: {
+        1: "Utilisateurs totaux",
+        2: "Équipe de maintenance",
+        3: "Administrateurs"
+      }
+    },
+    searchbar: {
+      titel: "Tableau d'Utilisateurs",
+      placeholder: "Rechercher...",
+      buttons: {
+        1: "Exporter le tableau",
+        2: "Effacer les filtres",
+        3: "Ajouter un utilisateur"
+      }
+    },
+    tablehead: {
+      1: "Nom complet",
+      2: "Profession",
+      3: "E-mail",
+      4: "Numéro de téléphone",
+      5: "Rôle",
+      6: "Actions",
+      clearfilter: "Effacer le filtre"
+    }
   }
 };
