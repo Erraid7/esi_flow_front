@@ -5,7 +5,7 @@ import { useDarkMode } from '../darkLightMode/darkModeContext';
 import { Eye, EyeSlash } from 'iconsax-react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { ForgotPasswordModal, VerificationModal, SuccessModal } from "./forgot-password-modals"
+import { ForgotPasswordModal, VerificationModal, NewPasswordModal, SuccessModal } from "./forgot-password-modals"
 
 
 
@@ -25,6 +25,7 @@ const Login = () => {
 
    // States for forgot password flow
    const [resetEmail, setResetEmail] = useState("")
+   const [currentModal, setCurrentModal] = useState(null)
    const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false)
    const [showVerificationModal, setShowVerificationModal] = useState(false)
    const [showSuccessModal, setShowSuccessModal] = useState(false) 
@@ -91,23 +92,29 @@ const Login = () => {
   const handleForgotPasswordClick = (e) => {
     e.preventDefault()
     setResetEmail(formData.email || "")
-    setShowForgotPasswordModal(true)
+    setCurrentModal("forgot")
   }
 
   const handleContinue = () => {
-    setShowForgotPasswordModal(false)
-    setShowVerificationModal(true)
+    setCurrentModal("verification")
   }
 
   const handleVerify = () => {
-    setShowVerificationModal(false)
-    setShowSuccessModal(true)
+    setCurrentModal("newPassword")
+  }
+
+  const handlePasswordReset = (newPassword) => {
+    console.log("Password reset with:", newPassword)
+    setCurrentModal("success")
   }
 
   const handleBackToLogin = () => {
-    setShowSuccessModal(false)
+    setCurrentModal(null)
   }
 
+  const handleCloseModal = () => {
+    setCurrentModal(null)
+  }
   
   
   return (
@@ -225,21 +232,33 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Forgot Password Modals */}
-      {showForgotPasswordModal && (
+      {/* Forgot Password Modals - Only show one modal at a time based on currentModal state */}
+      {currentModal === "forgot" && (
         <ForgotPasswordModal
           email={resetEmail}
           setEmail={setResetEmail}
-          onClose={() => setShowForgotPasswordModal(false)}
+          onClose={handleCloseModal}
           onContinue={handleContinue}
         />
       )}
 
-      {showVerificationModal && (
-        <VerificationModal onClose={() => setShowVerificationModal(false)} onVerify={handleVerify} />
+      {currentModal === "verification" && (
+        <VerificationModal 
+          onClose={handleCloseModal} 
+          onVerify={handleVerify} 
+        />
       )}
 
-      {showSuccessModal && <SuccessModal onClose={handleBackToLogin} />}
+      {currentModal === "newPassword" && (
+        <NewPasswordModal 
+          onClose={handleCloseModal} 
+          onSubmit={handlePasswordReset} 
+        />
+      )}
+
+      {currentModal === "success" && (
+        <SuccessModal onClose={handleBackToLogin} />
+      )}
     </div>
   );
 };

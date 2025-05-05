@@ -804,5 +804,64 @@ export const fr = {
       formErrors: "Veuillez corriger les erreurs dans le formulaire",
       loadError: "Échec du chargement des données utilisateur"
     }
+  },
+  // Add translations for the user edit form
+  forgotPassword: {
+    title: "Mot de passe oublié",
+    description:
+      "Entrez votre adresse e-mail et nous vous enverrons un code de vérification pour réinitialiser votre mot de passe.",
+    emailLabel: "Adresse e-mail",
+    emailPlaceholder: "Entrez votre adresse e-mail",
+    invalidEmail: "Veuillez entrer une adresse e-mail valide",
+    emailNotFound: "Cette adresse e-mail n'est pas enregistrée dans notre système",
+    cancelButton: "Annuler",
+    continueButton: "Continuer",
+    sending: "Envoi en cours...",
+  },
+  verification: {
+    title: "Code de vérification",
+    description: "Nous avons envoyé un code de vérification à {email}. Veuillez entrer le code ci-dessous.",
+    incompleteCode: "Veuillez entrer le code de vérification à 6 chiffres complet",
+    invalidCode: "Le code de vérification que vous avez entré est invalide ou a expiré",
+    verifyButton: "Vérifier le code",
+    verifying: "Vérification...",
+    didNotReceive: "Vous n'avez pas reçu le code ?",
+    resendButton: "Renvoyer le code",
+    resendIn: "Renvoyer le code dans",
+    resending: "Renvoi en cours...",
+    codeSent: "Un nouveau code de vérification a été envoyé à votre e-mail",
+    resendFailed: "Échec de l'envoi du code de vérification. Veuillez réessayer.",
+  },
+  newPassword: {
+    title: "Créer un nouveau mot de passe",
+    description:
+      "Veuillez créer un nouveau mot de passe pour votre compte. Assurez-vous qu'il est sécurisé et facile à retenir.",
+    passwordLabel: "Nouveau mot de passe",
+    passwordPlaceholder: "Entrez un nouveau mot de passe",
+    confirmPasswordLabel: "Confirmer le mot de passe",
+    confirmPasswordPlaceholder: "Confirmez votre nouveau mot de passe",
+    passwordRequirements: "Votre mot de passe doit répondre à toutes les exigences ci-dessous",
+    passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
+    passwordTooShort: "Le mot de passe doit comporter au moins 8 caractères",
+    resetButton: "Réinitialiser le mot de passe",
+    resetting: "Réinitialisation...",
+    resetFailed: "Échec de la réinitialisation du mot de passe. Veuillez réessayer.",
+    cancelButton: "Retour",
+    passwordStrength: "Force du mot de passe",
+    strengthEmpty: "Vide",
+    strengthWeak: "Faible",
+    strengthMedium: "Moyen",
+    strengthStrong: "Fort",
+    minLength: "Au moins 8 caractères",
+    upperCase: "Lettre majuscule",
+    lowerCase: "Lettre minuscule",
+    number: "Chiffre",
+    specialChar: "Caractère spécial",
+  },
+  success: {
+    title: "Succès !",
+    description:
+      "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+    backButton: "Retour à la connexion",
   }
 };

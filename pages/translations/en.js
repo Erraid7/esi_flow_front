@@ -565,24 +565,6 @@ export const en = {
     },
     loading: "Loading task data..."
   },
-  forgotPassword : {
-    title: "Forget password",
-    description: "Enter your email that you used when you joined and we'll send you instructions to reset your password.",
-    emailLabel: "Email",
-    emailPlaceholder: "Enter your email",
-    cancelButton: "Cancel",
-    continueButton: "Continue"
-  },
-  verification : {
-    title: "Verification",
-    description: "Enter the 6-digit code that was sent to your email",
-    verifyButton: "Verify"
-  },
-  success : {
-    title: "Successfully",
-    description: "Your password has been reset successfully",
-    backButton: "Back To Sign in"
-  },
   notifications: {
     title: "Notifications",
     breadcrumb: {
@@ -800,5 +782,61 @@ export const en = {
       formErrors: "Please fix the errors in the form",
       loadError: "Failed to load user data"
     }
-  }
+  },
+  // Add translations for the password reset component
+  forgotPassword: {
+    title: "Forgot Password",
+    description: "Enter your email address and we'll send you a verification code to reset your password.",
+    emailLabel: "Email Address",
+    emailPlaceholder: "Enter your email address",
+    invalidEmail: "Please enter a valid email address",
+    emailNotFound: "This email address is not registered in our system",
+    cancelButton: "Cancel",
+    continueButton: "Continue",
+    sending: "Sending...",
+  },
+  verification: {
+    title: "Verification Code",
+    description: "We've sent a verification code to {email}. Please enter the code below.",
+    incompleteCode: "Please enter the complete 6-digit verification code",
+    invalidCode: "The verification code you entered is invalid or has expired",
+    verifyButton: "Verify Code",
+    verifying: "Verifying...",
+    didNotReceive: "Didn't receive the code?",
+    resendButton: "Resend Code",
+    resendIn: "Resend code in",
+    resending: "Resending...",
+    codeSent: "A new verification code has been sent to your email",
+    resendFailed: "Failed to resend verification code. Please try again.",
+  },
+  newPassword: {
+    title: "Create New Password",
+    description: "Please create a new password for your account. Make sure it's secure and easy to remember.",
+    passwordLabel: "New Password",
+    passwordPlaceholder: "Enter new password",
+    confirmPasswordLabel: "Confirm Password",
+    confirmPasswordPlaceholder: "Confirm your new password",
+    passwordRequirements: "Your password must meet all the requirements below",
+    passwordsDoNotMatch: "Passwords do not match",
+    passwordTooShort: "Password must be at least 8 characters long",
+    resetButton: "Reset Password",
+    resetting: "Resetting...",
+    resetFailed: "Failed to reset password. Please try again.",
+    cancelButton: "Back",
+    passwordStrength: "Password Strength",
+    strengthEmpty: "Empty",
+    strengthWeak: "Weak",
+    strengthMedium: "Medium",
+    strengthStrong: "Strong",
+    minLength: "At least 8 characters",
+    upperCase: "Uppercase letter",
+    lowerCase: "Lowercase letter",
+    number: "Number",
+    specialChar: "Special character",
+  },
+  success: {
+    title: "Success!",
+    description: "Your password has been reset successfully. You can now log in with your new password.",
+    backButton: "Back to Login",
+  },
 };
