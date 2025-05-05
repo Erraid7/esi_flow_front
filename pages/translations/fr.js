@@ -716,5 +716,93 @@ export const fr = {
       6: "Actions",
       clearfilter: "Effacer le filtre"
     }
+  },
+  // French translations (fr.js)
+  settings: {
+    title: "Paramètres",
+    breadcrumb: {
+      dashboard: "Tableau de bord",
+      settings: "Paramètres"
+    },
+    tabs: {
+      general: "Paramètres généraux",
+      user: "Informations utilisateur",
+      system: "Informations système"
+    },
+    general: {
+      systemPreferences: "Préférences système",
+      darkMode: "Mode sombre",
+      darkModeDescription: "Activez le mode sombre pour une meilleure expérience visuelle dans les environnements peu éclairés.",
+      language: "Langue",
+      languageDescription: "Changer la langue de l'interface",
+      notifications: "Notifications",
+      emailNotifications: "Notifications par e-mail",
+      emailNotificationsDescription: "Recevez des mises à jour importantes et des notifications par e-mail.",
+      reminderNotifications: "Notifications de rappel",
+      reminderNotificationsDescription: "Recevez des rappels pour les tâches à venir et les échéances.",
+      advancedSettings: "Paramètres avancés",
+      dataSharing: "Partage de données",
+      dataSharingDescription: "Partagez des données d'utilisation anonymes pour aider à améliorer la plateforme."
+    },
+    user: {
+      profilePicture: "Photo de profil",
+      uploadPicture: "Cliquez pour télécharger une photo de profil",
+      basicInformation: "Informations de base",
+      fullName: "Nom complet",
+      email: "E-mail",
+      emailComment: "Votre adresse e-mail sera utilisée pour les notifications liées au compte.",
+      phone: "Téléphone",
+      phoneComment: "Votre numéro de téléphone sera utilisé pour la récupération de compte et la sécurité.",
+      biography: "Biographie",
+      profession: "Profession",
+      professionUpdate: "Mettre à jour votre rôle professionnel",
+      role: "Rôle",
+      roleUpdate: "Mettre à jour votre rôle système",
+      roleDescription: "Votre rôle détermine les actions que vous pouvez effectuer dans le système.",
+      accountSecurity: "Sécurité du compte",
+      passwordInfo: "Laissez les champs de mot de passe vides si vous ne souhaitez pas changer votre mot de passe.",
+      password: "Mot de passe",
+      passwordPlaceholder: "Entrez un nouveau mot de passe",
+      passwordComment: "Le mot de passe doit comporter au moins 8 caractères avec des majuscules, des chiffres et des caractères spéciaux.",
+      confirmPassword: "Confirmer le mot de passe",
+      confirmPasswordPlaceholder: "Confirmer le nouveau mot de passe"
+    },
+    system: {
+      platformInformation: "Informations sur la plateforme",
+      platformDescription: "Cette section fournit des informations sur la version actuelle du système et des détails techniques.",
+      platformVersion: "Version de la plateforme",
+      serverEnvironment: "Environnement serveur",
+      databaseVersion: "Version de la base de données",
+      lastUpdate: "Dernière mise à jour",
+      developmentTeam: "Équipe de développement",
+      projectLead: "Chef de projet",
+      backendDeveloper: "Développeur backend",
+      leadDeveloper: "Développeur principal",
+      uiDesigner: "Designer UI/UX",
+      qaEngineer: "Ingénieur QA",
+      supportInformation: "Informations de support",
+      technicalSupport: "Support technique",
+      documentation: "Documentation",
+      madeWithLove: "Fait avec amour par l'équipe ARCAD"
+    },
+    actions: {
+      saveSettings: "Enregistrer les paramètres",
+      saveChanges: "Enregistrer les modifications",
+      saving: "Enregistrement...",
+      cancel: "Annuler"
+    },
+    validation: {
+      passwordLength: "Le mot de passe doit comporter au moins 8 caractères",
+      passwordComplexity: "Le mot de passe doit inclure des majuscules, des chiffres et des caractères spéciaux",
+      passwordsMatch: "Les mots de passe ne correspondent pas"
+    },
+    toast: {
+      generalSuccess: "Paramètres généraux enregistrés avec succès",
+      generalError: "Échec de l'enregistrement des paramètres généraux",
+      userSuccess: "Informations utilisateur mises à jour avec succès",
+      userError: "Échec de la mise à jour des informations utilisateur",
+      formErrors: "Veuillez corriger les erreurs dans le formulaire",
+      loadError: "Échec du chargement des données utilisateur"
+    }
   }
 };

@@ -711,8 +711,94 @@ export const en = {
       5:"Role",
       6:"Actions",
       clearfilter:"Clear filter"
-
-    
+    }
+  },
+  // English translations (en.js)
+  settings: {
+    title: "Settings",
+    breadcrumb: {
+      dashboard: "Dashboard",
+      settings: "Settings"
+    },
+    tabs: {
+      general: "General Settings",
+      user: "User Information",
+      system: "System Information"
+    },
+    general: {
+      systemPreferences: "System Preferences",
+      darkMode: "Dark Mode",
+      darkModeDescription: "Enable dark mode for a better viewing experience in low light environments.",
+      language: "Language",
+      languageDescription: "Change the language of the interface",
+      notifications: "Notifications",
+      emailNotifications: "Email Notifications",
+      emailNotificationsDescription: "Receive important updates and notifications via email.",
+      reminderNotifications: "Reminder Notifications",
+      reminderNotificationsDescription: "Get reminders for upcoming tasks and deadlines.",
+      advancedSettings: "Advanced Settings",
+      dataSharing: "Data Sharing",
+      dataSharingDescription: "Share anonymous usage data to help improve the platform."
+    },
+    user: {
+      profilePicture: "Profile Picture",
+      uploadPicture: "Click to upload profile picture",
+      basicInformation: "Basic Information",
+      fullName: "Full Name",
+      email: "Email",
+      emailComment: "Your email address will be used for account-related notifications.",
+      phone: "Phone",
+      phoneComment: "Your phone number will be used for account recovery and security purposes.",
+      biography: "Biography",
+      profession: "Profession",
+      professionUpdate: "Update your professional role",
+      role: "Role",
+      roleUpdate: "Update your system role",
+      roleDescription: "Your role determines what actions you can perform in the system.",
+      accountSecurity: "Account Security",
+      passwordInfo: "Leave the password fields empty if you don't want to change your password.",
+      password: "Password",
+      passwordPlaceholder: "Enter new password",
+      passwordComment: "Password must be at least 8 characters with uppercase, numbers, and special characters.",
+      confirmPassword: "Confirm Password",
+      confirmPasswordPlaceholder: "Confirm new password"
+    },
+    system: {
+      platformInformation: "Platform Information",
+      platformDescription: "This section provides information about the current system version and technical details.",
+      platformVersion: "Platform Version",
+      serverEnvironment: "Server Environment",
+      databaseVersion: "Database Version",
+      lastUpdate: "Last Update",
+      developmentTeam: "Development Team",
+      projectLead: "Project Lead",
+      backendDeveloper: "Backend Developer",
+      leadDeveloper: "Lead Developer",
+      uiDesigner: "UI/UX Designer",
+      qaEngineer: "QA Engineer",
+      supportInformation: "Support Information",
+      technicalSupport: "Technical Support",
+      documentation: "Documentation",
+      madeWithLove: "Made with love by ARCAD team"
+    },
+    actions: {
+      saveSettings: "Save Settings",
+      saveChanges: "Save Changes",
+      saving: "Saving...",
+      cancel: "Cancel"
+    },
+    validation: {
+      passwordLength: "Password must be at least 8 characters",
+      passwordComplexity: "Password must include uppercase, numbers, and special characters",
+      passwordsMatch: "Passwords do not match"
+    },
+    toast: {
+      generalSuccess: "General settings saved successfully",
+      generalError: "Failed to save general settings",
+      userSuccess: "User information updated successfully",
+      userError: "Failed to update user information",
+      formErrors: "Please fix the errors in the form",
+      loadError: "Failed to load user data"
     }
   }
 };
