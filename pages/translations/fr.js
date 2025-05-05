@@ -381,6 +381,132 @@ export const fr = {
         6: "Actions",
         clearfilter: "Effacer le filtre"
       }
-    }
+    },
+    equipmentList: {
+      path: {
+        1: "Tableau de bord",
+        2: "Équipement",
+      },
+      cards: {
+        title: "Gestion des Équipements",
+        sub: {
+          1: "Équipement Total",
+          2: "Nécessite Maintenance",
+          3: "En Fonctionnement",
+          4: "Hors Service",
+        },
+      },
+      tablehead: {
+        1: "Code d'Inventaire",
+        2: "ID",
+        3: "Type",
+        4: "Catégorie",
+        5: "Emplacement",
+        6: "Date d'acquisition",
+        7: "Statut",
+      },
+      searchbar: {
+        title: "Table des Équipements",
+        buttons: {
+          1: "Rechercher",
+          2: "Réinitialiser",
+          3: "Ajouter Nouveau",
+        },
+      },
+    },
+    tasksList: {
+      path: {
+        1: "Tableau de bord",
+        2: "Tâches",
+      },
+      cards: {
+        title: "Gestion des Tâches",
+        sub: {
+          1: "En attente",
+          2: "En cours",
+          3: "Terminées",
+          4: "À faire",
+        },
+      },
+      tablehead: {
+        1: "Nom de la tâche",
+        2: "Emplacement",
+        3: "Responsable",
+        4: "Priorité",
+        5: "Échéance",
+        6: "Statut",
+      },
+      searchbar: {
+        title: "Tableau des Tâches",
+        placeholder: "Entrez du texte pour rechercher",
+        buttons: {
+          1: "Rechercher",
+          2: "Réinitialiser",
+          3: "Ajouter une Tâche",
+        },
+      },
+      status: {
+        1: "En attente",
+        2: "En cours",
+        3: "Terminées",
+        4: "À faire",
+      },
+      priority: {
+        1: "Faible",
+        2: "Moyenne",
+        3: "Élevée",
+      },
+    },
+    reportPage: {
+      path: {
+        1: "Tableau de bord",
+        2: "Rapports",
+      },
+      title: "Rapports du Système",
+      sections: {
+        users: "Rapport des Utilisateurs",
+        tasks: "Rapport des Tâches",
+        equipment: "Rapport des Équipements",
+      },
+      tables: {
+        users: {
+          title: "Gestion des Utilisateurs",
+          columns: {
+            name: "Nom",
+            profession: "Profession",
+            email: "Email",
+            phoneNumber: "Numéro de Téléphone",
+            role: "Rôle",
+          },
+          addButton: "Ajouter un Utilisateur",
+        },
+        tasks: {
+          title: "Gestion des Tâches",
+          columns: {
+            taskName: "Nom de la Tâche",
+            location: "Emplacement",
+            responsible: "Responsable",
+            priority: "Priorité",
+            deadline: "Échéance",
+            status: "Statut",
+          },
+          addButton: "Ajouter une Tâche",
+        },
+        equipment: {
+          title: "Gestion des Équipements",
+          columns: {
+            inventoryCode: "Code d'Inventaire",
+            id: "ID",
+            type: "Type",
+            category: "Catégorie",
+            location: "Emplacement",
+            acquisitionDate: "Date d'Acquisition",
+            status: "Statut",
+          },
+          addButton: "Ajouter un Équipement",
+        },
+      },
+    },
+    uniquetache:"task"
     
 }

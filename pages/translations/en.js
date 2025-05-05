@@ -389,5 +389,132 @@ export const en = {
 
     
     }
-  }
+  },
+  equipmentList: {
+    path: {
+      1: "Dashboard",
+      2: "Equipment",
+    },
+    cards: {
+      title: "Equipment Management",
+      sub: {
+        1: "Total Equipment",
+        2: "Needs Maintenance",
+        3: "Working",
+        4: "Out of Service",
+      },
+    },
+    tablehead: {
+      1: "Inventory Code",
+      2: "ID",
+      3: "Type",
+      4: "Category",
+      5: "Location",
+      6: "Acquisition date",
+      7: "Status",
+    },
+    searchbar: {
+      title: "Equipment Table",
+      buttons: {
+        1: "Search",
+        2: "Reset",
+        3: "Add New",
+      },
+    },
+  },
+  tasksList: {
+    path: {
+      1: "Dashboard",
+      2: "Tasks",
+    },
+    cards: {
+      title: "Tasks Management",
+      sub: {
+        1: "Pending",
+        2: "In Progress",
+        3: "Completed",
+        4: "To Do",
+      },
+    },
+    tablehead: {
+      1: "Task name",
+      2: "Location",
+      3: "Responsible",
+      4: "Priority",
+      5: "Deadline",
+      6: "Status",
+    },
+    searchbar: {
+      title: "Task Table",
+      placeholder: "Enter text to search",
+      buttons: {
+        1: "Search",
+        2: "Reset",
+        3: "Add Task",
+      },
+    },
+    status: {
+      1: "Pending",
+      2: "In Progress",
+      3: "Completed",
+      4: "To Do",
+    },
+    priority: {
+      1: "Low",
+      2: "Medium",
+      3: "High",
+    },
+  },
+  // Report page translations
+  reportPage: {
+    path: {
+      1: "Dashboard",
+      2: "Reports",
+    },
+    title: "System Reports",
+    sections: {
+      users: "Users Report",
+      tasks: "Tasks Report",
+      equipment: "Equipment Report",
+    },
+    tables: {
+      users: {
+        title: "User Management",
+        columns: {
+          name: "Name",
+          profession: "Profession",
+          email: "Email",
+          phoneNumber: "Phone Number",
+          role: "Role",
+        },
+        addButton: "Add User",
+      },
+      tasks: {
+        title: "Task Management",
+        columns: {
+          taskName: "Task Name",
+          location: "Location",
+          responsible: "Responsible",
+          priority: "Priority",
+          deadline: "Deadline",
+          status: "Status",
+        },
+        addButton: "Add Task",
+      },
+      equipment: {
+        title: "Equipment Management",
+        columns: {
+          inventoryCode: "Inventory Code",
+          id: "ID",
+          type: "Type",
+          category: "Category",
+          location: "Location",
+          acquisitionDate: "Acquisition Date",
+          status: "Status",
+        },
+        addButton: "Add Equipment",
+      },
+    },
+  },
+  uniquetache:"tache"
 };
