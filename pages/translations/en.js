@@ -357,23 +357,41 @@ export const en = {
     },
     loading: "Loading equipment data..."
   },
-  forgotPassword : {
+// English translations
+
+  forgotPassword: {
     title: "Forget password",
     description: "Enter your email that you used when you joined and we'll send you instructions to reset your password.",
     emailLabel: "Email",
     emailPlaceholder: "Enter your email",
     cancelButton: "Cancel",
-    continueButton: "Continue"
+    continueButton: "Continue",
+    invalidEmail: "Please enter a valid email address"
   },
-  verification : {
+  verification: {
     title: "Verification",
     description: "Enter the 6-digit code that was sent to your email",
-    verifyButton: "Verify"
+    verifyButton: "Verify",
+    incompleteCode: "Please enter the complete verification code"
   },
-  success : {
+  success: {
     title: "Successfully",
     description: "Your password has been reset successfully",
     backButton: "Back To Sign in"
   },
+  newPassword: {
+    title: "New Password",
+    description: "Please create a new secure password for your account",
+    passwordLabel: "New Password",
+    passwordPlaceholder: "Enter your new password",
+    confirmPasswordLabel: "Confirm Password",
+    confirmPasswordPlaceholder: "Confirm your new password",
+    passwordsDoNotMatch: "Passwords do not match",
+    passwordTooShort: "Password must be at least 8 characters long",
+    cancelButton: "Cancel",
+    resetButton: "Reset Password",
+    passwordRequirements: "Password must be at least 8 characters"
+  }
 
+  
 };

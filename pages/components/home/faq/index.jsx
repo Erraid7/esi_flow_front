@@ -46,6 +46,7 @@ export default function FaqSection() {
   };
 
   return (
+  <section className="overflow-auto px-4 md:px-20  flex flex-col gap-8 bg-neutral-50 dark:bg-neutral-990 pb-24" id='faq'>
     <div className="w-full  mx-auto px-4 md:px-20">
       <div className="mb-12">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-russo text-neutral-990 dark:text-neutral-100 leading-tight">
@@ -121,5 +122,6 @@ export default function FaqSection() {
         ))}
       </div>
     </div>
+ </section>
   );
 }

@@ -2,6 +2,7 @@
 
 export default function ContactSection() {
   return (
+  <section className="overflow-auto px-4 md:px-20  flex flex-col gap-8 bg-neutral-50 dark:bg-neutral-990 pb-24" id='contact'>
     <div className="bg-neutral-50 py-8 mt-8 px-[40px] md:px-[20px] flex flex-col items-start dark:bg-neutral-990">
       {/* Logo container */}
       <div className=" bg-neutral-50 flex items-start justify-start mb-0 dark:bg-neutral-990">
@@ -38,5 +39,6 @@ export default function ContactSection() {
         </div>
       </div>
     </div>
+  </section>
   )
 }

@@ -457,25 +457,41 @@ export const frTranslations = {
         }
       }
     },
-    forgotPassword :{
-      title: "Mot de passe oublié",
-      description: "Entrez l'email que vous avez utilisé lors de votre inscription et nous vous enverrons les instructions pour réinitialiser votre mot de passe.",
-      emailLabel: "Email",
-      emailPlaceholder: "Entrez votre email",
-      cancelButton: "Annuler",
-      continueButton: "Continuer"
-    },
-    
-    verification : {
-      title: "Vérification",
-      description: "Entrez le code à 6 chiffres qui a été envoyé à votre email",
-      verifyButton: "Vérifier"
-    },
+// French translations
 
-    success :{
-      title: "Succès",
-      description: "Votre mot de passe a été réinitialisé avec succès",
-      backButton: "Retour à la connexion"
-    },
+  forgotPassword: {
+    title: "Mot de passe oublié",
+    description: "Entrez l'email que vous avez utilisé lors de votre inscription et nous vous enverrons les instructions pour réinitialiser votre mot de passe.",
+    emailLabel: "Email",
+    emailPlaceholder: "Entrez votre email",
+    cancelButton: "Annuler",
+    continueButton: "Continuer",
+    invalidEmail: "Veuillez entrer une adresse e-mail valide"
+  },
+  verification: {
+    title: "Vérification",
+    description: "Entrez le code à 6 chiffres qui a été envoyé à votre email",
+    verifyButton: "Vérifier",
+    incompleteCode: "Veuillez entrer le code de vérification complet"
+  },
+  success: {
+    title: "Succès",
+    description: "Votre mot de passe a été réinitialisé avec succès",
+    backButton: "Retour à la connexion"
+  },
+  newPassword: {
+    title: "Nouveau mot de passe",
+    description: "Veuillez créer un nouveau mot de passe sécurisé pour votre compte",
+    passwordLabel: "Nouveau mot de passe",
+    passwordPlaceholder: "Entrez votre nouveau mot de passe",
+    confirmPasswordLabel: "Confirmer le mot de passe",
+    confirmPasswordPlaceholder: "Confirmez votre nouveau mot de passe",
+    passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
+    passwordTooShort: "Le mot de passe doit contenir au moins 8 caractères",
+    cancelButton: "Annuler",
+    resetButton: "Réinitialiser",
+    passwordRequirements: "Le mot de passe doit comporter au moins 8 caractères"
+  }
+
   };
 
