@@ -42,7 +42,7 @@ export default function Dashboard() {
 
   // Progress Card Component
   const ProgressCard = () => {
-    const progress = 66
+    const progress = 90
 
     return (
       <div className="bg-card-bg rounded-lg p-4 sm:p-6 shadow-sm w-full h-full">

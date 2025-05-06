@@ -13,7 +13,9 @@ import {
   defaultCustomStyles, 
   DefaultEmptyComponent 
 } from "./themes"
-import { useLanguage } from '../../translations/contexts/languageContext';
+import { useLanguage } from '../../translations/contexts/languageContext'
+import { RowDetailModal } from "./RowDetailModal"
+import { exportCSV } from "./exportUtils"
 
 // Initialize themes
 createDarkTheme()
@@ -46,8 +48,14 @@ export const DynamicTable = ({
   styled = [],
   actionColumn = true,
   onEdit,
+  onAddNew,
+  onExportCSV, // New prop for custom export function
+  exportFilename, // Optional custom filename for export
   addButtonText = "Add User",
-  onDelete
+  addButtonLink = "",
+  onDelete,
+  showRowDetailsModal = true,
+  showExport = true // New prop to toggle export button visibility
 }) => {
   return (
     <FilterProvider initialData={data}>
@@ -71,8 +79,14 @@ export const DynamicTable = ({
         styled={styled}
         actionColumn={actionColumn}
         onEdit={onEdit}
+        onAddNew={onAddNew}
         onDelete={onDelete}
+        onExportCSV={onExportCSV}
+        exportFilename={exportFilename}
+        addButtonLink={addButtonLink} 
         addButtonText={addButtonText}
+        showRowDetailsModal={showRowDetailsModal}
+        showExport={showExport}
       />
     </FilterProvider>
   )
@@ -99,12 +113,22 @@ const DynamicTableInner = ({
   styled = [],
   actionColumn,
   onEdit,
+  onAddNew,
   onDelete,
-  addButtonText
+  onExportCSV,
+  exportFilename,
+  addButtonText,
+  addButtonLink,
+  showRowDetailsModal,
+  showExport = true
 }) => {
   const { filteredData, updateFilter, clearFilters, filters, getUniqueValues } = useFilter()
   const [searchQuery, setSearchQuery] = useState("")
-  const { t, toggleLanguage } = useLanguage();
+  const { t } = useLanguage()
+  
+  // New state for modal
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedRow, setSelectedRow] = useState(null)
 
   // Handle global search
   const handleSearch = (e) => {
@@ -119,6 +143,31 @@ const DynamicTableInner = ({
     updateFilter("globalSearch", "")
   }
 
+  // Handle CSV export
+  const handleExportCSV = () => {
+    if (onExportCSV) {
+      // Use custom export handler if provided
+      onExportCSV(filteredData, columnConfig);
+    } else {
+      // Default export behavior
+      const filename = exportFilename || 
+        `${title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.csv`;
+      exportCSV(filteredData, columnConfig, filename);
+    }
+  };
+
+  // Handle row click to open modal
+  const handleRowClick = (row) => {
+    if (showRowDetailsModal) {
+      setSelectedRow(row)
+      setIsModalOpen(true)
+    }
+    
+    // Still call the original onRowClicked if provided
+    if (onRowClicked) {
+      onRowClicked(row)
+    }
+  }
  
   // Create dynamic columns based on data structure
   const generateColumns = () => {
@@ -133,7 +182,6 @@ const DynamicTableInner = ({
       const fieldTitle = columnConfig[key]?.title || key.charAt(0).toUpperCase() + key.slice(1)
       
       // Create column based on field type
-      // Within the generateColumns function, replace the existing isDropdown check with this:
       if (isDropdown) {
         const options = getUniqueValues(key)
         return {
@@ -170,7 +218,7 @@ const DynamicTableInner = ({
     // Add action column if specified
     if (actionColumn) {
       columns.push({
-        name:t('userList', 'tablehead',6) ,
+        name: t('userList', 'tablehead', 6),
         cell: (row) => (
           <div className="flex space-x-2">
             <button 
@@ -228,6 +276,12 @@ const DynamicTableInner = ({
           onClearSearch={clearSearch}
           onClearFilters={clearFilters}
           addButtonText={addButtonText}
+          addButtonLink={addButtonLink}
+          onAddNew={onAddNew}
+          onExportCSV={handleExportCSV}
+          data={filteredData}
+          columnConfig={columnConfig}
+          showExport={showExport}
         />
       )}
 
@@ -242,15 +296,25 @@ const DynamicTableInner = ({
           noDataComponent={emptyComponent || <DefaultEmptyComponent />}
           noHeader={false}
           persistTableHead
-          onRowClicked={onRowClicked}
+          onRowClicked={handleRowClick}
           selectableRows={selectableRows}
           selectableRowsHighlight={selectableRowsHighlight}
           onSelectedRowsChange={onSelectedRowsChange}
           clearSelectedRows={clearSelectedRows}
           fixedHeader={fixedHeader}
           fixedHeaderScrollHeight={fixedHeaderScrollHeight}
+          pointerOnHover={true}
+          className={`${showRowDetailsModal ? 'cursor-pointer' : ''}`}
         />
       </div>
+
+      {/* Row Details Modal */}
+      <RowDetailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        rowData={selectedRow}
+        columnConfig={columnConfig}
+      />
     </div>
   )
 }

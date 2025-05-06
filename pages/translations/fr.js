@@ -109,6 +109,32 @@ export const fr = {
     },
   },
   dashboard: {
+    technician: {
+      title: "Tableau de bord du technicien",
+      mostFrequentIssues: "Problèmes les plus fréquents",
+      highPriority: "Haute priorité",
+      mediumPriority: "Priorité moyenne",
+      lowPriority: "Faible priorité",
+      lastTaskProgress: "Progression de la dernière tâche",
+      clickAndDiscover: "Cliquez et découvrez, notification ici",
+      makeReport: "Faire le rapport",
+    },
+  
+    personal: {
+      title: "Tableau de bord personnel",
+      requestStatus: "État de mes demandes",
+      requestStatuses: {
+        completed: "Terminé",
+        pending: "En attente",
+        toDo: "À faire",
+        inProgress: "En cours",
+        canceled: "Annulé"
+      },
+      lastRequestProgress: "Progression de la dernière demande",
+      clickAndDiscover: "Cliquez et découvrez, notification ici",
+      myNotification: "Mes notifications",
+      viewNotification: "Voir les notifications"
+    },
     title: "Tableau de Bord ESI Flow",
     overview: "Aperçu du Tableau de Bord",
     activeRequests: "Demandes actives / tech/utilisateurs",
@@ -642,6 +668,7 @@ export const fr = {
       urgencyLevel: "Urgence",
       status: "Statut",
       createdAt: "Créé le",
+      inventoryCode : "code inventaire",
     },
     tablehead: {
       clearfilter: "Effacer le filtre",
@@ -729,5 +756,261 @@ equipmentList: {
           3: "Élevée",
         },
       },
-      uniquetache:"task"
+      uniquetache:"task",
+  notifications: {
+    title: "Notifications",
+    breadcrumb: {
+      dashboard: "Tableau de bord",
+      notifications: "Notifications"
+    },
+    searchTitle: "Recherche de Notifications",
+    searchPlaceholder: "Recherchez des notifications par mot-clé, type ou date",
+    filters: {
+      all: "Tout",
+      unread: "Non lus",
+      urgent: "Urgent",
+      tasks: "Tâches",
+      info: "Infos"
+    },
+    markAllAsRead: "Marquer tout comme lu",
+    groups: {
+      today: "Aujourd'hui",
+      yesterday: "Hier",
+      thisWeek: "Cette semaine"
+    },
+    timeFormat: {
+      minutesAgo: "il y a {{count}} min",
+      hoursAgo: "il y a {{count}} heure",
+      hoursAgo_plural: "il y a {{count}} heures",
+      daysAgo: "il y a {{count}} jour",
+      daysAgo_plural: "il y a {{count}} jours"
+    },
+    noNotifications: "Aucune notification trouvée",
+    checkBackLater: "Revenez plus tard pour les mises à jour",
+    loadMore: "Charger plus",
+    loading: "Chargement des notifications...",
+    toast: {
+      fetchError: "Échec du chargement des notifications",
+      markedAllRead: "Toutes les notifications ont été marquées comme lues",
+      loadingMore: "Chargement de plus de notifications..."
+    },
+    mockData: {
+      taskAssigned: "Nouvelle tâche assignée: Défaillance de l'unité de climatisation",
+      taskAssignedDesc: "Dysfonctionnement du système de refroidissement dans la salle de conférence",
+      equipmentAlert: "Alerte équipement: Le système CVC fonctionne à pleine capacité",
+      equipmentAlertDesc: "Augmentation de la consommation d'énergie détectée dans le bâtiment DE",
+      filterReplacement: "Rappel de tâche: Remplacement du filtre à air requis",
+      filterReplacementDesc: "Accumulation de poussière dans les bouches d'aération de la bibliothèque",
+      taskCompleted: "Tâche accomplie: Normalisation de la pression du système de chaudière",
+      taskCompletedDesc: "Un contrôle de routine a permis de résoudre le problème de haute pression dans la chauffe CP3",
+      newEquipment: "Nouvel équipement ajouté: Tour de refroidissement",
+      newEquipmentDesc: "Bâtiment A • ID: HVAC-2310",
+      maintenanceUpdate: "Mise à jour du calendrier de maintenance",
+      maintenanceUpdateDesc: "Système • 3 tâches replanifiées",
+      newEquipments: "Nouveaux équipements ajoutés: Radiateurs",
+      newEquipmentsDesc: "Amphithéâtre AP2 • ID: RAD-AP2-004",
+      maintenanceReport: "Rapport de maintenance disponible",
+      maintenanceReportDesc: "Système • Résumé de la maintenance du deuxième trimestre",
+      softwareUpdate: "Mise à jour logicielle disponible",
+      softwareUpdateDesc: "Système • Version 2.4.1",
+      todayDeadline: "À faire pour aujourd'hui à 17h",
+      tomorrowDeadline: "À faire pour demain"
+    }
+  },
+  settings: {
+    title: "Paramètres",
+    breadcrumb: {
+      dashboard: "Tableau de bord",
+      settings: "Paramètres"
+    },
+    tabs: {
+      general: "Paramètres généraux",
+      user: "Informations utilisateur",
+      system: "Informations système"
+    },
+    general: {
+      systemPreferences: "Préférences système",
+      darkMode: "Mode sombre",
+      darkModeDescription: "Activez le mode sombre pour une meilleure expérience visuelle dans les environnements peu éclairés.",
+      language: "Langue",
+      languageDescription: "Changer la langue de l'interface",
+      notifications: "Notifications",
+      emailNotifications: "Notifications par e-mail",
+      emailNotificationsDescription: "Recevez des mises à jour importantes et des notifications par e-mail.",
+      reminderNotifications: "Notifications de rappel",
+      reminderNotificationsDescription: "Recevez des rappels pour les tâches à venir et les échéances.",
+      advancedSettings: "Paramètres avancés",
+      dataSharing: "Partage de données",
+      dataSharingDescription: "Partagez des données d'utilisation anonymes pour aider à améliorer la plateforme."
+    },
+    user: {
+      profilePicture: "Photo de profil",
+      uploadPicture: "Cliquez pour télécharger une photo de profil",
+      basicInformation: "Informations de base",
+      fullName: "Nom complet",
+      email: "E-mail",
+      emailComment: "Votre adresse e-mail sera utilisée pour les notifications liées au compte.",
+      phone: "Téléphone",
+      phoneComment: "Votre numéro de téléphone sera utilisé pour la récupération de compte et la sécurité.",
+      biography: "Biographie",
+      profession: "Profession",
+      professionUpdate: "Mettre à jour votre rôle professionnel",
+      role: "Rôle",
+      roleUpdate: "Mettre à jour votre rôle système",
+      roleDescription: "Votre rôle détermine les actions que vous pouvez effectuer dans le système.",
+      accountSecurity: "Sécurité du compte",
+      passwordInfo: "Laissez les champs de mot de passe vides si vous ne souhaitez pas changer votre mot de passe.",
+      password: "Mot de passe",
+      passwordPlaceholder: "Entrez un nouveau mot de passe",
+      passwordComment: "Le mot de passe doit comporter au moins 8 caractères avec des majuscules, des chiffres et des caractères spéciaux.",
+      confirmPassword: "Confirmer le mot de passe",
+      confirmPasswordPlaceholder: "Confirmer le nouveau mot de passe"
+    },
+    system: {
+      platformInformation: "Informations sur la plateforme",
+      platformDescription: "Cette section fournit des informations sur la version actuelle du système et des détails techniques.",
+      platformVersion: "Version de la plateforme",
+      serverEnvironment: "Environnement serveur",
+      databaseVersion: "Version de la base de données",
+      lastUpdate: "Dernière mise à jour",
+      developmentTeam: "Équipe de développement",
+      projectLead: "Chef de projet",
+      backendDeveloper: "Développeur backend",
+      leadDeveloper: "Développeur principal",
+      uiDesigner: "Designer UI/UX",
+      qaEngineer: "Ingénieur QA",
+      supportInformation: "Informations de support",
+      technicalSupport: "Support technique",
+      documentation: "Documentation",
+      madeWithLove: "Fait avec amour par l'équipe ARCAD"
+    },
+    actions: {
+      saveSettings: "Enregistrer les paramètres",
+      saveChanges: "Enregistrer les modifications",
+      saving: "Enregistrement...",
+      cancel: "Annuler"
+    },
+    validation: {
+      passwordLength: "Le mot de passe doit comporter au moins 8 caractères",
+      passwordComplexity: "Le mot de passe doit inclure des majuscules, des chiffres et des caractères spéciaux",
+      passwordsMatch: "Les mots de passe ne correspondent pas"
+    },
+    toast: {
+      generalSuccess: "Paramètres généraux enregistrés avec succès",
+      generalError: "Échec de l'enregistrement des paramètres généraux",
+      userSuccess: "Informations utilisateur mises à jour avec succès",
+      userError: "Échec de la mise à jour des informations utilisateur",
+      formErrors: "Veuillez corriger les erreurs dans le formulaire",
+      loadError: "Échec du chargement des données utilisateur"
+    }
+  },
+  // Add translations for the user edit form
+  forgotPassword: {
+    title: "Mot de passe oublié",
+    description:
+      "Entrez votre adresse e-mail et nous vous enverrons un code de vérification pour réinitialiser votre mot de passe.",
+    emailLabel: "Adresse e-mail",
+    emailPlaceholder: "Entrez votre adresse e-mail",
+    invalidEmail: "Veuillez entrer une adresse e-mail valide",
+    emailNotFound: "Cette adresse e-mail n'est pas enregistrée dans notre système",
+    cancelButton: "Annuler",
+    continueButton: "Continuer",
+    sending: "Envoi en cours...",
+  },
+  verification: {
+    title: "Code de vérification",
+    description: "Nous avons envoyé un code de vérification à {email}. Veuillez entrer le code ci-dessous.",
+    incompleteCode: "Veuillez entrer le code de vérification à 6 chiffres complet",
+    invalidCode: "Le code de vérification que vous avez entré est invalide ou a expiré",
+    verifyButton: "Vérifier le code",
+    verifying: "Vérification...",
+    didNotReceive: "Vous n'avez pas reçu le code ?",
+    resendButton: "Renvoyer le code",
+    resendIn: "Renvoyer le code dans",
+    resending: "Renvoi en cours...",
+    codeSent: "Un nouveau code de vérification a été envoyé à votre e-mail",
+    resendFailed: "Échec de l'envoi du code de vérification. Veuillez réessayer.",
+  },
+  newPassword: {
+    title: "Créer un nouveau mot de passe",
+    description:
+      "Veuillez créer un nouveau mot de passe pour votre compte. Assurez-vous qu'il est sécurisé et facile à retenir.",
+    passwordLabel: "Nouveau mot de passe",
+    passwordPlaceholder: "Entrez un nouveau mot de passe",
+    confirmPasswordLabel: "Confirmer le mot de passe",
+    confirmPasswordPlaceholder: "Confirmez votre nouveau mot de passe",
+    passwordRequirements: "Votre mot de passe doit répondre à toutes les exigences ci-dessous",
+    passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
+    passwordTooShort: "Le mot de passe doit comporter au moins 8 caractères",
+    resetButton: "Réinitialiser le mot de passe",
+    resetting: "Réinitialisation...",
+    resetFailed: "Échec de la réinitialisation du mot de passe. Veuillez réessayer.",
+    cancelButton: "Retour",
+    passwordStrength: "Force du mot de passe",
+    strengthEmpty: "Vide",
+    strengthWeak: "Faible",
+    strengthMedium: "Moyen",
+    strengthStrong: "Fort",
+    minLength: "Au moins 8 caractères",
+    upperCase: "Lettre majuscule",
+    lowerCase: "Lettre minuscule",
+    number: "Chiffre",
+    specialChar: "Caractère spécial",
+  },
+  success: {
+    title: "Succès !",
+    description:
+      "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+    backButton: "Retour à la connexion",
+  },
+  reportPage: {
+    path: {
+      1: "Tableau de bord",
+      2: "Rapports",
+    },
+    title: "Rapports du Système",
+    sections: {
+      users: "Rapport des Utilisateurs",
+      tasks: "Rapport des Tâches",
+      equipment: "Rapport des Équipements",
+    },
+    tables: {
+      users: {
+        title: "Gestion des Utilisateurs",
+        columns: {
+          name: "Nom",
+          profession: "Profession",
+          email: "Email",
+          phoneNumber: "Numéro de Téléphone",
+          role: "Rôle",
+        },
+        addButton: "Ajouter un Utilisateur",
+      },
+      tasks: {
+        title: "Gestion des Tâches",
+        columns: {
+          taskName: "Nom de la Tâche",
+          location: "Emplacement",
+          responsible: "Responsable",
+          priority: "Priorité",
+          deadline: "Échéance",
+          status: "Statut",
+        },
+        addButton: "Ajouter une Tâche",
+      },
+      equipment: {
+        title: "Gestion des Équipements",
+        columns: {
+          inventoryCode: "Code d'Inventaire",
+          id: "ID",
+          type: "Type",
+          category: "Catégorie",
+          location: "Emplacement",
+          acquisitionDate: "Date d'Acquisition",
+          status: "Statut",
+        },
+        addButton: "Ajouter un Équipement",
+      },
+    },
+  },
 };

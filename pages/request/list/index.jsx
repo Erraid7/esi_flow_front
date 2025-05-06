@@ -125,7 +125,7 @@ export default function RequestListPage() {
   }
 
   // Handle add request
-  const handleAdd = () => {
+  const handleadd = () => {
     router.push(`add`)
   }
 
@@ -241,12 +241,25 @@ export default function RequestListPage() {
       </div>
     )
   }
+  // Current user for sidebar
+  const currentUser = {
+    name: "MEHDAOUI Lokman",
+    role: "admin",
+    initials: "AD",
+  }
 
   return (
     <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 h-full">
       <div>
-        <Sidebar activeItem={"requests"} />
+      <Sidebar
+        activeItem={"users"}
+        userRole={currentUser.role}
+        userName={currentUser.name}
+        userInitials={currentUser.initials}
+      />
       </div>
+
+     
 
       <div className="w-full px-4 py-4">
         <div>
@@ -291,7 +304,7 @@ export default function RequestListPage() {
             dropdownFields={["urgency", "status"]}
             onEdit={handleEdit}
             onDelete={confirmDelete} // Changed to open the confirmation modal
-            onAdd={handleAdd}
+            onAddNew={handleadd} // Added onAddNew prop for adding new users
             styled={["status", "urgency"]}
           />
         )}

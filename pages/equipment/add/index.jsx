@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import { MapPin } from "lucide-react"
+import { MapPin, Calendar, Clock, Upload } from "lucide-react"
 import Toast from "../../components/form_components/toast"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
@@ -14,6 +14,7 @@ import axios from "axios"
 // Main Component
 export default function EquipmentAddForm() {
   const { t } = useLanguage()
+  const fileInputRef = useRef(null)
 
   // State for toast notifications
   const [toast, setToast] = useState({
@@ -32,7 +33,13 @@ export default function EquipmentAddForm() {
     location: "",
     status: "",
     description: "",
+    picture: null,
+    automaticMaintenanceInterval: "",
+    seasonalMaintenanceMonths: [],
   })
+
+  // Preview for uploaded image
+  const [imagePreview, setImagePreview] = useState(null)
 
   // Form validation
   const [errors, setErrors] = useState({})
@@ -84,6 +91,22 @@ export default function EquipmentAddForm() {
   // Update the statusOptions array to match the backend ENUM
   const statusOptions = ["working", "needs_maintenance", "out_of_service"]
 
+  // Months for seasonal maintenance
+  const monthOptions = [
+    { value: 1, label: "January" },
+    { value: 2, label: "February" },
+    { value: 3, label: "March" },
+    { value: 4, label: "April" },
+    { value: 5, label: "May" },
+    { value: 6, label: "June" },
+    { value: 7, label: "July" },
+    { value: 8, label: "August" },
+    { value: 9, label: "September" },
+    { value: 10, label: "October" },
+    { value: 11, label: "November" },
+    { value: 12, label: "December" },
+  ]
+
   const handleInputChange = useCallback(
     (field, value) => {
       setEquipment((prev) => ({ ...prev, [field]: value }))
@@ -94,6 +117,40 @@ export default function EquipmentAddForm() {
     },
     [errors],
   )
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      handleInputChange("picture", file)
+
+      // Create preview URL
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleMonthToggle = (monthValue) => {
+    setEquipment((prev) => {
+      const currentMonths = [...prev.seasonalMaintenanceMonths]
+
+      if (currentMonths.includes(monthValue)) {
+        // Remove month if already selected
+        return {
+          ...prev,
+          seasonalMaintenanceMonths: currentMonths.filter((m) => m !== monthValue),
+        }
+      } else {
+        // Add month if not selected
+        return {
+          ...prev,
+          seasonalMaintenanceMonths: [...currentMonths, monthValue].sort((a, b) => a - b),
+        }
+      }
+    })
+  }
 
   const showToast = useCallback((message, type = "success") => {
     setToast({
@@ -120,6 +177,11 @@ export default function EquipmentAddForm() {
     if (!equipment.location.trim()) newErrors.location = t("equipmentEdit", "validation", "locationRequired")
     if (!equipment.status) newErrors.status = t("equipmentEdit", "validation", "statusRequired")
 
+    // Validate automatic maintenance interval if provided
+    if (equipment.automaticMaintenanceInterval && isNaN(equipment.automaticMaintenanceInterval)) {
+      newErrors.automaticMaintenanceInterval = "Maintenance interval must be a number"
+    }
+
     return newErrors
   }, [equipment, t])
 
@@ -133,21 +195,55 @@ export default function EquipmentAddForm() {
       setIsSubmitting(true)
 
       try {
-        // Create equipment data object matching backend requirements
-        const equipmentData = {
-          inventorie_code: equipment.code,
-          type: equipment.type,
-          category: equipment.category,
-          acquisition_date: equipment.acquisitionDate,
-          date_of_commissioning: equipment.commissioningDate,
-          localisation: equipment.location,
-          eqp_status: equipment.status,
-          documentation: equipment.description,
-          maintenance_history: [],
+        // Create FormData object for file upload
+        const formData = new FormData()
+
+        // Add all equipment data to FormData
+        formData.append("inventorie_code", equipment.code)
+        formData.append("type", equipment.type)
+        formData.append("category", equipment.category)
+        formData.append("acquisition_date", equipment.acquisitionDate)
+        formData.append("date_of_commissioning", equipment.commissioningDate)
+        formData.append("localisation", equipment.location)
+        formData.append("eqp_status", equipment.status)
+        formData.append("documentation", equipment.description)
+
+        // Add new fields
+        if (equipment.picture) {
+          formData.append("picture", equipment.picture)
         }
 
-        // Make the actual API call to the backend
-        const response = await axios.post("http://localhost:5000/equipments", equipmentData)
+        // Convert automaticMaintenanceInterval to integer
+        if (equipment.automaticMaintenanceInterval) {
+          const intervalValue = Number.parseInt(equipment.automaticMaintenanceInterval, 10)
+          formData.append("automatic_maintenance_interval", intervalValue)
+        }
+
+        // Handle seasonal maintenance months as integers
+        if (equipment.seasonalMaintenanceMonths.length > 0) {
+          // Create a proper array for the backend
+          const monthsArray = equipment.seasonalMaintenanceMonths.map((month) =>
+            typeof month === "string" ? Number.parseInt(month, 10) : month,
+          )
+
+          // Use a hidden input approach to send the array
+          formData.append("seasonal_maintenance_months", JSON.stringify(monthsArray))
+        }
+
+        // Empty maintenance history array
+        formData.append("maintenance_history", JSON.stringify([]))
+
+        // Log the form data for debugging
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}: ${value}`)
+        }
+
+        // Make the API call with FormData
+        const response = await axios.post("http://localhost:5000/equipments", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
 
         // Show success message
         showToast("Equipment added successfully", "success")
@@ -162,7 +258,11 @@ export default function EquipmentAddForm() {
           location: "",
           status: "",
           description: "",
+          picture: null,
+          automaticMaintenanceInterval: "",
+          seasonalMaintenanceMonths: [],
         })
+        setImagePreview(null)
       } catch (error) {
         console.error("Error adding equipment:", error)
         showToast(error.response?.data?.error || error.message || "Failed to add equipment", "error")
@@ -218,6 +318,56 @@ export default function EquipmentAddForm() {
                   error={errors.code}
                   required={true}
                 />
+              </div>
+            </FormSection>
+
+            {/* Equipment Image */}
+            <FormSection title="Equipment Image">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-200">
+                    Equipment Picture
+                  </label>
+
+                  <div className="flex items-start gap-4">
+                    {/* Image preview */}
+                    <div className="w-32 h-32 border rounded-lg overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+                      {imagePreview ? (
+                        <img
+                          src={imagePreview || "/placeholder.svg"}
+                          alt="Equipment preview"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-neutral-400 flex flex-col items-center justify-center p-2 text-center">
+                          <Upload size={24} />
+                          <span className="text-xs mt-1">No image</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Upload controls */}
+                    <div className="flex flex-col gap-2">
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        accept="image/*"
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current.click()}
+                        className="h-9 px-4 text-sm bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-200 font-medium rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-colors"
+                      >
+                        Select Image
+                      </button>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Upload an image of the equipment. If none is provided, a default image will be used.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </FormSection>
 
@@ -289,6 +439,65 @@ export default function EquipmentAddForm() {
                 isTextarea={true}
                 error={errors.description}
               />
+            </FormSection>
+
+            {/* Maintenance Schedule */}
+            <FormSection title="Maintenance Schedule">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Automatic Maintenance Interval */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-200 flex items-center gap-1">
+                    <Clock size={16} />
+                    Automatic Maintenance Interval (days)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="e.g., 90 for maintenance every 3 months"
+                    value={equipment.automaticMaintenanceInterval}
+                    onChange={(e) => {
+                      // Ensure it's stored as a number
+                      const value = e.target.value === "" ? "" : Number.parseInt(e.target.value, 10)
+                      handleInputChange("automaticMaintenanceInterval", value)
+                    }}
+                    className="h-10 px-3 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                    error={errors.automaticMaintenanceInterval}
+                  />
+                  {errors.automaticMaintenanceInterval && (
+                    <p className="text-red-500 text-xs mt-1">{errors.automaticMaintenanceInterval}</p>
+                  )}
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Enter the number of days between regular maintenance checks
+                  </p>
+                </div>
+
+                {/* Seasonal Maintenance Months */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-200 flex items-center gap-1">
+                    <Calendar size={16} />
+                    Seasonal Maintenance Months
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {monthOptions.map((month) => (
+                      <button
+                        key={month.value}
+                        type="button"
+                        onClick={() => handleMonthToggle(Number.parseInt(month.value, 10))}
+                        className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                          equipment.seasonalMaintenanceMonths.includes(month.value)
+                            ? "bg-blue-500 text-white"
+                            : "bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
+                        }`}
+                      >
+                        {month.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Select months when seasonal maintenance should be performed
+                  </p>
+                </div>
+              </div>
             </FormSection>
 
             {/* Form Actions */}

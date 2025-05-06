@@ -7,7 +7,9 @@ import { useFilter } from "./FilterContext"
 import { createPortal } from "react-dom"
 import { useLanguage } from '../../translations/contexts/languageContext';
 import { useDarkMode } from '../../darkLightMode/darkModeContext';
-import {DocumentDownload} from 'iconsax-react';
+import { DocumentDownload } from 'iconsax-react';
+import Link from 'next/link'
+import { exportCSV } from "./exportUtils"
 
 export const ColumnHeader = ({ title, field }) => {
   const [isInputVisible, setIsInputVisible] = useState(false)
@@ -201,12 +203,27 @@ export const SearchHeader = ({
   onClearSearch, 
   onClearFilters,
   onAddNew,
-  addButtonText = "Add User", // Default text is "Add User"
+  onExportCSV,  // New prop for export function
+  data,         // Current data to export
+  columnConfig, // Column configuration for export
+  addButtonText = "Add User",
   showExport = true,
   showClearFilters = true,
   showAddButton = true  }) => {
     const { t } = useLanguage();
     const { isDarkMode } = useDarkMode();
+    
+    // Handle export button click
+    const handleExport = () => {
+      if (onExportCSV) {
+        onExportCSV();
+      } else if (data) {
+        // Default export if no custom handler provided
+        const filename = `${title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.csv`;
+        exportCSV(data, columnConfig || {}, filename);
+      }
+    };
+
 return (
   <div className="flex flex-col md:flex-row items-start justify-between md:items-center w-full gap-4 px-2">
       <h2 className="text-xl font-russo text-neutral-950 dark:text-white">{title}</h2>
@@ -252,14 +269,15 @@ return (
         <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
           {showExport && (
             <button
-              className="bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-md p-2 text-sm"
+              onClick={handleExport}
+              className="bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-md p-2 text-sm flex items-center gap-1"
+              title={t('userList','searchbar','buttons',0) || "Export CSV"}
             >
-              {isDarkMode ?(
-                <DocumentDownload size="20"  color="#d9e3f0"/>
-              ):(
-                <DocumentDownload size="20"  color="#555555"/>
+              {isDarkMode ? (
+                <DocumentDownload size="20" color="#d9e3f0"/>
+              ) : (
+                <DocumentDownload size="20" color="#555555"/>
               )}
-              
             </button>
           )}
           

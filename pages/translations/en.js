@@ -647,6 +647,7 @@ export const en = {
       urgencyLevel: "Urgency",
       status: "Status",
       createdAt: "Created At",
+      inventoryCode : "Inventory Code",
     },
     tablehead: {
       clearfilter: "Clear Filter",
@@ -734,5 +735,260 @@ export const en = {
         3: "High",
       },
     },
-    uniquetache:"tache"
+    uniquetache:"tache",
+  notifications: {
+    title: "Notifications",
+    breadcrumb: {
+      dashboard: "Dashboard",
+      notifications: "Notifications"
+    },
+    searchTitle: "Search Notifications",
+    searchPlaceholder: "Search by keyword, type or date",
+    filters: {
+      all: "All",
+      unread: "Unread",
+      urgent: "Urgent",
+      tasks: "Tasks",
+      info: "Info"
+    },
+    markAllAsRead: "Mark all as read",
+    groups: {
+      today: "Today",
+      yesterday: "Yesterday",
+      thisWeek: "This week"
+    },
+    timeFormat: {
+      minutesAgo: "{{count}} min ago",
+      hoursAgo: "{{count}} hour ago",
+      hoursAgo_plural: "{{count}} hours ago",
+      daysAgo: "{{count}} day ago",
+      daysAgo_plural: "{{count}} days ago"
+    },
+    noNotifications: "No notifications found",
+    checkBackLater: "Check back later for updates",
+    loadMore: "Load more",
+    loading: "Loading notifications...",
+    toast: {
+      fetchError: "Failed to load notifications",
+      markedAllRead: "All notifications marked as read",
+      loadingMore: "Loading more notifications..."
+    },
+    mockData: {
+      taskAssigned: "New task assigned: HVAC unit malfunction",
+      taskAssignedDesc: "Cooling system malfunction in conference room",
+      equipmentAlert: "Equipment alert: CVC system at full capacity",
+      equipmentAlertDesc: "Increased energy consumption detected in building DE",
+      filterReplacement: "Reminder: Air filter replacement required",
+      filterReplacementDesc: "Dust accumulation in library ventilation ducts",
+      taskCompleted: "Task completed: System pressure normalization",
+      taskCompletedDesc: "Routine check resolved high pressure issue in boiler",
+      newEquipment: "New equipment added: Cooling tower",
+      newEquipmentDesc: "Building A • ID: HVAC-2310",
+      maintenanceUpdate: "Maintenance calendar updated",
+      maintenanceUpdateDesc: "System • 3 tasks rescheduled",
+      newEquipments: "New equipment added: Radiators",
+      newEquipmentsDesc: "Amphitheater AP2 • ID: RAD-AP2-004",
+      maintenanceReport: "Maintenance report available",
+      maintenanceReportDesc: "System • Q2 maintenance summary",
+      softwareUpdate: "Software update available",
+      softwareUpdateDesc: "System • Version 2.4.1",
+      todayDeadline: "Due today at 5PM",
+      tomorrowDeadline: "Due tomorrow"
+    }
+  },
+  // English translations (en.js)
+  settings: {
+    title: "Settings",
+    breadcrumb: {
+      dashboard: "Dashboard",
+      settings: "Settings"
+    },
+    tabs: {
+      general: "General Settings",
+      user: "User Information",
+      system: "System Information"
+    },
+    general: {
+      systemPreferences: "System Preferences",
+      darkMode: "Dark Mode",
+      darkModeDescription: "Enable dark mode for a better viewing experience in low light environments.",
+      language: "Language",
+      languageDescription: "Change the language of the interface",
+      notifications: "Notifications",
+      emailNotifications: "Email Notifications",
+      emailNotificationsDescription: "Receive important updates and notifications via email.",
+      reminderNotifications: "Reminder Notifications",
+      reminderNotificationsDescription: "Get reminders for upcoming tasks and deadlines.",
+      advancedSettings: "Advanced Settings",
+      dataSharing: "Data Sharing",
+      dataSharingDescription: "Share anonymous usage data to help improve the platform."
+    },
+    user: {
+      profilePicture: "Profile Picture",
+      uploadPicture: "Click to upload profile picture",
+      basicInformation: "Basic Information",
+      fullName: "Full Name",
+      email: "Email",
+      emailComment: "Your email address will be used for account-related notifications.",
+      phone: "Phone",
+      phoneComment: "Your phone number will be used for account recovery and security purposes.",
+      biography: "Biography",
+      profession: "Profession",
+      professionUpdate: "Update your professional role",
+      role: "Role",
+      roleUpdate: "Update your system role",
+      roleDescription: "Your role determines what actions you can perform in the system.",
+      accountSecurity: "Account Security",
+      passwordInfo: "Leave the password fields empty if you don't want to change your password.",
+      password: "Password",
+      passwordPlaceholder: "Enter new password",
+      passwordComment: "Password must be at least 8 characters with uppercase, numbers, and special characters.",
+      confirmPassword: "Confirm Password",
+      confirmPasswordPlaceholder: "Confirm new password"
+    },
+    system: {
+      platformInformation: "Platform Information",
+      platformDescription: "This section provides information about the current system version and technical details.",
+      platformVersion: "Platform Version",
+      serverEnvironment: "Server Environment",
+      databaseVersion: "Database Version",
+      lastUpdate: "Last Update",
+      developmentTeam: "Development Team",
+      projectLead: "Project Lead",
+      backendDeveloper: "Backend Developer",
+      leadDeveloper: "Lead Developer",
+      uiDesigner: "UI/UX Designer",
+      qaEngineer: "QA Engineer",
+      supportInformation: "Support Information",
+      technicalSupport: "Technical Support",
+      documentation: "Documentation",
+      madeWithLove: "Made with love by ARCAD team"
+    },
+    actions: {
+      saveSettings: "Save Settings",
+      saveChanges: "Save Changes",
+      saving: "Saving...",
+      cancel: "Cancel"
+    },
+    validation: {
+      passwordLength: "Password must be at least 8 characters",
+      passwordComplexity: "Password must include uppercase, numbers, and special characters",
+      passwordsMatch: "Passwords do not match"
+    },
+    toast: {
+      generalSuccess: "General settings saved successfully",
+      generalError: "Failed to save general settings",
+      userSuccess: "User information updated successfully",
+      userError: "Failed to update user information",
+      formErrors: "Please fix the errors in the form",
+      loadError: "Failed to load user data"
+    }
+  },
+  // Add translations for the password reset component
+  forgotPassword: {
+    title: "Forgot Password",
+    description: "Enter your email address and we'll send you a verification code to reset your password.",
+    emailLabel: "Email Address",
+    emailPlaceholder: "Enter your email address",
+    invalidEmail: "Please enter a valid email address",
+    emailNotFound: "This email address is not registered in our system",
+    cancelButton: "Cancel",
+    continueButton: "Continue",
+    sending: "Sending...",
+  },
+  verification: {
+    title: "Verification Code",
+    description: "We've sent a verification code to {email}. Please enter the code below.",
+    incompleteCode: "Please enter the complete 6-digit verification code",
+    invalidCode: "The verification code you entered is invalid or has expired",
+    verifyButton: "Verify Code",
+    verifying: "Verifying...",
+    didNotReceive: "Didn't receive the code?",
+    resendButton: "Resend Code",
+    resendIn: "Resend code in",
+    resending: "Resending...",
+    codeSent: "A new verification code has been sent to your email",
+    resendFailed: "Failed to resend verification code. Please try again.",
+  },
+  newPassword: {
+    title: "Create New Password",
+    description: "Please create a new password for your account. Make sure it's secure and easy to remember.",
+    passwordLabel: "New Password",
+    passwordPlaceholder: "Enter new password",
+    confirmPasswordLabel: "Confirm Password",
+    confirmPasswordPlaceholder: "Confirm your new password",
+    passwordRequirements: "Your password must meet all the requirements below",
+    passwordsDoNotMatch: "Passwords do not match",
+    passwordTooShort: "Password must be at least 8 characters long",
+    resetButton: "Reset Password",
+    resetting: "Resetting...",
+    resetFailed: "Failed to reset password. Please try again.",
+    cancelButton: "Back",
+    passwordStrength: "Password Strength",
+    strengthEmpty: "Empty",
+    strengthWeak: "Weak",
+    strengthMedium: "Medium",
+    strengthStrong: "Strong",
+    minLength: "At least 8 characters",
+    upperCase: "Uppercase letter",
+    lowerCase: "Lowercase letter",
+    number: "Number",
+    specialChar: "Special character",
+  },
+  success: {
+    title: "Success!",
+    description: "Your password has been reset successfully. You can now log in with your new password.",
+    backButton: "Back to Login",
+  },
+  // Report page translations
+  reportPage: {
+    path: {
+      1: "Dashboard",
+      2: "Reports",
+    },
+    title: "System Reports",
+    sections: {
+      users: "Users Report",
+      tasks: "Tasks Report",
+      equipment: "Equipment Report",
+    },
+    tables: {
+      users: {
+        title: "User Management",
+        columns: {
+          name: "Name",
+          profession: "Profession",
+          email: "Email",
+          phoneNumber: "Phone Number",
+          role: "Role",
+        },
+        addButton: "Add User",
+      },
+      tasks: {
+        title: "Task Management",
+        columns: {
+          taskName: "Task Name",
+          location: "Location",
+          responsible: "Responsible",
+          priority: "Priority",
+          deadline: "Deadline",
+          status: "Status",
+        },
+        addButton: "Add Task",
+      },
+      equipment: {
+        title: "Equipment Management",
+        columns: {
+          inventoryCode: "Inventory Code",
+          id: "ID",
+          type: "Type",
+          category: "Category",
+          location: "Location",
+          acquisitionDate: "Acquisition Date",
+          status: "Status",
+        },
+        addButton: "Add Equipment",
+      },
+    },
+  }
 }

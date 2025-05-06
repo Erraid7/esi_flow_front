@@ -227,7 +227,7 @@ export default function RequestAddForm() {
         setUploadingPhotos(false)
 
         // Get token from localStorage
-        const storedTokenStr = localStorage.getItem('token');
+        const storedTokenStr = localStorage.getItem('user');
         let storedToken = null;
 
         if (storedTokenStr) {

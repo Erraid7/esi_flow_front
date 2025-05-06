@@ -16,9 +16,8 @@ export const Card = ({ title, count, icon, increase = null, color = "primary" })
         <span className="text-3xl font-bold text-neutral-950 dark:text-neutral-50">{count}</span>
         {increase !== null && (
           <div className="flex items-center ml-3 mb-1">
-            <ArrowUp className={`h-3 w-3 text-${color}-500 dark:text-${color}-400 mr-0.5`} />
             <span className={`text-sm font-medium text-${color}-500 dark:text-${color}-400`}>
-              {increase}%
+              {increase}
             </span>
           </div>
         )}

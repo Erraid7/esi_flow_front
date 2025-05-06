@@ -10,8 +10,18 @@ import { ArrowRight2 } from "iconsax-react"
 import axios from "axios"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import { Card } from "../../components/cards"
+import { checkAuth } from '@/pages/authWrapper/apiver';
+
 
 export default function UserManagement() {
+  useEffect(() => {
+    const { authorized } = checkAuth(['admin']);
+    if (!authorized) {
+      router.push("/login")
+    }
+
+  }, []);
+
   const { t } = useLanguage()
   const { isDarkMode } = useDarkMode()
   const router = useRouter()
@@ -184,10 +194,23 @@ export default function UserManagement() {
     )
   }
 
+
+  // Current user for sidebar
+  const currentUser = {
+    name: "MEHDAOUI Lokman",
+    role: "admin",
+    initials: "AD",
+  }
+
   return (
     <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 h-full">
       <div>
-        <Sidebar activeItem={"users"} />
+        <Sidebar
+        activeItem={"users"}
+        userRole={currentUser.role}
+        userName={currentUser.name}
+        userInitials={currentUser.initials}
+      />
       </div>
 
       <div className="w-full px-4 py-4">
@@ -232,6 +255,8 @@ export default function UserManagement() {
             onEdit={handleEdit}
             onDelete={confirmDelete} // Changed to open the confirmation modal
             styled={["role"]}
+            onAddNew={handleadd} // Added onAddNew prop for adding new users
+         
           />
         )}
         

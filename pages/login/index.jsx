@@ -5,6 +5,7 @@ import { useDarkMode } from '../darkLightMode/darkModeContext';
 import { Eye, EyeSlash } from 'iconsax-react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { ForgotPasswordModal, VerificationModal, NewPasswordModal, SuccessModal } from "./forgot-password-modals"
 
 
 
@@ -21,6 +22,13 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+   // States for forgot password flow
+   const [resetEmail, setResetEmail] = useState("")
+   const [currentModal, setCurrentModal] = useState(null)
+   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false)
+   const [showVerificationModal, setShowVerificationModal] = useState(false)
+   const [showSuccessModal, setShowSuccessModal] = useState(false)
   
   // Define your backend URL - you should use environment variables for this in production
   const handleChange = (e) => {
@@ -58,13 +66,16 @@ const Login = () => {
         withCredentials: true,
       });
       
+      //push user info in the local storage
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('token', response.data.token);
       // Redirection based on role
       if (response.data.role === 'admin') {
         router.push('/dashboard/admin');
       } else if (response.data.role === 'technician') {
-        router.push('/technician');
+        router.push('/dashboard/technician');
       } else {
-        router.push('/user');
+        router.push('/dashboard/personal');
       }
       
     } catch (error) {
@@ -79,6 +90,34 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  // Forgot password handlers
+  const handleForgotPasswordClick = (e) => {
+    e.preventDefault()
+    setResetEmail(formData.email || "")
+    setCurrentModal("forgot")
+  }
+
+  const handleContinue = () => {
+    setCurrentModal("verification")
+  }
+
+  const handleVerify = () => {
+    setCurrentModal("newPassword")
+  }
+
+  const handlePasswordReset = (newPassword) => {
+    console.log("Password reset with:", newPassword)
+    setCurrentModal("success")
+  }
+
+  const handleBackToLogin = () => {
+    setCurrentModal(null)
+  }
+
+  const handleCloseModal = () => {
+    setCurrentModal(null)
+  }
 
   
   
@@ -170,9 +209,13 @@ const Login = () => {
                 <input type='checkbox' className='mr-2' />
                 {t('login', 'remember')}
               </label>
-              <Link href='/forgot-password' className='text-primary-600 dark:text-primary-300 hover:underline'>
-                {t('login', 'forgot')}
-              </Link>
+              <a
+                  href="#"
+                  onClick={handleForgotPasswordClick}
+                  className="text-primary-600 dark:text-primary-300 hover:underline"
+                >
+                  {t("login", "forgot")}
+                </a>
             </div>
 
             <button
@@ -192,6 +235,33 @@ const Login = () => {
           <img src="/logo-v-dark.svg" alt="ESI Flow" className='w-24 h-16 block lg:hidden' />
         </div>
       </div>
+       {/* Forgot Password Modals - Only show one modal at a time based on currentModal state */}
+       {currentModal === "forgot" && (
+        <ForgotPasswordModal
+          email={resetEmail}
+          setEmail={setResetEmail}
+          onClose={handleCloseModal}
+          onContinue={handleContinue}
+        />
+      )}
+
+      {currentModal === "verification" && (
+        <VerificationModal 
+          onClose={handleCloseModal} 
+          onVerify={handleVerify} 
+        />
+      )}
+
+      {currentModal === "newPassword" && (
+        <NewPasswordModal 
+          onClose={handleCloseModal} 
+          onSubmit={handlePasswordReset} 
+        />
+      )}
+
+      {currentModal === "success" && (
+        <SuccessModal onClose={handleBackToLogin} />
+      )}
     </div>
   );
 };

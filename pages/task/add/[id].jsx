@@ -3,60 +3,27 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import { MapPin } from "lucide-react"
+import { MapPin, ImageIcon } from "lucide-react"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
 import AutocompleteField from "../../components/form_components/autocomplete_field"
-import PhotoUpload from "../../components/form_components/photoupload_field"
 import Toast from "../../components/form_components/toast"
 import DateField from "@/pages/components/form_components/date_field"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 
-// Mock equipment data
-const mockEquipmentData = [
-  { id: "1", code: "EQ-001", name: "Projector", location: "Building A, Floor 1" },
-  { id: "2", code: "EQ-002", name: "Smart Board", location: "Building A, Floor 1" },
-  { id: "3", code: "EQ-003", name: "Computer", location: "Building A, Floor 1" },
-  { id: "4", code: "EQ-004", name: "Printer", location: "Building A, Floor 2" },
-  { id: "5", code: "EQ-005", name: "Scanner", location: "Building A, Floor 2" },
-  { id: "6", code: "EQ-006", name: "Air Conditioner", location: "Building A, Floor 3" },
-  { id: "7", code: "EQ-007", name: "Projector", location: "Building A, Floor 3" },
-  { id: "8", code: "EQ-008", name: "Microscope", location: "Building B, Floor 1" },
-  { id: "9", code: "EQ-009", name: "Laboratory Equipment", location: "Building B, Floor 1" },
-  { id: "10", code: "EQ-010", name: "Whiteboard", location: "Building B, Floor 2" },
-  { id: "11", code: "EQ-011", name: "Sound System", location: "Building C, Floor 1" },
-  { id: "12", code: "EQ-012", name: "Gym Equipment", location: "Gymnasium" },
-  { id: "13", code: "EQ-013", name: "Coffee Machine", location: "Cafeteria" },
-  { id: "14", code: "EQ-014", name: "Book Scanner", location: "Library" },
-  { id: "15", code: "EQ-015", name: "Chemistry Equipment", location: "Laboratory" },
-  { id: "16", code: "EQ-123456", name: "Electrical System", location: "Building A, Floor 3" },
-]
-
-// Mock users data - formatted for autocomplete
-const mockUsersData = [
-  { id: "1", code: "JD001", name: "John Doe", location: "Technician" },
-  { id: "2", code: "JS002", name: "Jane Smith", location: "Maintenance Manager" },
-  { id: "3", code: "RJ003", name: "Robert Johnson", location: "Electrician" },
-  { id: "4", code: "SW004", name: "Sarah Williams", location: "Plumber" },
-  { id: "5", code: "MB005", name: "Michael Brown", location: "HVAC Specialist" },
-  { id: "6", code: "TA006", name: "Team Alpha", location: "Maintenance Team" },
-  { id: "7", code: "TB007", name: "Team Beta", location: "Electrical Team" },
-]
+// API base URL - replace with your actual backend URL
+const API_BASE_URL = "http://localhost:5000"
 
 // Main Component
-export default function TaskAddForm({
-  request = null
-//   {
-//     id: null,
-//     title: "Maintenance Request",
-//     urgencyLevel: "medium",
-//     equipmentCode: "EQ-123456",
-//     location: "Building A, Floor 3",
-//     description: "Fix the electrical system in Building A, Floor 3.",
-//     photos: [],
-//   }
-}) {
+export default function TaskAddForm({ request = null }) {
   const { t } = useLanguage()
   const formInitialized = useRef(false)
+  const router = useRouter()
+  const params = useParams()
+  const requestId = params?.id || "" // Get ID directly from params
+  console.log("Request ID:", requestId)
 
   // State for toast notifications
   const [toast, setToast] = useState({
@@ -77,25 +44,29 @@ export default function TaskAddForm({
     description: "",
     priority: "",
     type: "",
+    requestCode: "", // Added request code field
   })
 
   // Equipment state
   const [equipmentList, setEquipmentList] = useState([])
+  const [allEquipment, setAllEquipment] = useState([])
   const [isLoadingEquipment, setIsLoadingEquipment] = useState(false)
   const [selectedEquipment, setSelectedEquipment] = useState(null)
 
   // Users state
-  const [usersList, setUsersList] = useState(mockUsersData)
+  const [usersList, setUsersList] = useState([])
+  const [allUsers, setAllUsers] = useState([])
   const [isLoadingUsers, setIsLoadingUsers] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
   const [userSearchTerm, setUserSearchTerm] = useState("")
 
-  // Photos state
-  const [photos, setPhotos] = useState([])
+  // Photo state - just for display
+  const [photoUrl, setPhotoUrl] = useState("")
 
   // Form validation
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Available options for dropdowns
   const statusOptions = [
@@ -105,62 +76,191 @@ export default function TaskAddForm({
     t("taskForm", "statusOptions", 3),
     t("taskForm", "statusOptions", 4),
   ]
-  const priorityOptions = [
-    t("taskForm", "priorityOptions", 0),
-    t("taskForm", "priorityOptions", 1),
-    t("taskForm", "priorityOptions", 2),
-    t("taskForm", "priorityOptions", 3),
-  ]
-  const taskTypes = [
-    t("taskForm", "taskTypes", 0),
-    t("taskForm", "taskTypes", 1),
-    t("taskForm", "taskTypes", 2),
-  ]
+
+  // Define priority options with lowercase values to match backend ENUM
+  const priorityOptions = ["low", "medium", "high"]
+
+  // Define intervention types that match the backend ENUM values
+  const taskTypes = ["repair", "maintenance", "replacement"]
+
+  // Fetch equipment data from backend
+  useEffect(() => {
+    const fetchEquipment = async () => {
+      setIsLoadingEquipment(true)
+      try {
+        const response = await axios.get(`${API_BASE_URL}/equipments`)
+
+        // Format equipment data for autocomplete
+        const formattedEquipment = response.data.map((eq) => ({
+          id: eq.id,
+          code: eq.inventorie_code || eq.inventory_code || `EQ-${eq.id}`, // Fix: Check both spellings and fallback
+          name: eq.type || eq.name || "Unknown Equipment",
+          location: eq.location || eq.localisation || "Unknown Location",
+        }))
+        console.log("Formatted Equipment:", formattedEquipment)
+        setAllEquipment(formattedEquipment)
+        setEquipmentList(formattedEquipment)
+      } catch (error) {
+        console.error("Error fetching equipment:", error)
+        // Fallback to empty array if API fails
+        setAllEquipment([])
+        setEquipmentList([])
+      } finally {
+        setIsLoadingEquipment(false)
+      }
+    }
+
+    fetchEquipment()
+  }, [])
+
+  // Fetch users data from backend
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setIsLoadingUsers(true)
+      try {
+        const response = await axios.get(`${API_BASE_URL}/users`)
+
+        // Format users data for autocomplete
+        const formattedUsers = response.data.map((user) => ({
+          id: user.id,
+          code: user.employee_id || `TECH-${user.id}`, // Use employee_id as code or generate one
+          name: user.full_name || `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Unknown User",
+          location: user.role || user.department || "Technician", // Role or department as location
+        }))
+
+        setAllUsers(formattedUsers)
+        setUsersList(formattedUsers)
+      } catch (error) {
+        console.error("Error fetching users:", error)
+        // Fallback to empty array if API fails
+        setAllUsers([])
+        setUsersList([])
+      } finally {
+        setIsLoadingUsers(false)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  // Fetch request data if requestId is provided in URL
+  useEffect(() => {
+    const fetchRequestData = async () => {
+      if (requestId && !formInitialized.current) {
+        setIsLoading(true)
+        try {
+          // Fetch request data from backend
+          const response = await axios.get(`${API_BASE_URL}/requests/${requestId}`)
+          const requestData = response.data
+          console.log("Request Data:", requestData)
+
+          if (requestData) {
+            // Initialize task with request data
+            const initialTask = {
+              name: requestData.title || "",
+              assignTo: "",
+              status: requestData.req_status || "Not Started",
+              deadline: "",
+              report: "",
+              equipmentCode: "", // We'll set this after finding the equipment
+              location: requestData.localisation || "",
+              description: requestData.description || "",
+              priority: requestData.priority || "medium", // Use lowercase priority
+              type: requestData.type || "repair", // Default to repair if not specified
+              requestCode: requestData.request_code || "", // Add request code
+            }
+
+            // Set photo URL if available
+            if (requestData.picture) {
+              setPhotoUrl(requestData.picture)
+              console.log("Existing photo set:", requestData.picture)
+            }
+
+            // Find equipment if equipment_id is provided
+            if (requestData.equipment_id && allEquipment.length > 0) {
+              console.log("Looking for equipment with ID:", requestData.equipment_id)
+              const equipment = allEquipment.find((eq) => eq.id == requestData.equipment_id)
+
+              if (equipment) {
+                console.log("Found equipment:", equipment)
+                setSelectedEquipment(equipment)
+                initialTask.equipmentCode = equipment.code
+                initialTask.location = equipment.location || initialTask.location
+              } else {
+                console.log("Equipment not found in list")
+              }
+            }
+
+            setTask(initialTask)
+            formInitialized.current = true
+          }
+        } catch (error) {
+          console.error("Error fetching request data:", error)
+          showToast(t("taskForm", "toast", "requestFetchError") || "Failed to fetch request data", "error")
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    // Only fetch if we have equipment data and a requestId
+    if (allEquipment.length > 0) {
+      fetchRequestData()
+    }
+  }, [requestId, t, allEquipment])
 
   // Initialize form with request data if provided - ONLY ONCE
   useEffect(() => {
-    if (request && !formInitialized.current) {
+    if (request && !formInitialized.current && allEquipment.length > 0) {
+      // Find equipment if equipment_id is provided
+      let selectedEq = null
+      if (request.equipment_id) {
+        selectedEq = allEquipment.find((eq) => eq.id == request.equipment_id)
+      }
+
       const initialTask = {
-        name: `${request.title || ""}`,
+        name: request.title || "",
         assignTo: "",
         status: "Not Started",
         deadline: "",
         report: "",
-        equipmentCode: request.equipmentCode || "",
-        location: request.location || "",
+        equipmentCode: selectedEq ? selectedEq.code : "",
+        location: request.location || (selectedEq ? selectedEq.location : ""),
         description: request.description || "",
-        priority: mapUrgencyToPriority(request.urgencyLevel) || "Medium",
+        priority: request.priority || "medium", // Use lowercase priority
+        type: request.type || "repair", // Default to repair if not specified
+        requestCode: request.request_code || "", // Add request code
       }
 
       setTask(initialTask)
+
+      if (selectedEq) {
+        setSelectedEquipment(selectedEq)
+      }
+
+      // Set photo if available
+      if (request.picture) {
+        setPhotoUrl(request.picture)
+      }
+
       formInitialized.current = true
-
-      // Set photos if available
-      if (request.photos && request.photos.length > 0) {
-        setPhotos(request.photos)
-      }
-
-      // Find equipment if code is provided
-      if (request.equipmentCode) {
-        const equipment = mockEquipmentData.find((eq) => eq.code === request.equipmentCode)
-        if (equipment) {
-          setSelectedEquipment(equipment)
-        }
-      }
     }
-  }, [request])
+  }, [request, allEquipment])
 
-  // Map urgency level to priority
+  // Map urgency level to priority (ensure lowercase values)
   const mapUrgencyToPriority = (urgencyLevel) => {
-    if (!urgencyLevel) return null
+    if (!urgencyLevel) return "medium"
 
     const urgencyMap = {
-      [t("requestForm", "urgencyLevels", "low")]: "Low",
-      [t("requestForm", "urgencyLevels", "medium")]: "Medium",
-      [t("requestForm", "urgencyLevels", "high")]: "High",
+      low: "low",
+      medium: "medium",
+      high: "high",
+      Low: "low",
+      Medium: "medium",
+      High: "high",
     }
 
-    return urgencyMap[urgencyLevel] || "Medium"
+    return urgencyMap[urgencyLevel] || "medium"
   }
 
   // Filter equipment based on location input
@@ -168,20 +268,17 @@ export default function TaskAddForm({
     const filterEquipment = async () => {
       setIsLoadingEquipment(true)
       try {
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 300))
-
-        let filteredEquipment = [...mockEquipmentData]
-
         // If location is provided, filter equipment by location
-        if (task.location.trim()) {
+        if (task.location.trim() && allEquipment.length > 0) {
           const locationLower = task.location.toLowerCase()
-          filteredEquipment = mockEquipmentData.filter((equipment) =>
+          const filteredEquipment = allEquipment.filter((equipment) =>
             equipment.location.toLowerCase().includes(locationLower),
           )
+          setEquipmentList(filteredEquipment)
+        } else {
+          // If no location filter, show all equipment
+          setEquipmentList(allEquipment)
         }
-
-        setEquipmentList(filteredEquipment)
       } catch (error) {
         console.error("Error filtering equipment:", error)
         showToast(t("taskForm", "toast", "equipmentError"), "error")
@@ -191,21 +288,18 @@ export default function TaskAddForm({
     }
 
     filterEquipment()
-  }, [task.location, t])
+  }, [task.location, allEquipment, t])
 
   // Filter users based on search term
   useEffect(() => {
     const filterUsers = async () => {
       setIsLoadingUsers(true)
       try {
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 200))
-
-        if (!userSearchTerm.trim()) {
-          setUsersList(mockUsersData)
+        if (!userSearchTerm.trim() || allUsers.length === 0) {
+          setUsersList(allUsers)
         } else {
           const searchTermLower = userSearchTerm.toLowerCase()
-          const filteredUsers = mockUsersData.filter(
+          const filteredUsers = allUsers.filter(
             (user) =>
               user.name.toLowerCase().includes(searchTermLower) ||
               user.location.toLowerCase().includes(searchTermLower) ||
@@ -222,7 +316,7 @@ export default function TaskAddForm({
     }
 
     filterUsers()
-  }, [userSearchTerm, t])
+  }, [userSearchTerm, allUsers, t])
 
   const handleInputChange = useCallback(
     (field, value) => {
@@ -243,7 +337,7 @@ export default function TaskAddForm({
           return {
             ...prev,
             equipmentCode: code,
-            location: equipment.location,
+            location: equipment.location || prev.location,
           }
         }
         return { ...prev, equipmentCode: code }
@@ -296,7 +390,7 @@ export default function TaskAddForm({
     if (!task.assignTo) newErrors.assignTo = t("taskForm", "validation", "assignToRequired")
     if (!task.status) newErrors.status = t("taskForm", "validation", "statusRequired")
     if (!task.deadline) newErrors.deadline = t("taskForm", "validation", "deadlineRequired")
-    if (!task.equipmentCode) newErrors.equipmentCode = t("taskForm", "validation", "equipmentCodeRequired")
+    if (!task.equipmentCode) newErrors.equipmentCode = t("taskForm", "validation", "equipmentCodeRequired") // Fix: error key should match field name
     if (!task.priority) newErrors.priority = t("taskForm", "validation", "priorityRequired")
     if (!task.type) newErrors.type = t("taskForm", "validation", "taskTypeRequired")
     if (!task.location.trim()) newErrors.location = t("taskForm", "validation", "locationRequired")
@@ -315,71 +409,65 @@ export default function TaskAddForm({
       setIsSubmitting(true)
 
       try {
-        // Create task data object matching backend requirements
-        const formData = new FormData()
-        formData.append("name", task.name)
-        formData.append("assignTo", task.assignTo)
-        formData.append("status", task.status)
-        formData.append("deadline", task.deadline)
-        formData.append("report", task.report)
-        formData.append("equipmentCode", task.equipmentCode)
-        formData.append("location", task.location)
-        formData.append("description", task.description)
-        formData.append("priority", task.priority)
-        formData.append("type", task.type)
+        // Determine which requestId to use
+        const targetRequestId = requestId || (request && request.id)
 
-        // Append equipment details if available
-        if (selectedEquipment) {
-          formData.append("equipmentName", selectedEquipment.name)
-          formData.append("equipmentId", selectedEquipment.id)
+        if (!targetRequestId) {
+          throw new Error("No request ID provided")
         }
 
-        // Append user details if available
-        if (selectedUser) {
-          formData.append("assigneeName", selectedUser.name)
-          formData.append("assigneeRole", selectedUser.location)
+        // Get the actual equipment ID if we have the equipment object
+        // IMPORTANT: We need to send the equipment ID to the backend, not the code
+        const equipmentId = selectedEquipment ? selectedEquipment.id : null
+
+        if (!equipmentId) {
+          throw new Error("No equipment selected")
         }
 
-        // Append request ID if task was created from a request
-        if (request && request.id) {
-          formData.append("requestId", request.id)
+        // Create intervention data object matching backend requirements
+        const interventionData = {
+          technician_id: selectedUser?.id,
+          intv_status: task.status,
+          deadline: task.deadline,
+          intervention_type: task.type, // Fixed: Use task.type for intervention_type
+          report: task.report,
+
+          // These fields will update the request
+          title: task.name,
+          description: task.description,
+          localisation: task.location,
+          equipment_id: equipmentId, // Use the actual ID, not the code
+          priority: task.priority, // Now using lowercase priority
+          picture: photoUrl || null, // Use the existing photo URL
+          request_code: task.requestCode, // Added request code
         }
 
-        // Append photos if any
-        photos.forEach((photo, index) => {
-          if (photo.file) {
-            formData.append(`photo${index}`, photo.file)
-          } else if (photo.id) {
-            formData.append(`existingPhotos`, photo.id)
-          }
-        })
+        console.log("Intervention Data:", interventionData)
+        console.log("Target Request ID:", targetRequestId)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Call the API to create intervention from request
+        const response = await axios.post(
+          `${API_BASE_URL}/interventions/from-request/${targetRequestId}`,
+          interventionData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              // Add authorization header if needed
+              // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+          },
+        )
 
         // Show success message
         showToast(t("taskForm", "toast", "createSuccess"), "success")
 
-        // Reset form
-        setTask({
-          name: "",
-          assignTo: "",
-          status: "",
-          deadline: "",
-          report: "",
-          equipmentCode: "",
-          location: "",
-          description: "",
-          priority: "",
-          type: "",
-        })
-        setPhotos([])
-        setSelectedEquipment(null)
-        setSelectedUser(null)
-        formInitialized.current = false
+        // Redirect to interventions list or details page after successful creation
+        setTimeout(() => {
+          router.push("/interventions")
+        }, 2000)
       } catch (error) {
-        console.error("Error creating task:", error)
-        showToast(error.message || t("taskForm", "toast", "error"), "error")
+        console.error("Error creating intervention:", error)
+        showToast(error.response?.data?.message || error.message || t("taskForm", "toast", "error"), "error")
       } finally {
         setIsSubmitting(false)
       }
@@ -393,6 +481,25 @@ export default function TaskAddForm({
     name: "BOULAMI Amira",
     role: "admin",
     initials: "BA",
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
+        <Sidebar
+          activeItem={"tasks"}
+          userRole={currentUser.role}
+          userName={currentUser.name}
+          userInitials={currentUser.initials}
+        />
+        <div className="flex items-center justify-center w-full">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <p className="mt-2 text-neutral-600 dark:text-neutral-300">{t("common", "loading")}</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -419,7 +526,10 @@ export default function TaskAddForm({
               <span className="mx-2 text-lg">›</span>
               <span>{t("taskForm", "breadcrumb", "addTask")}</span>
             </div>
-            <h1 className="text-xl lg:text-2xl font-russo">{t("taskForm", "title", "add")}</h1>
+            <h1 className="text-xl lg:text-2xl font-russo">
+              {t("taskForm", "title", "add")}
+              {task.requestCode && <span className="ml-2 text-lg font-normal text-gray-500">#{task.requestCode}</span>}
+            </h1>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-8">
@@ -545,15 +655,28 @@ export default function TaskAddForm({
                   placeholder={t("taskForm", "fields", "priority", "placeholder")}
                 />
 
-                <PhotoUpload
-                  title={t("taskForm", "fields", "photos", "label")}
-                  addButtonText={t("taskForm", "fields", "photos", "addButton")}
-                  maxPhotosText={t("taskForm", "fields", "photos", "maxPhotos")}
-                  photos={photos}
-                  setPhotos={setPhotos}
-                  maxPhotos={3}
-                  error={errors.photos}
-                />
+                {/* Display photo if available */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    {t("taskForm", "fields", "photos", "label") || "Photo"}
+                  </label>
+                  <div className="mt-1 flex items-center">
+                    {photoUrl ? (
+                      <div className="relative w-32 h-32 rounded-md overflow-hidden border border-neutral-200 dark:border-neutral-700">
+                        <img
+                          src={photoUrl || "/placeholder.svg"}
+                          alt="Request photo"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center w-32 h-32 bg-neutral-100 dark:bg-neutral-800 rounded-md border border-neutral-200 dark:border-neutral-700">
+                        <ImageIcon className="w-8 h-8 text-neutral-400" />
+                        <span className="ml-2 text-sm text-neutral-500 dark:text-neutral-400">No photo</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -562,7 +685,9 @@ export default function TaskAddForm({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`h-10 w-32 mr-3 text-sm bg-blue-500 text-white font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
+                className={`h-10 w-32 mr-3 text-sm bg-blue-500 text-white font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${
+                  isSubmitting ? "opacity-75 cursor-not-allowed" : ""
+                }`}
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center">
@@ -595,6 +720,7 @@ export default function TaskAddForm({
 
               <button
                 type="button"
+                onClick={() => router.back()}
                 className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
               >
                 {t("taskForm", "actions", "cancel")}
