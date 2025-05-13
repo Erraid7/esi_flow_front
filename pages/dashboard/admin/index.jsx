@@ -7,8 +7,8 @@ import axios from "axios";
 import DynamicTable from "../../components/dynamicTable1";
 
 import EquipmentStatusChart from "../../components/equipmentStatusChart.jsx";
-import StateCards from "../../stateCard.jsx";
-import NotificationAndCreateUserCards from "./notcraete";
+import StateCards from "../../componentsstateCard.jsx";
+import NotificationAndCreateUserCards from "../../components/notcraete";
 import { useLanguage } from "../../translations/contexts/languageContext";
 import { useDarkMode } from "../../darkLightMode/darkModeContext";
 import DynamicPieChart from "../../components/pie";
