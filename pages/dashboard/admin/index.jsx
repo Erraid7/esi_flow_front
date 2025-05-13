@@ -6,7 +6,7 @@ import Sidebar from "../../components/sidebar";
 import axios from "axios";
 import DynamicTable from "../../components/dynamicTable1";
 
-import EquipmentStatusChart from "./equipmentStatusChart.jsx";
+import EquipmentStatusChart from "../../components/equipmentStatusChart.jsx";
 import StateCards from "./stateCard.jsx";
 import NotificationAndCreateUserCards from "./notcraete";
 import { useLanguage } from "../../translations/contexts/languageContext";
@@ -17,7 +17,7 @@ import { AlertTriangle, X } from 'lucide-react';
 import Toast from "@/pages/components/form_components/toast";
 
 // API service for data fetching
-import { fetchDashboardData } from "./api";
+import { fetchDashboardData } from "../../components/api";
 
 const Dashboard = () => {
   const { t } = useLanguage();
