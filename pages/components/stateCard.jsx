@@ -1,7 +1,7 @@
 "use client"
 import { useRouter } from "next/navigation" // Import useRouter from next/navigation for App Router
-import { useLanguage } from "../../translations/contexts/languageContext"
-import { useDarkMode } from "../../darkLightMode/darkModeContext"
+import { useLanguage } from "../translations/contexts/languageContext"
+import { useDarkMode } from "../darkLightMode/darkModeContext"
 
 const StateCards = ({ cardsData }) => {
   const { t } = useLanguage()

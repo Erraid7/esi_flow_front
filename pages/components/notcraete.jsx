@@ -1,6 +1,6 @@
 "use client"
-import { useLanguage } from "../../translations/contexts/languageContext"
-import { useDarkMode } from '../../darkLightMode/darkModeContext'
+import { useLanguage } from "../translations/contexts/languageContext"
+import { useDarkMode } from '../darkLightMode/darkModeContext'
 import { useRouter } from 'next/navigation'
 
 const NotificationAndCreateUserCards = () => {
