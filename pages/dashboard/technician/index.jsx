@@ -186,7 +186,7 @@ export default function Dashboard() {
 
   // Navigate to report page
   const handleReportClick = () => {
-    router.push("/report")
+    router.push("/task/list")
   }
 
   // Handle adding a new task
@@ -497,12 +497,11 @@ export default function Dashboard() {
                         intervention_id: { hidden: true },
                         request_id: { hidden: true },
                       }}
-                      addButtonText={t("dashboard", "tasks", "addButton") || "Add Task"}
                       dropdownFields={["Priority", "Status"]}
                       onEdit={handleEditTask}
                       onDelete={confirmDelete}
                       styled={["Priority", "Status"]}
-                      showAddButton={true}
+                      showAddButton={false}
                       refreshData={fetchTasks}
                       emptyStateMessage={t("dashboard", "tasks", "noTasks") || "No tasks assigned to you"}
                     />

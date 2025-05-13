@@ -152,7 +152,7 @@ export const fr = {
     },
     title: "Tableau de Bord ESI Flow",
     overview: "Aperçu du Tableau de Bord",
-    activeRequests: "Demandes actives / tech/utilisateurs",
+    activeRequests: "Stastistiques",
     cards: {
       users: {
         title: "Nombre d'utilisateurs",

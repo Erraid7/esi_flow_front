@@ -152,7 +152,7 @@ export const en = {
     },
     title: "ESI Flow Dashboard",
     overview: "Dashboard Overview",
-    activeRequests: "Active requests / tech/users",
+    activeRequests: "Statistics",
     cards: {
       users: {
         title: "Number of users",

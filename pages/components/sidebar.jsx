@@ -338,6 +338,7 @@ const Sidebar = ({ activeItem = "dashboard" }) => {
           icon: <CheckCheckIcon size={18} />,
           notificationCount: interventionNotifications,
         },
+        { key: "requests", link: "request/list", icon: <Mail size={18} />, notificationCount: requestNotifications },
         { key: "notifications", link: "notif", icon: <Bell size={18} />, notificationCount: totalNotifications },
         { key: "settings", link: "settings", icon: <Settings size={18} />, notificationCount: 0 },
       ],
