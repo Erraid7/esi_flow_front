@@ -3,20 +3,9 @@
 import { useState, useEffect, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import {
-  Mail,
-  Phone,
-  School,
-  ChevronDown,
-  Eye,
-  EyeOff,
-  Bell,
-  X,
-  Check,
-  AlertTriangle,
-  ShieldHalf
-} from "lucide-react"
-
+import axios from "axios"
+import { Mail, Phone, Router, School, ShieldHalf } from "lucide-react"
+import { useRouter } from "next/navigation"
 import Toast from "../../components/form_components/toast"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
@@ -26,6 +15,7 @@ import FormSection from "../../components/form_components/form_section"
 // Main Component
 export default function UserCreateForm() {
   const { t, toggleLanguage } = useLanguage()
+  const router = useRouter()
 
   // State for mobile menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -44,7 +34,7 @@ export default function UserCreateForm() {
     phone: "",
     role: "",
     profession: "",
-    bio: ""
+    bio: "",
   })
 
   // Password state
@@ -56,8 +46,31 @@ export default function UserCreateForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Available options for dropdowns
-  const professionOptions = ["Teacher", "Administrator", "Engineer", "Technician", "Manager", "Other"]
-  const roleOptions = ["admin", "technician", "personal"]
+  const professionOptions = [
+    "Teacher",
+    "Security",
+    "Cleaning",
+    "Student",
+    "Researcher",
+    "IT Technician",
+    "Network Technician",
+    "Server Administrator",
+    "Security Technician",
+    "Electrical Technician",
+    "Mechanical Technician",
+    "Multimedia Technician",
+    "Lab Technician",
+    "HVAC Technician",
+    "Plumber",
+    "Carpenter",
+    "Painter",
+    "Gardener",
+    "Driver",
+    "Office Equipment Technician",
+    "Other",
+  ]
+
+  const roleOptions = ["Admin", "Technician", "Personal"]
 
   const handleInputChange = (field, value) => {
     setUser({ ...user, [field]: value })
@@ -65,6 +78,10 @@ export default function UserCreateForm() {
     if (errors[field]) {
       setErrors({ ...errors, [field]: null })
     }
+  }
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
   const showToast = (message, type = "success") => {
@@ -92,7 +109,9 @@ export default function UserCreateForm() {
     if (!user.role)
       newErrors.role = t("userEdit", "validation", "requiredField", { field: t("userEdit", "fields", "role") })
     if (!user.profession)
-      newErrors.profession = t("userEdit", "validation", "requiredField", { field: t("userEdit", "fields", "profession") })
+      newErrors.profession = t("userEdit", "validation", "requiredField", {
+        field: t("userEdit", "fields", "profession"),
+      })
     if (!user.bio.trim())
       newErrors.bio = t("userEdit", "validation", "requiredField", { field: t("userEdit", "fields", "bio") })
     if (!password)
@@ -137,23 +156,12 @@ export default function UserCreateForm() {
           phone: user.phone,
           bio: user.bio,
           role: user.role,
-          profession: user.profession
+          profession: user.profession,
+          sendEmailNotification: switchValue, // Add this line to send the toggle value
         }
 
-        // Send POST request to your API endpoint
-        const response = await fetch('/api/users/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to register user')
-        }
+        // Using axios to send the request to our API route
+        const response = await axios.post("https://esi-flow-back.onrender.com/auth/register", userData)
 
         // Show success message
         showToast("User created successfully", "success")
@@ -165,13 +173,19 @@ export default function UserCreateForm() {
           phone: "",
           role: "",
           profession: "",
-          bio: ""
+          bio: "",
         })
         setPassword("")
         setConfirmPassword("")
+
+        // redirect to user list page
+        setTimeout(() => { router.back() }, 2000)
       } catch (error) {
         console.error("Registration error:", error)
-        showToast(error.message || "Failed to create user", "error")
+
+        // Get error message from axios response if available
+        const errorMessage = error.response?.data?.message || "Failed to create user"
+        showToast(errorMessage, "error")
       } finally {
         setIsSubmitting(false)
       }
@@ -192,22 +206,15 @@ export default function UserCreateForm() {
       document.body.style.overflow = "auto"
     }
   }, [isMobileMenuOpen])
-  
-  const [switchValue, setSwitchValue] = useState(false);
-  const handleSwitchChange = (field, value) => { 
-    setSwitchValue(value);
-  }
-  
-  const [requirePasswordSwitch, setRequirePasswordSwitch] = useState(false);
-  const handlepassChange = (field, value) => {
-    setRequirePasswordSwitch(value);
-  };
 
-  // Current user for sidebar
-  const currentUser = {
-    name: "MEHDAOUI Lokman",
-    role: "admin",
-    initials: "AD"
+  const [switchValue, setSwitchValue] = useState(false)
+  const handleSwitchChange = (field, value) => {
+    setSwitchValue(value)
+  }
+
+  const [requirePasswordSwitch, setRequirePasswordSwitch] = useState(false)
+  const handlepassChange = (field, value) => {
+    setRequirePasswordSwitch(value)
   }
 
   return (
@@ -216,12 +223,7 @@ export default function UserCreateForm() {
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
       {/* Show sidebar for desktop or when mobile menu is open */}
-      <Sidebar 
-        activeItem={"users"}
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userInitials={currentUser.initials}
-      />
+      <Sidebar activeItem={"users"}/>
 
       {/* Main content */}
       <div className="pt-14 lg:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
@@ -296,7 +298,7 @@ export default function UserCreateForm() {
                   error={errors.role}
                   required={true}
                 />
-                
+
                 <DropdownField
                   title={t("userEdit", "fields", "profession")}
                   value={user.profession}
@@ -343,63 +345,36 @@ export default function UserCreateForm() {
                 />
               </div>
             </FormSection>
-            
+
             <FormSection>
-                <div className="flex flex-col gap-6">
-                  {/* Send Email Toggle */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
-                        <Mail size={25} className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                          {t("userEdit", "sendMail")}
-                        </p>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          {t("userEdit", "sendMailComment")}
-                        </p>
-                      </div>
+              <div className="flex flex-col gap-6">
+                {/* Send Email Toggle */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
+                      <Mail size={25} className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500" />
                     </div>
-
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        checked={switchValue}
-                        onChange={(e) => handleSwitchChange("role", e.target.checked)}
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
-                    </label>
-                  </div>
-                  
-                  {/* Password Toggle */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
-                        <ShieldHalf strokeWidth={2} size={25} className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                          {t("userEdit", "requirePassword")}
-                        </p>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          {t("userEdit", "requirePasswordComment")}
-                        </p>
-                      </div>
+                    <div>
+                      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                        {t("userEdit", "sendMail")}
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        {t("userEdit", "sendMailComment")}
+                      </p>
                     </div>
-
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        checked={requirePasswordSwitch}
-                        onChange={(e) => handlepassChange("role", e.target.checked)}
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
-                    </label>
                   </div>
+
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={switchValue}
+                      onChange={(e) => handleSwitchChange("role", e.target.checked)}
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
+                  </label>
                 </div>
+              </div>
             </FormSection>
 
             {/* Form Actions */}
@@ -407,7 +382,7 @@ export default function UserCreateForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`h-10 w-fit mr-3 px-2 text-sm bg-primary-500 text-neutral-50 font-inter font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
+                className={`h-10 w-fit px-2 mr-3 text-sm bg-primary-500 text-neutral-50 font-inter font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center">
@@ -449,4 +424,5 @@ export default function UserCreateForm() {
         </div>
       </div>
     </div>
-)}
+  )
+}

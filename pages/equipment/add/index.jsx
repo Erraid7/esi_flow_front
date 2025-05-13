@@ -1,19 +1,22 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useCallback, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
-import { MapPin} from "lucide-react"
+import { MapPin, Calendar, Clock, Upload } from "lucide-react"
 import Toast from "../../components/form_components/toast"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
 import FormSection from "../../components/form_components/form_section"
 import DateField from "../../components/form_components/date_field"
-
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
 // Main Component
 export default function EquipmentAddForm() {
   const { t } = useLanguage()
+  const router = useRouter()
+  const fileInputRef = useRef(null)
 
   // State for toast notifications
   const [toast, setToast] = useState({
@@ -32,16 +35,79 @@ export default function EquipmentAddForm() {
     location: "",
     status: "",
     description: "",
+    picture: null,
+    automaticMaintenanceInterval: "",
+    seasonalMaintenanceMonths: [],
   })
+
+  // Preview for uploaded image
+  const [imagePreview, setImagePreview] = useState(null)
 
   // Form validation
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Available options for dropdowns
-  const typeOptions = ["Mechanical", "Electrical", "Hydraulic", "Pneumatic", "Electronic", "Other"]
-  const categoryOptions = ["Production", "Maintenance", "Safety", "Quality Control", "Logistics", "Office"]
-  const statusOptions = ["Operational", "Under Maintenance", "Out of Service", "Pending Installation", "Retired"]
+  const typeOptions = [
+    "Lightweight",
+    "Heavyweight",
+    "Motorcycle",
+    "Desktop",
+    "Laptop",
+    "Server",
+    "Router",
+    "Switch",
+    "Firewall",
+    "Projector",
+    "Printer",
+    "Scanner",
+    "Oscilloscope",
+    "3D Printer",
+    "Desk",
+    "Chair",
+    "Window",
+    "Door",
+    "Electromenager",
+    "Heating",
+    "Radiator",
+    "Air Conditioner",
+    "Other",
+  ]
+
+  // Update the categoryOptions array to match the backend ENUM
+  const categoryOptions = [
+    "Vehicle",
+    "Computing Device",
+    "Networking Equipment",
+    "Storage Device",
+    "Multimedia Equipment",
+    "Office Equipment",
+    "Laboratory Equipment",
+    "Furniture",
+    "Building Component",
+    "Appliance",
+    "HVAC",
+    "Other",
+  ]
+
+  // Update the statusOptions array to match the backend ENUM
+  const statusOptions = ["Working", "Needs Maintenance", "Out of service"]
+
+  // Months for seasonal maintenance
+  const monthOptions = [
+    { value: 1, label: "January" },
+    { value: 2, label: "February" },
+    { value: 3, label: "March" },
+    { value: 4, label: "April" },
+    { value: 5, label: "May" },
+    { value: 6, label: "June" },
+    { value: 7, label: "July" },
+    { value: 8, label: "August" },
+    { value: 9, label: "September" },
+    { value: 10, label: "October" },
+    { value: 11, label: "November" },
+    { value: 12, label: "December" },
+  ]
 
   const handleInputChange = useCallback(
     (field, value) => {
@@ -53,6 +119,44 @@ export default function EquipmentAddForm() {
     },
     [errors],
   )
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      handleInputChange("picture", file)
+
+      // Create preview URL
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleMonthToggle = (monthValue) => {
+    setEquipment((prev) => {
+      const currentMonths = [...prev.seasonalMaintenanceMonths]
+
+      if (currentMonths.includes(monthValue)) {
+        // Remove month if already selected
+        return {
+          ...prev,
+          seasonalMaintenanceMonths: currentMonths.filter((m) => m !== monthValue),
+        }
+      } else {
+        // Add month if not selected
+        return {
+          ...prev,
+          seasonalMaintenanceMonths: [...currentMonths, monthValue].sort((a, b) => a - b),
+        }
+      }
+    })
+  }
+
+  const handleCancel = () => {
+    router.back()
+  }
 
   const showToast = useCallback((message, type = "success") => {
     setToast({
@@ -68,23 +172,22 @@ export default function EquipmentAddForm() {
 
   const validateForm = useCallback(() => {
     const newErrors = {}
-  
+
     // Required fields
-    if (!equipment.code.trim()) 
-      newErrors.code = t("equipmentEdit", "validation", "codeRequired")
-    if (!equipment.type) 
-      newErrors.type = t("equipmentEdit", "validation", "typeRequired")
-    if (!equipment.category) 
-      newErrors.category = t("equipmentEdit", "validation", "categoryRequired")
-    if (!equipment.acquisitionDate) 
-      newErrors.acquisitionDate = t("equipmentEdit", "validation", "acquisitionRequired")
-    if (!equipment.commissioningDate) 
+    if (!equipment.code.trim()) newErrors.code = t("equipmentEdit", "validation", "codeRequired")
+    if (!equipment.type) newErrors.type = t("equipmentEdit", "validation", "typeRequired")
+    if (!equipment.category) newErrors.category = t("equipmentEdit", "validation", "categoryRequired")
+    if (!equipment.acquisitionDate) newErrors.acquisitionDate = t("equipmentEdit", "validation", "acquisitionRequired")
+    if (!equipment.commissioningDate)
       newErrors.commissioningDate = t("equipmentEdit", "validation", "commissioningRequired")
-    if (!equipment.location.trim()) 
-      newErrors.location = t("equipmentEdit", "validation", "locationRequired")
-    if (!equipment.status) 
-      newErrors.status = t("equipmentEdit", "validation", "statusRequired")
-  
+    if (!equipment.location.trim()) newErrors.location = t("equipmentEdit", "validation", "locationRequired")
+    if (!equipment.status) newErrors.status = t("equipmentEdit", "validation", "statusRequired")
+
+    // Validate automatic maintenance interval if provided
+    if (equipment.automaticMaintenanceInterval && isNaN(equipment.automaticMaintenanceInterval)) {
+      newErrors.automaticMaintenanceInterval = "Maintenance interval must be a number"
+    }
+
     return newErrors
   }, [equipment, t])
 
@@ -98,20 +201,55 @@ export default function EquipmentAddForm() {
       setIsSubmitting(true)
 
       try {
-        // Create equipment data object matching backend requirements
-        const equipmentData = {
-          code: equipment.code,
-          type: equipment.type,
-          category: equipment.category,
-          acquisitionDate: equipment.acquisitionDate,
-          commissioningDate: equipment.commissioningDate,
-          location: equipment.location,
-          status: equipment.status,
-          description: equipment.description,
+        // Create FormData object for file upload
+        const formData = new FormData()
+
+        // Add all equipment data to FormData
+        formData.append("inventorie_code", equipment.code)
+        formData.append("type", equipment.type)
+        formData.append("category", equipment.category)
+        formData.append("acquisition_date", equipment.acquisitionDate)
+        formData.append("date_of_commissioning", equipment.commissioningDate)
+        formData.append("localisation", equipment.location)
+        formData.append("eqp_status", equipment.status)
+        formData.append("documentation", equipment.description)
+
+        // Add new fields
+        if (equipment.picture) {
+          formData.append("picture", equipment.picture)
         }
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Convert automaticMaintenanceInterval to integer
+        if (equipment.automaticMaintenanceInterval) {
+          const intervalValue = Number.parseInt(equipment.automaticMaintenanceInterval, 10)
+          formData.append("automatic_maintenance_interval", intervalValue)
+        }
+
+        // Handle seasonal maintenance months as integers
+        if (equipment.seasonalMaintenanceMonths.length > 0) {
+          // Create a proper array for the backend
+          const monthsArray = equipment.seasonalMaintenanceMonths.map((month) =>
+            typeof month === "string" ? Number.parseInt(month, 10) : month,
+          )
+
+          // Use a hidden input approach to send the array
+          formData.append("seasonal_maintenance_months", JSON.stringify(monthsArray))
+        }
+
+        // Empty maintenance history array
+        formData.append("maintenance_history", JSON.stringify([]))
+
+        // Log the form data for debugging
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}: ${value}`)
+        }
+
+        // Make the API call with FormData
+        const response = await axios.post("https://esi-flow-back.onrender.com/equipments", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
 
         // Show success message
         showToast("Equipment added successfully", "success")
@@ -126,10 +264,16 @@ export default function EquipmentAddForm() {
           location: "",
           status: "",
           description: "",
+          picture: null,
+          automaticMaintenanceInterval: "",
+          seasonalMaintenanceMonths: [],
         })
+        setImagePreview(null)
+        // Optionally navigate back to equipment list after successful update
+        setTimeout(() => router.back(), 2000)
       } catch (error) {
         console.error("Error adding equipment:", error)
-        showToast(error.message || "Failed to add equipment", "error")
+        showToast(error.response?.data?.error || error.message || "Failed to add equipment", "error")
       } finally {
         setIsSubmitting(false)
       }
@@ -146,10 +290,10 @@ export default function EquipmentAddForm() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
+    <div className="pt-14 lg:pt-0 flex min-h-screen bg-gray-50 dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
-  
+
       {/* Show sidebar */}
       <Sidebar
         activeItem={"equipment"}
@@ -157,7 +301,7 @@ export default function EquipmentAddForm() {
         userName={currentUser.name}
         userInitials={currentUser.initials}
       />
-  
+
       {/* Main content */}
       <div className="pt-14 lg:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
         <div className="px-4 sm:px-10 lg:px-20 w-full">
@@ -169,22 +313,75 @@ export default function EquipmentAddForm() {
             </div>
             <h1 className="text-xl lg:text-2xl font-russo">{t("equipmentEdit", "title", "add")}</h1>
           </div>
-  
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-            {/* Equipment Information */}
-            <FormSection title={t("equipmentEdit", "sections", "equipmentInfo")}>
-              <div className="flex flex-col gap-4">
-                <FormField
-                  title={t("equipmentEdit", "fields", "code")}
-                  placeholder={t("equipmentEdit", "fields", "codePlaceholder")}
-                  value={equipment.code}
-                  onChange={(e) => handleInputChange("code", e.target.value)}
-                  error={errors.code}
-                  required={true}
-                />
-              </div>
-            </FormSection>
-  
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Equipment Information */}
+              <FormSection title={t("equipmentEdit", "sections", "equipmentInfo")}>
+                <div className="flex flex-col gap-4">
+                  <FormField
+                    title={t("equipmentEdit", "fields", "code")}
+                    placeholder={t("equipmentEdit", "fields", "codePlaceholder")}
+                    value={equipment.code}
+                    onChange={(e) => handleInputChange("code", e.target.value)}
+                    error={errors.code}
+                    required={true}
+                    comment={t("equipmentEdit", "fields", "codeComment")}
+                  />
+                </div>
+              </FormSection>
+
+              {/* Equipment Image */}
+              <FormSection title="Equipment Image">
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-neutral-900 dark:text-neutral-200">
+                      Equipment Picture
+                    </label>
+
+                    <div className="flex items-start gap-4">
+                      {/* Image preview */}
+                      <div className="w-16 h-16 lg:w-24 lg:h-24 border rounded-lg overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+                        {imagePreview ? (
+                          <img
+                            src={imagePreview || "/placeholder.svg"}
+                            alt="Equipment preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-neutral-400 flex flex-col items-center justify-center p-2 text-center">
+                            <Upload size={24} />
+                            <span className="text-xs mt-1">No image</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Upload controls */}
+                      <div className="flex flex-col gap-2">
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          onChange={handleFileChange}
+                          accept="image/*"
+                          className="hidden"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current.click()}
+                          className="h-9 px-4 text-sm bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-200 font-medium rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-colors"
+                        >
+                          Select Image
+                        </button>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          Upload an image of the equipment. If none is provided, a default image will be used.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FormSection>
+            </div>
+
             {/* Record Details */}
             <FormSection title={t("equipmentEdit", "sections", "recordDetails")}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -192,22 +389,22 @@ export default function EquipmentAddForm() {
                   title={t("equipmentEdit", "fields", "type")}
                   value={equipment.type}
                   onChange={(value) => handleInputChange("type", value)}
-                  options={typeOptions.map(type => t("equipmentEdit", "typeOptions", typeOptions.indexOf(type)))}
+                  options={typeOptions}
                   error={errors.type}
                   required={true}
                   placeholder={t("equipmentEdit", "fields", "typePlaceholder")}
                 />
-  
+
                 <DropdownField
                   title={t("equipmentEdit", "fields", "category")}
                   value={equipment.category}
                   onChange={(value) => handleInputChange("category", value)}
-                  options={categoryOptions.map(category => t("equipmentEdit", "categoryOptions", categoryOptions.indexOf(category)))}
+                  options={categoryOptions}
                   error={errors.category}
                   required={true}
                   placeholder={t("equipmentEdit", "fields", "categoryPlaceholder")}
                 />
-  
+
                 <DateField
                   title={t("equipmentEdit", "fields", "acquisition")}
                   value={equipment.acquisitionDate}
@@ -215,7 +412,7 @@ export default function EquipmentAddForm() {
                   error={errors.acquisitionDate}
                   required={true}
                 />
-  
+
                 <DateField
                   title={t("equipmentEdit", "fields", "commissioning")}
                   value={equipment.commissioningDate}
@@ -223,7 +420,7 @@ export default function EquipmentAddForm() {
                   error={errors.commissioningDate}
                   required={true}
                 />
-  
+
                 <FormField
                   title={t("equipmentEdit", "fields", "location")}
                   placeholder={t("equipmentEdit", "fields", "locationPlaceholder")}
@@ -233,18 +430,18 @@ export default function EquipmentAddForm() {
                   error={errors.location}
                   required={true}
                 />
-  
+
                 <DropdownField
                   title={t("equipmentEdit", "fields", "status")}
                   value={equipment.status}
                   onChange={(value) => handleInputChange("status", value)}
-                  options={statusOptions.map(status => t("equipmentEdit", "statusOptions", statusOptions.indexOf(status)))}
+                  options={statusOptions}
                   error={errors.status}
                   required={true}
                   placeholder={t("equipmentEdit", "fields", "statusPlaceholder")}
                 />
               </div>
-  
+
               <FormField
                 title={t("equipmentEdit", "fields", "description")}
                 placeholder={t("equipmentEdit", "fields", "descriptionPlaceholder")}
@@ -254,7 +451,66 @@ export default function EquipmentAddForm() {
                 error={errors.description}
               />
             </FormSection>
-  
+
+            {/* Maintenance Schedule */}
+            <FormSection title="Maintenance Schedule">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Automatic Maintenance Interval */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-200 flex items-center gap-1">
+                    <Clock size={16} />
+                    Automatic Maintenance Interval (days)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="e.g., 90 for maintenance every 3 months"
+                    value={equipment.automaticMaintenanceInterval}
+                    onChange={(e) => {
+                      // Ensure it's stored as a number
+                      const value = e.target.value === "" ? "" : Number.parseInt(e.target.value, 10)
+                      handleInputChange("automaticMaintenanceInterval", value)
+                    }}
+                    className="h-10 px-3 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                    error={errors.automaticMaintenanceInterval}
+                  />
+                  {errors.automaticMaintenanceInterval && (
+                    <p className="text-red-500 text-xs mt-1">{errors.automaticMaintenanceInterval}</p>
+                  )}
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Enter the number of days between regular maintenance checks
+                  </p>
+                </div>
+
+                {/* Seasonal Maintenance Months */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-200 flex items-center gap-1">
+                    <Calendar size={16} />
+                    Seasonal Maintenance Months
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {monthOptions.map((month) => (
+                      <button
+                        key={month.value}
+                        type="button"
+                        onClick={() => handleMonthToggle(Number.parseInt(month.value, 10))}
+                        className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                          equipment.seasonalMaintenanceMonths.includes(month.value)
+                            ? "bg-blue-500 text-white"
+                            : "bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
+                        }`}
+                      >
+                        {month.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Select months when seasonal maintenance should be performed
+                  </p>
+                </div>
+              </div>
+            </FormSection>
+
             {/* Form Actions */}
             <div className="flex justify-end mt-8">
               <button
@@ -290,8 +546,9 @@ export default function EquipmentAddForm() {
                   t("equipmentEdit", "actions", "create")
                 )}
               </button>
-  
+
               <button
+                onClick={handleCancel}
                 type="button"
                 className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
               >

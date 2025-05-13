@@ -1,10 +1,21 @@
 "use client"
 import { useLanguage } from "../../translations/contexts/languageContext"
-import { useDarkMode } from '../../darkLightMode/darkModeContext';
+import { useDarkMode } from '../../darkLightMode/darkModeContext'
+import { useRouter } from 'next/navigation'
 
 const NotificationAndCreateUserCards = () => {
   const { t } = useLanguage()
   const { isDarkMode } = useDarkMode()
+  const router = useRouter()
+
+  // Navigation handlers
+  const goToNotifications = () => {
+    router.push('/notif')
+  }
+
+  const goToCreateUser = () => {
+    router.push('/user/add')
+  }
 
   return (
     <div className="grid grid-rows-2 gap-6">
@@ -33,7 +44,10 @@ const NotificationAndCreateUserCards = () => {
 
         {/* Button in the bottom right */}
         <div className="flex justify-end">
-          <button className="bg-primary-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg text-sm font-medium transition duration-300">
+          <button 
+            onClick={goToNotifications}
+            className="bg-primary-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg text-sm font-medium transition duration-300"
+          >
             {t("dashboard", "notifications", "button")}
           </button>
         </div>
@@ -62,7 +76,10 @@ const NotificationAndCreateUserCards = () => {
 
         {/* Button in the bottom right */}
         <div className="flex justify-end">
-          <button className="bg-primary-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg text-sm font-medium transition duration-300 flex items-center">
+          <button 
+            onClick={goToCreateUser}
+            className="bg-primary-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+          >
             {t("dashboard", "createUser", "button")}
             <svg
               xmlns="http://www.w3.org/2000/svg"

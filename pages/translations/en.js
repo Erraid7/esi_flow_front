@@ -110,6 +110,46 @@ export const en = {
 
   },
   dashboard: {
+    tasks: {
+      title: "My Tasks",                         // Mes Tâches
+      taskId: "Task ID",                         // ID de la tâche
+      report: "Report",                     // Description
+      type: "Type",                              // Type
+      status: "Status",                          // Statut
+      deadline: "Deadline",                      // Date limite
+      createdAt: "Created At",                   // Créé le
+      requestId: "Request ID",                   // ID de la demande
+      addButton: "Add Task",                     // Ajouter une tâche
+      noTasks: "No tasks assigned to you"        // Aucune tâche ne vous a été assignée
+    },
+    technician: {
+      title: "Technician Dashboard",
+      mostFrequentIssues: "Most Frequent Issues",
+      highPriority: "High priorty",
+      mediumPriority: "Meduim priority",
+      lowPriority: "Low priority",
+      lastTaskProgress: "Last Task Progress",
+      clickAndDiscover: "click and discover, notification here",
+      makeReport: "Make a report",
+      equipmentStatus : "Equipment Status",
+      progress :  "here you progres in your task according to your status"
+     
+    },
+    personal: {
+      title: "Personal Dashboard",
+      requestStatus: "Status of my accepted requests",
+      requestStatuses: {
+        completed: "Completed",
+        pending: "Pending",
+        toDo: "To Do",
+        inProgress: "In Progress",
+        canceled: "Canceled"
+      },
+      lastRequestProgress: "Last request Progress",
+      clickAndDiscover: "click and discover, notification here",
+      myNotification: "My notification",
+      viewNotification: "view notification"
+    },
     title: "ESI Flow Dashboard",
     overview: "Dashboard Overview",
     activeRequests: "Active requests / tech/users",
@@ -133,9 +173,9 @@ export const en = {
     charts: {
       priority: {
         title: "Priority Request",
-        high: "High priority",
-        medium: "Medium priority",
-        low: "Low priority",
+        high: "repair",
+        medium: "maintenance",
+        low: "replacement",
       },
       equipment: {
         title: "Equipment Status",
@@ -254,9 +294,15 @@ export const en = {
       passwordLength: "Password must be at least 8 characters",
       passwordComplexity: "Password must include uppercase, numbers, and special characters",
       passwordsMatch: "Passwords do not match"
-    }
+    },
+    sendMail: "Send Email Invitation",
+    sendMailComment: "User will receive login credentials via email",
+    requirePassword: "Require Password Change",
+    requirePasswordComment: "User must change password on first login", 
+    
   },
   // Add translations for side nav component
+  
   sideNav: {
     items: {
       dashboard: "Dashboard",
@@ -284,15 +330,16 @@ export const en = {
       edit: "Edit Equipment"
     },
     title: {
-      add: "Add Maintenance Record",
+      add: "Add Equipment",
       edit: "Edit Equipment"
     },
     sections: {
       equipmentInfo: "Equipment Information",
-      recordDetails: "Record Details"
+      recordDetails: "Record Details",
+      maintenanceSchedule: "Maintenance Schedule"
     },
     fields: {
-      code: "Code Inventaire",
+      code: "Inventory Code",
       codePlaceholder: "Enter code",
       type: "Type",
       typePlaceholder: "Select equipment type",
@@ -305,35 +352,21 @@ export const en = {
       status: "Status",
       statusPlaceholder: "Select status",
       description: "Description",
-      descriptionPlaceholder: "Enter detailed description of maintenance performed"
+      descriptionPlaceholder: "Enter detailed description",
+      codeComment: "Equipment identification code",
+      image: "Equipment Image",
+      picture: "Equipment Picture",
+      imageHelp: "Upload an image of the equipment. If none is provided, the current image will be kept.",
+      maintenanceInterval: "Automatic Maintenance Interval (days)",
+      maintenanceIntervalPlaceholder: "e.g., 90 for maintenance every 3 months",
+      maintenanceIntervalHelp: "Enter the number of days between regular maintenance checks",
+      seasonalMonths: "Seasonal Maintenance Months",
+      seasonalMonthsHelp: "Select months when seasonal maintenance should be performed"
     },
-    typeOptions: [
-      "Mechanical", 
-      "Electrical", 
-      "Hydraulic", 
-      "Pneumatic", 
-      "Electronic", 
-      "Other"
-    ],
-    categoryOptions: [
-      "Production", 
-      "Maintenance", 
-      "Safety", 
-      "Quality Control", 
-      "Logistics", 
-      "Office"
-    ],
-    statusOptions: [
-      "Operational", 
-      "Under Maintenance", 
-      "Out of Service", 
-      "Pending Installation", 
-      "Retired"
-    ],
     actions: {
       create: "Create",
       update: "Update",
-      cancel: "cancel",
+      cancel: "Cancel",
       saving: "Saving...",
       creating: "Creating...",
       updating: "Updating..."
@@ -352,7 +385,8 @@ export const en = {
       acquisitionRequired: "Acquisition date is required",
       commissioningRequired: "Commissioning date is required",
       locationRequired: "Location is required",
-      statusRequired: "Status is required"
+      statusRequired: "Status is required",
+      maintenanceIntervalInvalid: "Maintenance interval must be a number"
     },
     loading: "Loading equipment data..."
   },
@@ -561,8 +595,585 @@ export const en = {
       error: "Please fill in all required fields",
       loadError: "Failed to load task data",
       equipmentError: "Failed to load equipment data",
-      userError: "Failed to load users data"
+      userError: "Failed to load users data",
+      createBothSuccess: "Request and maintenance task created successfully!"
     },
     loading: "Loading task data..."
+  },
+  
+  userList:{
+    path:{
+      1:"Dashboard",
+      2:"User List"
+    },
+    cards:{
+      titel:"User Management",
+      sub:{
+        1:"Total Users",
+        2:"Maintenance Team",
+        3:"Administrators"
+      }
+    },
+    searchbar:{
+      titel:"Users Table",
+      placeholder:"Search...",
+      buttons:{
+        1:"Export Table",
+        2:"Clear Filters",
+        3:"Add User"
+      }
+    },
+    tablehead:{
+      1:"Full Name",
+      2:"Profession",
+      3:"E-mail",
+      4:"Phone Number",
+      5:"Role",
+      6:"Actions",
+      clearfilter:"Clear filter",
+           // New translations for delete confirmation
+     deleteConfirm : "Confirm Deletion",
+     deleteDescription : "Are you sure you want to delete the user {name}? This action cannot be undone.",
+     deleteUserDetails : "User Details",
+     deleteUserName : "Name:",
+     deleteUserEmail : "Email:",
+     deleteUserRole : "Role:",
+     deleteCancel : "Cancel",
+     deleteConfirmButton : "Delete User",
+     deleteError : "Failed to delete user"
+    
+    }
+  },
+  
+  requestList:{
+    path: {
+      dashboard: "Dashboard",
+      requests: "Maintenance Requests",
+    },
+    cards: {
+      title: "Maintenance Request Management",
+      totalRequests: "Total Requests",
+      pendingRequests: "Pending Requests",
+      completedRequests: "Completed Requests",
+    },
+    searchbar: {
+      title: "Maintenance Request List",
+      placeholder: "Search requests...",
+      addButton: "Add Request",
+      buttons: {
+        export: "Export",
+        clearFilters: "Clear Filters",
+      },
+    },
+    columns: {
+      id: "Request ID",
+      title: "Title",
+      location: "Location",
+      requestedBy: "Requested By",
+      urgencyLevel: "Urgency",
+      status: "Status",
+      createdAt: "Created At",
+      inventoryCode : "Inventory Code",
+      requestCode : "Request Code",
+    },
+    tablehead: {
+      clearfilter: "Clear Filter",
+    },
+    toast: {
+      fetchError: "Failed to load requests",
+      deleteSuccess: "Request deleted successfully",
+      deleteError: "Failed to delete request",
+    },
+  },
+
+
+ equipmentList: {
+  deleteConfirm: "Confirm Deletion",
+      path: {
+        1: "Dashboard",
+        2: "Equipment",
+      },
+      cards: {
+        title: "Equipment Management",
+        sub: {
+          1: "Total Equipment",
+          2: "Needs Maintenance",
+          3: "Working",
+          4: "Out of Service",
+        },
+      },
+      tablehead: {
+        1: "Inventory Code",
+        2: "ID",
+        3: "Type",
+        4: "Category",
+        5: "Location",
+        6: "Acquisition date",
+        7: "Status",
+      },
+      searchbar: {
+        title: "Equipment Table",
+        buttons: {
+          1: "Search",
+          2: "Reset",
+          3: "Add Equipment",
+        },
+      },
+    },
+    tasksList: {
+      path: {
+        1: "Dashboard",
+        2: "Tasks",
+      },
+      cards: {
+        title: "Tasks Management",
+        sub: {
+          1: "Pending",
+          2: "In Progress",
+          3: "Completed",
+          4: "To Do",
+        },
+      },
+      tablehead: {
+        1: "Task name",
+        2: "Location",
+        3: "Responsible",
+        4: "Priority",
+        5: "Deadline",
+        6: "Status",
+        7: "Type",
+      },
+      searchbar: {
+        title: "Task Table",
+        placeholder: "Enter text to search",
+        buttons: {
+          1: "Search",
+          2: "Reset",
+          3: "Add Task",
+        },
+      },
+      status: {
+        1: "Pending",
+        2: "In Progress",
+        3: "Completed",
+        4: "To Do",
+      },
+      priority: {
+        1: "Low",
+        2: "Medium",
+        3: "High",
+      },
+    },
+  notifications: {
+    title: "Notifications",
+    unread: "unread",
+    loading: "Loading notifications...",
+    noNotifications: "No notifications found",
+    checkBackLater: "Check back later for new notifications",
+    clearSearch: "Clear search",
+    searchPlaceholder: "Search notifications...",
+    refresh: "Refresh notifications",
+    markAsRead: "Mark as read",
+    delete: "Delete notification",
+    markAllAsRead: "Mark all as read",
+    loadMore: "Load more",
+
+    breadcrumb: {
+      dashboard: "Dashboard",
+      notifications: "Notifications"
+    },
+
+    filters: {
+      title: "Filters",
+      all: "All",
+      unread: "Unread",
+      requests: "Requests",
+      tasks: "Tasks",
+      system: "System"
+    },
+
+    groups: {
+      today: "Today",
+      yesterday: "Yesterday",
+      thisWeek: "This Week"
+    },
+
+    timeFormat: {
+      minutesAgo: "{{count}} minutes ago",
+      hoursAgo: "{{count}} hours ago",
+      daysAgo: "{{count}} days ago"
+    },
+
+    toast: {
+      refreshSuccess: "Notifications refreshed successfully",
+      fetchError: "Failed to fetch notifications",
+      markedAsRead: "Notification marked as read",
+      deleted: "Notification deleted",
+      markedAllRead: "All notifications marked as read",
+      loadingMore: "Loading more notifications...",
+      noUnreadNotifications: "No unread notifications",
+    },
+
+    mockData: {
+      welcome: "Welcome to ESI Flow",
+      welcomeDesc: "Your account has been created successfully.",
+
+      newRequest: "New Maintenance Request",
+      newRequestDesc: "A new maintenance request has been submitted for the air conditioning unit in Building A.",
+
+      requestRefused: "Request Refused",
+      requestRefusedDesc: "Your maintenance request for the printer in Room 101 has been refused. Reason: Equipment scheduled for replacement next week.",
+
+      requestAccepted: "Request Accepted",
+      requestAcceptedDesc: "Your maintenance request for the server in Data Center B has been accepted. The equipment is now under maintenance.",
+
+      taskAssigned: "New Task Assignment",
+      taskAssignedDesc: "You have been assigned a new maintenance task for the HVAC system in Building C.",
+
+      taskCompleted: "Task Completed",
+      taskCompletedDesc: "Technician Ahmed has completed the maintenance task for the network switch in Server Room A.",
+
+      requestFulfilled: "Request Fulfilled",
+      requestFulfilledDesc: "Your maintenance request for the projector in Conference Room D has been completed. Please verify the equipment is working properly.",
+
+      interventionUpdated: "Intervention Status Updated",
+      interventionUpdatedDesc: "The status of intervention #49 has been updated from 'In Progress' to 'On Hold'. Reason: Waiting for replacement parts.",
+
+      scheduledMaintenance: "Scheduled Maintenance",
+      scheduledMaintenanceDesc: "Scheduled maintenance for all printers on Floor 2 will occur this weekend. Please save your work and turn off the equipment before leaving on Friday.",
+
+      todayDeadline: "Due today",
+      tomorrowDeadline: "Due tomorrow"
+    }
+  },
+  // English translations (en.js)
+  settings: {
+    title: "Settings",
+    breadcrumb: {
+      dashboard: "Dashboard",
+      settings: "Settings"
+    },
+    tabs: {
+      general: "General Settings",
+      user: "User Information",
+      system: "System Information"
+    },
+    general: {
+      systemPreferences: "System Preferences",
+      darkMode: "Dark Mode",
+      darkModeDescription: "Enable dark mode for a better viewing experience in low light environments.",
+      language: "Language",
+      languageDescription: "Change the language of the interface",
+      notifications: "Notifications",
+      emailNotifications: "Email Notifications",
+      emailNotificationsDescription: "Receive important updates and notifications via email.",
+      reminderNotifications: "Reminder Notifications",
+      reminderNotificationsDescription: "Get reminders for upcoming tasks and deadlines.",
+      advancedSettings: "Advanced Settings",
+      dataSharing: "Data Sharing",
+      dataSharingDescription: "Share anonymous usage data to help improve the platform."
+    },
+    user: {
+      profilePicture: "Profile Picture",
+      uploadPicture: "Click to upload profile picture",
+      basicInformation: "Basic Information",
+      fullName: "Full Name",
+      email: "Email",
+      emailComment: "Your email address will be used for account-related notifications.",
+      phone: "Phone",
+      phoneComment: "Your phone number will be used for account recovery and security purposes.",
+      biography: "Biography",
+      profession: "Profession",
+      professionUpdate: "Update your professional role",
+      role: "Role",
+      roleUpdate: "Update your system role",
+      roleDescription: "Your role determines what actions you can perform in the system.",
+      accountSecurity: "Account Security",
+      passwordInfo: "Leave the password fields empty if you don't want to change your password.",
+      password: "Password",
+      passwordPlaceholder: "Enter new password",
+      passwordComment: "Password must be at least 8 characters with uppercase, numbers, and special characters.",
+      confirmPassword: "Confirm Password",
+      confirmPasswordPlaceholder: "Confirm new password"
+    },
+    system: {
+      platformInformation: "Platform Information",
+      platformDescription: "This section provides information about the current system version and technical details.",
+      platformVersion: "Platform Version",
+      serverEnvironment: "Server Environment",
+      databaseVersion: "Database Version",
+      lastUpdate: "Last Update",
+      developmentTeam: "Development Team",
+      projectLead: "Project Lead",
+      backendDeveloper: "Backend Developer",
+      leadDeveloper: "Lead Developer",
+      uiDesigner: "UI/UX Designer",
+      qaEngineer: "QA Engineer",
+      supportInformation: "Support Information",
+      technicalSupport: "Technical Support",
+      documentation: "Documentation",
+      madeWithLove: "Made with love by ARCAD team"
+    },
+    actions: {
+      saveSettings: "Save Settings",
+      saveChanges: "Save Changes",
+      saving: "Saving...",
+      cancel: "Cancel"
+    },
+    validation: {
+      passwordLength: "Password must be at least 8 characters",
+      passwordComplexity: "Password must include uppercase, numbers, and special characters",
+      passwordsMatch: "Passwords do not match"
+    },
+    toast: {
+      generalSuccess: "General settings saved successfully",
+      generalError: "Failed to save general settings",
+      userSuccess: "User information updated successfully",
+      userError: "Failed to update user information",
+      formErrors: "Please fix the errors in the form",
+      loadError: "Failed to load user data"
+    }
+  },
+  // Add translations for the password reset component
+  forgotPassword: {
+    title: "Forgot Password",
+    description: "Enter your email address and we'll send you a verification code to reset your password.",
+    emailLabel: "Email Address",
+    emailPlaceholder: "Enter your email address",
+    invalidEmail: "Please enter a valid email address",
+    emailNotFound: "This email address is not registered in our system",
+    cancelButton: "Cancel",
+    continueButton: "Continue",
+    sending: "Sending...",
+  },
+  verification: {
+    title: "Verification Code",
+    description: "We've sent a verification code to {email}. Please enter the code below.",
+    incompleteCode: "Please enter the complete 6-digit verification code",
+    invalidCode: "The verification code you entered is invalid or has expired",
+    verifyButton: "Verify Code",
+    verifying: "Verifying...",
+    didNotReceive: "Didn't receive the code?",
+    resendButton: "Resend Code",
+    resendIn: "Resend code in",
+    resending: "Resending...",
+    codeSent: "A new verification code has been sent to your email",
+    resendFailed: "Failed to resend verification code. Please try again.",
+  },
+  newPassword: {
+    title: "Create New Password",
+    description: "Please create a new password for your account. Make sure it's secure and easy to remember.",
+    passwordLabel: "New Password",
+    passwordPlaceholder: "Enter new password",
+    confirmPasswordLabel: "Confirm Password",
+    confirmPasswordPlaceholder: "Confirm your new password",
+    passwordRequirements: "Your password must meet all the requirements below",
+    passwordsDoNotMatch: "Passwords do not match",
+    passwordTooShort: "Password must be at least 8 characters long",
+    resetButton: "Reset Password",
+    resetting: "Resetting...",
+    resetFailed: "Failed to reset password. Please try again.",
+    cancelButton: "Back",
+    passwordStrength: "Password Strength",
+    strengthEmpty: "Empty",
+    strengthWeak: "Weak",
+    strengthMedium: "Medium",
+    strengthStrong: "Strong",
+    minLength: "At least 8 characters",
+    upperCase: "Uppercase letter",
+    lowerCase: "Lowercase letter",
+    number: "Number",
+    specialChar: "Special character",
+  },
+  success: {
+    title: "Success!",
+    description: "Your password has been reset successfully. You can now log in with your new password.",
+    backButton: "Back to Login",
+  },
+  // Report page translations
+  reportPage: {
+    path: {
+      dashboard: "Dashboard",
+      reports: "Reports",
+    },
+    title: "Reports",
+    sections: {
+      taskStats: "Task Statistics",
+      tasks: "Tasks",
+      equipmentStats: "Equipment Statistics",
+      equipment: "Equipment",
+      userStats: "User Statistics",
+      users: "Users",
+      requestStats: "Request Statistics",
+      requests: "Requests",
+    },
+    stats: {
+      pending: "Pending",
+      inProgress: "In Progress",
+      completed: "Completed",
+      toDo: "To Do",
+      totalEquipment: "Total Equipment",
+      needsMaintenance: "Needs Maintenance",
+      working: "Working",
+      outOfService: "Out of Service",
+      totalUsers: "Total Users",
+      maintenanceTeam: "Maintenance Team",
+      administrators: "Administrators",
+      totalRequests: "Total Requests",
+      pendingRequests: "Pending Requests",
+      completedRequests: "Completed Requests",
+    },
+    tables: {
+      tasks: {
+        title: "Tasks Management",
+        addButton: "Add Task",
+        columns: {
+          taskName: "Task Name",
+          location: "Location",
+          responsible: "Responsible",
+          priority: "Priority",
+          deadline: "Deadline",
+          status: "Status",
+        },
+      },
+      equipment: {
+        title: "Equipment Management",
+        addButton: "Add Equipment",
+        columns: {
+          inventoryCode: "Inventory Code",
+          type: "Type",
+          category: "Category",
+          location: "Location",
+          acquisitionDate: "Acquisition Date",
+          status: "Status",
+        },
+      },
+      users: {
+        title: "User Management",
+        addButton: "Add User",
+        columns: {
+          name: "Name",
+          profession: "Profession",
+          email: "Email",
+          phoneNumber: "Phone Number",
+          role: "Role",
+        },
+      },
+      requests: {
+        title: "Request Management",
+        addButton: "Add Request",
+        columns: {
+          requestCode: "Request Code",
+          title: "Title",
+          location: "Location",
+          requestedBy: "Requested By",
+          urgencyLevel: "Urgency Level",
+          status: "Status",
+        },
+      },
+    },
+    actions: {
+      edit: "Edit",
+      delete: "Delete",
+      accept: "Accept",
+      reject: "Reject",
+      export: "Export",
+      print: "Print",
+      filter: "Filter",
+    },
+    notifications: {
+      deleteConfirm: "Confirm Deletion",
+      deleteSuccess: "Item deleted successfully",
+      deleteError: "Failed to delete item",
+      loadError: "Failed to load data",
+      loading: "Loading data...",
+    },
+  },
+  // Common translations used across multiple components
+  common: {
+    actions: {
+      close: "Close",
+      save: "Save",
+      cancel: "Cancel",
+      edit: "Edit",
+      delete: "Delete",
+      copy: "Copy",
+      "Copy to clipboard": "Copy to clipboard",
+      "Clear filters": "Clear filters"
+    },
+    navigation: {
+      "Previous record": "Previous record",
+      "Next record": "Next record"
+    },
+    search: {
+      "Search fields...": "Search fields...",
+      "No matching fields": "No matching fields",
+      "Try a different search term or filter": "Try a different search term or filter"
+    },
+    filters: {
+      "All": "All",
+      "IDs": "IDs",
+      "Dates": "Dates",
+      "Contact Info": "Contact Info",
+      "Other": "Other"
+    },
+    boolean: {
+      "Yes": "Yes",
+      "No": "No",
+      "True": "True",
+      "False": "False"
+    },
+    status: {
+      "Active": "Active",
+      "Inactive": "Inactive",
+      "Pending": "Pending",
+      "Completed": "Completed"
+    },
+    errors: {
+      "Something went wrong": "Something went wrong",
+      "Please try again": "Please try again"
+    }
+  },
+
+  // Specific to RowDetailModal component
+  rowDetails: {
+    title: "Row Details",
+    buttons: {
+      "Close": "Close",
+      "Edit": "Edit",
+      "Export": "Export"
+    },
+    messages: {
+      "No data available": "No data available",
+      "Field copied to clipboard": "Field copied to clipboard"
+    },
+    fields: {
+      // Common field names that might be used
+      "id": "ID",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "created_at": "Created At",
+      "updated_at": "Updated At",
+      "status": "Status",
+      "description": "Description"
+    }
+  },
+
+  // Date formatting
+  dates: {
+    formats: {
+      short: "MM/DD/YYYY",
+      long: "MMMM D, YYYY",
+      time: "h:mm A"
+    },
+    relative: {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "days_ago": "{{count}} days ago",
+      "in_days": "In {{count}} days"
+    }
   }
-};
+}

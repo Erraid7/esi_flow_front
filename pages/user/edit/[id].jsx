@@ -1,15 +1,12 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useLanguage } from "../../translations/contexts/languageContext"
+import { useLanguage } from "../../../pages/translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
 import axios from "axios"
-import { useRouter } from "next/navigation"
-import {
-  Mail,
-  Phone,
-  School,
-} from "lucide-react"
+import { useRouter, useParams } from "next/navigation"
+import { Mail, Phone, School, ChevronDown, Eye, EyeOff, Bell, X, Check, AlertTriangle, ShieldHalf } from "lucide-react"
+
 import Toast from "../../components/form_components/toast"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
@@ -21,115 +18,125 @@ import Info from "../../components/form_components/info_icon"
 export default function UserEditForm() {
   const { t, toggleLanguage } = useLanguage()
   const router = useRouter()
+  const params = useParams()
 
-  // Get user ID from URL (assuming URL structure like /users/edit/123)
-  const [userId, setUserId] = useState(null)
-  
-  useEffect(() => {
-    // Extract user ID from URL path
-    const path = window.location.pathname
-    const pathSegments = path.split('/')
-    const id = pathSegments[pathSegments.length - 1]
-    
-    // Check if ID is numeric to ensure it's a valid ID
-    if (!isNaN(id)) {
-      setUserId(id)
-    }
-  }, [])
+  // Safely access the ID parameter with a fallback
+  const userId = params?.id || ""
 
-  // Define isMobile state
-  const [isMobile, setIsMobile] = useState(false)
-  
   // State for mobile menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [activeItem, setActiveItem] = useState("users")
 
-  // Current user for sidebar
-  const currentUser = {
-    name: "MEHDAOUI Lokman",
-    role: "admin",
-    initials: "AD"
-  }
-
-  // State for user data
-  const [user, setUser] = useState({
-    full_name: "",
-    email: "",
-    phone: "",
-    biography: "",
-    profession: "",
-    role: "",
-  })
-  console.log(user)
-
-  // Loading and error states
-  const [isLoading, setIsLoading] = useState(true)
-  const [loadError, setLoadError] = useState(null)
-
-  // Password state
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-
-  // Form validation
-  const [errors, setErrors] = useState({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // Toast notification state
+  // State for toast notifications
   const [toast, setToast] = useState({
     visible: false,
     message: "",
     type: "success",
   })
 
+  // Form state
+  const [user, setUser] = useState({
+    id: "",
+    full_name: "",
+    email: "",
+    phone: "",
+    role: "",
+    profession: "",
+    bio: "",
+  })
+
+  // Original user data for comparison
+  const [originalUser, setOriginalUser] = useState(null)
+
+  // Password state
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [changePassword, setChangePassword] = useState(false)
+
+  // Form validation
+  const [errors, setErrors] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
   // Available options for dropdowns
-  const professionOptions = ["Teacher", "Administrator", "Engineer", "Technician", "Manager", "Other"]
-  const roleOptions = ["Admin", "User", "Editor", "Viewer", "Moderator"]
+  const professionOptions = [
+    "Teacher",
+    "Security",
+    "Cleaning",
+    "Student",
+    "Researcher",
+    "IT Technician",
+    "Network Technician",
+    "Server Administrator",
+    "Security Technician",
+    "Electrical Technician",
+    "Mechanical Technician",
+    "Multimedia Technician",
+    "Lab Technician",
+    "HVAC Technician",
+    "Plumber",
+    "Carpenter",
+    "Painter",
+    "Gardener",
+    "Driver",
+    "Office Equipment Technician",
+    "Other",
+  ]
 
-  // Check if on mobile on mount and when window size changes
+  const roleOptions = ["Admin", "Technician", "Personal"]
+
+  // Update user ID when params change
   useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768)
+    if (params?.id) {
+      setUser((prev) => ({ ...prev, id: params.id }))
     }
-    
-    checkIsMobile()
-    window.addEventListener('resize', checkIsMobile)
-    
-    return () => window.removeEventListener('resize', checkIsMobile)
-  }, [])
+  }, [params])
 
-  // Fetch user data from backend when userId is available
+  // Fetch user data
   useEffect(() => {
+    const fetchUserData = async () => {
+      // Only fetch if we have a valid userId
+      if (!userId) {
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        setIsLoading(true)
+        // Use relative path for API endpoint
+        const response = await axios.get(`https://esi-flow-back.onrender.com/users/${userId}`)
+        const userData = response.data
+
+        setUser({
+          id: userId,
+          full_name: userData.full_name || "",
+          email: userData.email || "",
+          phone: userData.phone || "",
+          role: userData.role || "",
+          profession: userData.profession || "",
+          bio: userData.bio || "",
+        })
+
+        setOriginalUser({
+          full_name: userData.full_name || "",
+          email: userData.email || "",
+          phone: userData.phone || "",
+          role: userData.role || "",
+          profession: userData.profession || "",
+          bio: userData.bio || "",
+        })
+
+        setIsLoading(false)
+      } catch (error) {
+        console.error("Error fetching user data:", error)
+        showToast("Failed to load user data", "error")
+        setIsLoading(false)
+      }
+    }
+
     if (userId) {
-      fetchUserData(userId)
+      fetchUserData()
     }
   }, [userId])
-
-  // Function to fetch user data
-  const fetchUserData = async (id) => {
-    setIsLoading(true)
-    setLoadError(null)
-    
-    try {
-      const response = await axios.get(`http://localhost:5000/users/${id}`)
-      
-      // Map backend data to form fields
-      const userData = response.data
-      setUser({
-        full_name: userData.full_name || "",
-        email: userData.email || "",
-        phone: userData.phone || "",
-        biography: userData.bio || "",
-        profession: userData.profession || "",
-        role: userData.role || "",
-      })
-    } catch (error) {
-      console.error("Error fetching user data:", error)
-      setLoadError("Failed to load user data. Please try again later.")
-      showToast("Failed to load user data", "error")
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const handleInputChange = (field, value) => {
     setUser({ ...user, [field]: value })
@@ -137,6 +144,10 @@ export default function UserEditForm() {
     if (errors[field]) {
       setErrors({ ...errors, [field]: null })
     }
+  }
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
   const showToast = (message, type = "success") => {
@@ -154,22 +165,18 @@ export default function UserEditForm() {
   const validateForm = () => {
     const newErrors = {}
 
-    // Required fields
-    if (!user.full_name.trim())
-      newErrors.full_name = t("userEdit", "validation", "requiredField")
-    if (!user.email.trim())
-      newErrors.email = t("userEdit", "validation", "requiredField")
-    if (!user.phone.trim())
-      newErrors.phone = t("userEdit", "validation", "requiredField")
-
-    // Email format
+    // Email format validation (only if email is provided)
     if (user.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) {
       newErrors.email = t("userEdit", "validation", "validEmail")
     }
 
-    // Password validation if password is being changed
-    if (password) {
-      if (password.length < 8) {
+    // Password validation (only if changing password)
+    if (changePassword) {
+      if (!password) {
+        newErrors.password = t("userEdit", "validation", "requiredField", {
+          field: t("userEdit", "fields", "password"),
+        })
+      } else if (password.length < 8) {
         newErrors.password = "Password must be at least 8 characters"
       } else if (!/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
         newErrors.password = "Password must include uppercase, numbers, and special characters"
@@ -186,6 +193,12 @@ export default function UserEditForm() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Validate that we have a user ID
+    if (!user.id) {
+      showToast("User ID is missing", "error")
+      return
+    }
+
     const formErrors = validateForm()
     setErrors(formErrors)
 
@@ -193,43 +206,64 @@ export default function UserEditForm() {
       setIsSubmitting(true)
 
       try {
-        // Map form data back to API format
-        const userData = {
-          name: user.full_name,
-          email: user.email,
-          phone: user.phone,
-          biography: user.biography,
-          profession: user.profession,
-          role: user.role,
+        // Create update data object with only changed fields
+        const updateData = { id: user.id }
+
+        // Only include fields that have changed
+        if (originalUser && user.full_name !== originalUser.full_name) updateData.full_name = user.full_name
+        if (originalUser && user.email !== originalUser.email) updateData.email = user.email
+        if (originalUser && user.phone !== originalUser.phone) updateData.phone = user.phone
+        if (originalUser && user.bio !== originalUser.bio) updateData.bio = user.bio
+        if (originalUser && user.role !== originalUser.role) updateData.role = user.role
+        if (originalUser && user.profession !== originalUser.profession) updateData.profession = user.profession
+
+        // Add password if it's being changed
+        if (changePassword && password) {
+          updateData.password = password
         }
 
-        // Add password only if it was provided
-        if (password) {
-          userData.password = password
-        }
+        console.log("Update Data:", updateData)
 
-        // Send update to backend
-        await axios.put(`http://localhost:5000/users/${userId}`, userData)
-        
-        showToast(t("userEdit", "toast", "success"), "success")
-        
-        // Reset password fields after successful update
-        setPassword("")
-        setConfirmPassword("")
+        // Only proceed if there are changes to submit
+        if (Object.keys(updateData).length > 1 || (changePassword && password)) {
+          // Using axios to send the request to our API route - use relative path
+          const response = await axios.put(`https://esi-flow-back.onrender.com/auth/edit-user/${userId}`, updateData)
+
+          // Update original user data with new values
+          setOriginalUser({
+            full_name: user.full_name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            profession: user.profession,
+            bio: user.bio,
+          })
+
+          // Reset password fields
+          setPassword("")
+          setConfirmPassword("")
+          setChangePassword(false)
+
+          // Show success message
+          showToast("User updated successfully", "success")
+
+          // redirect to user list page
+          setTimeout(() => { router.back() }, 2000)
+        } else {
+          showToast("No changes to save", "info")
+        }
       } catch (error) {
-        console.error("Error updating user:", error)
-        showToast(t("userEdit", "toast", "error"), "error")
+        console.error("Update error:", error)
+
+        // Get error message from axios response if available
+        const errorMessage = error.response?.data?.message || "Failed to update user"
+        showToast(errorMessage, "error")
       } finally {
         setIsSubmitting(false)
       }
     } else {
       showToast(t("userEdit", "toast", "error"), "error")
     }
-  }
-
-  const handleCancel = () => {
-    // Navigate back to users list
-    router.push("/users")
   }
 
   // Handle body overflow when mobile menu is open
@@ -245,123 +279,147 @@ export default function UserEditForm() {
     }
   }, [isMobileMenuOpen])
 
+  // const getCurrentUser = () => {
+  //   if (typeof window === 'undefined') {
+  //     // Prevent running on server
+  //     return true;
+  //   }
+
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     if (!token) {
+  //       return {
+  //         name: "Guest User",
+  //         role: "personal",
+  //         initials: "GU",
+  //       };
+  //     }
+
+  //     const parsed = JSON.parse(token); // Make sure it's valid JSON
+
+  //     const name = parsed.full_name || "Unknown User";
+  //     const role = parsed.role || "personal";
+
+  //     const initials = name
+  //       .split(' ')
+  //       .map(part => part[0])
+  //       .join('')
+  //       .substring(0, 2)
+  //       .toUpperCase();
+
+  //     return {
+  //       name,
+  //       role,
+  //       initials
+  //     };
+  //   } catch (error) {
+  //     console.error("Error decoding token:", error);
+  //     return {
+  //       name: "Error User",
+  //       role: "personal",
+  //       initials: "EU",
+  //     };
+  //   }
+  // };
+
+  // const currentUser = getCurrentUser();
+
+  // Get current user informationconst currentUser = getCurrentUser();
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
+    <div className="flex min-h-screen bg-red dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
-
-      {/* Show sidebar for desktop or when mobile menu is open */}
-      <Sidebar 
-        activeItem={activeItem}
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userInitials={currentUser.initials}
-      />
-
+      <Sidebar activeItem={"users"} />
       {/* Main content */}
-      <div className="pt-14 lg:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
-        <div className="px-4 sm:px-10 lg:px-20">
+      <div className="flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
+        <div className="px-4 sm:px-10 lg:px-20 w-full">
           <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
             <div className="text-sm flex items-center font-inter">
               <span>{t("userEdit", "breadcrumb", "users")}</span>
               <span className="mx-2 text-lg">›</span>
-              <span>{t("userEdit", "breadcrumb", "users")}</span>
+              <span>{t("userEdit", "breadcrumb", "edit")}</span>
             </div>
-            <h1 className="text-xl lg:text-2xl font-russo">{t("userEdit", "title")}</h1>
+            <h1 className="text-xl lg:text-2xl font-russo">{t("userEdit", "breadcrumb", "edit")}</h1>
           </div>
 
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
-            </div>
-          ) : loadError ? (
-            <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-6">
-              <strong className="font-bold">Error!</strong>
-              <span className="block sm:inline"> {loadError}</span>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-              {/* Basic Information */}
-              <FormSection title={t("userEdit", "sections", "basicInfo")}>
-                <div className="flex flex-col gap-4">
-                  <FormField
-                    title={t("userEdit", "fields", "fullName")}
-                    value={user.full_name}
-                    onChange={(e) => handleInputChange("full_name", e.target.value)}
-                    error={errors.full_name}
-                    required={true}
-                  />
+          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+            {/* Basic Information */}
+            <FormSection title={t("userEdit", "sections", "basicInfo")}>
+              <div className="flex flex-col gap-4">
+                <FormField
+                  title={t("userEdit", "fields", "fullName")}
+                  placeholder="Enter full name"
+                  value={user.full_name}
+                  onChange={(e) => handleInputChange("full_name", e.target.value)}
+                  error={errors.full_name}
+                />
 
-                  <FormField
-                    title={t("userEdit", "fields", "email")}
-                    value={user.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    icon={<Mail size={16} />}
-                    comment={t("userEdit", "fields", "emailComment")}
-                    error={errors.email}
-                    required={true}
-                  />
+                <FormField
+                  title={t("userEdit", "fields", "email")}
+                  placeholder="Enter email address"
+                  value={user.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  icon={<Mail size={16} />}
+                  error={errors.email}
+                />
 
-                  <FormField
-                    title={t("userEdit", "fields", "phone")}
-                    value={user.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    icon={<Phone size={16} />}
-                    comment={t("userEdit", "fields", "phoneComment")}
-                    error={errors.phone}
-                    required={true}
-                  />
+                <FormField
+                  title={t("userEdit", "fields", "phone")}
+                  placeholder="Enter phone number"
+                  value={user.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  icon={<Phone size={16} />}
+                  error={errors.phone}
+                />
 
-                  <FormField
-                    title={t("userEdit", "fields", "biography")}
-                    value={user.biography}
-                    onChange={(e) => handleInputChange("biography", e.target.value)}
-                    isTextarea={true}
-                  />
-                </div>
-              </FormSection>
-
-              {/* Profession & Role */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {/* Profession */}
-                <FormSection>
-                  <DropdownField
-                    title={t("userEdit", "fields", "profession")}
-                    value={user.profession}
-                    onChange={(value) => handleInputChange("profession", value)}
-                    icon={<School size={24} strokeWidth={2} className="text-primary-500" />}
-                    iconBg="bg-[#284CFF] bg-opacity-5 p-2 rounded rounded-lg"
-                    updateText={t("userEdit", "fields", "professionUpdate")}
-                    options={professionOptions}
-                  />
-                </FormSection>
-
-                {/* Role & Permissions */}
-                <FormSection>
-                  <DropdownField
-                    title={t("userEdit", "fields", "role")}
-                    value={user.role}
-                    onChange={(value) => handleInputChange("role", value)}
-                    icon={<span className="text-neutral-50 dark:text-neutral-990 font-russo text-base ">AD</span>}
-                    iconBg="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9"
-                    updateText={t("userEdit", "fields", "roleUpdate")}
-                    description={t("userEdit", "fields", "roleDescription")}
-                    options={roleOptions}
-                  />
-                </FormSection>
+                <FormField
+                  title="Bio"
+                  placeholder="Enter user bio"
+                  value={user.bio}
+                  onChange={(e) => handleInputChange("bio", e.target.value)}
+                  isTextarea={true}
+                  error={errors.bio}
+                />
               </div>
+            </FormSection>
 
-              {/* Account Setup */}
-              <FormSection title={t("userEdit", "sections", "accountSetup")}>
-                <div className="text-sm text-gray-600 dark:text-gray-300 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-md flex items-start">
-                  <Info size={20} className="text-blue-500 dark:text-blue-400 mr-2 mt-0.5 flex-shrink-0" />
-                  <p>{t("userEdit", "fields", "emailComment")}</p>
-                </div>
+            {/* Profession & Role */}
+            <div className="">
+              {/* Role & Permissions */}
+              <FormSection title="Role & Profession">
+                <DropdownField
+                  title={t("userEdit", "fields", "role")}
+                  value={user.role}
+                  onChange={(value) => handleInputChange("role", value)}
+                  icon={<span className="text-neutral-50 dark:text-neutral-990 font-russo text-base">AD</span>}
+                  iconBg="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9"
+                  updateText="Select user role"
+                  description="Set the permissions and access level for this user"
+                  options={roleOptions}
+                  error={errors.role}
+                />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <DropdownField
+                  title={t("userEdit", "fields", "profession")}
+                  value={user.profession}
+                  onChange={(value) => handleInputChange("profession", value)}
+                  icon={<School size={24} strokeWidth={2} className="text-primary-500" />}
+                  iconBg="bg-[#284CFF] bg-opacity-5 p-2 rounded rounded-lg"
+                  updateText="Select user profession"
+                  options={professionOptions}
+                  error={errors.profession}
+                />
+              </FormSection>
+            </div>
+
+            {/* Password Section */}
+            <FormSection title={t("userEdit", "sections", "accountSetup")}>
+
+              
+                <div className="flex gap-3 flex-col">
                   <PasswordField
                     title={t("userEdit", "fields", "password")}
-                    placeholder={t("userEdit", "fields", "passwordPlaceholder")}
+                    placeholder="Enter new password"
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value)
@@ -370,69 +428,73 @@ export default function UserEditForm() {
                         setErrors({ ...errors, confirmPassword: null })
                       }
                     }}
-                    comment={t("userEdit", "fields", "passwordComment")}
                     error={errors.password}
+                    required={true}
                   />
 
                   <PasswordField
                     title={t("userEdit", "fields", "confirmPassword")}
-                    placeholder={t("userEdit", "fields", "confirmPasswordPlaceholder")}
+                    placeholder="Confirm new password"
                     value={confirmPassword}
+                    comment="Password must be at least 8 characters with uppercase, numbers, and special characters"
                     onChange={(e) => {
                       setConfirmPassword(e.target.value)
                       if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: null })
                     }}
                     error={errors.confirmPassword}
+                    required={true}
                   />
                 </div>
-              </FormSection>
+           
+            </FormSection>
 
-              {/* Form Actions */}
-              <div className="flex justify-end mt-8">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`h-10 min-w-32 w-fit px-2 mr-3 text-sm bg-primary-500 text-neutral-50 font-inter font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      {t("userEdit", "actions", "saving")}
-                    </span>
-                  ) : (
-                    t("userEdit", "actions", "save")
-                  )}
-                </button>
+            {/* Form Actions */}
+            <div className="flex justify-end mt-8">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`h-10 w-32 mr-3 text-sm bg-primary-500 text-neutral-50 font-inter font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 transition-colors ${
+                  isSubmitting ? "opacity-75 cursor-not-allowed" : ""
+                }`}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    {t("userEdit", "actions", "saving")}
+                  </span>
+                ) : (
+                  t("userEdit", "actions", "save")
+                )}
+              </button>
 
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-inter font-semibold bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
-                >
-                  {t("userEdit", "actions", "cancel")}
-                </button>
-              </div>
-            </form>
-          )}
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-inter font-semibold bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
+              >
+                {t("userEdit", "actions", "cancel")}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
