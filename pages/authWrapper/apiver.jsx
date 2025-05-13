@@ -10,12 +10,11 @@ export function getTokenFromCookies() {
   export function checkAuth(requiredRoles = []) {
     if (typeof window === 'undefined') return { authorized: false };
   
-    const token = getTokenFromCookies('jwt'); // now correctly looks for 'jwt'
+   
     const userData = localStorage.getItem('user');
-    console.log("User data from localStorage:", userData);
-    console.log("Token from cookies:", token);
+    
   
-    if (!userData || !token) {
+    if (!userData) {
       return { authorized: false };
     }
   

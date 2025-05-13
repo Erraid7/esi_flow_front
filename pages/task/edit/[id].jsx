@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 
 // API base URL - replace with your actual backend URL
-const API_BASE_URL = "http://localhost:5000"
+const API_BASE_URL = "https://esi-flow-back.onrender.com"
 
 // Main Component
 export default function TaskEditForm({ request = null }) {
@@ -69,19 +69,13 @@ export default function TaskEditForm({ request = null }) {
   const [isLoading, setIsLoading] = useState(false)
 
   // Available options for dropdowns
-  const statusOptions = [
-    t("taskForm", "statusOptions", 0),
-    t("taskForm", "statusOptions", 1),
-    t("taskForm", "statusOptions", 2),
-    t("taskForm", "statusOptions", 3),
-    t("taskForm", "statusOptions", 4),
-  ]
+  const statusOptions = ["To Do", "In Progress", "Pending", "Completed", "Cancelled"]
 
   // Define priority options with lowercase values to match backend ENUM
-  const priorityOptions = ["low", "medium", "high"]
+  const priorityOptions = ["Low", "Medium", "High"]
 
   // Define intervention types that match the backend ENUM values
-  const taskTypes = ["repair", "maintenance", "replacement"]
+  const taskTypes = ["Repair", "Maintenance", "Replacement"]
 
   // Fetch equipment data from backend
   useEffect(() => {
@@ -121,11 +115,13 @@ export default function TaskEditForm({ request = null }) {
         const response = await axios.get(`${API_BASE_URL}/users`)
 
         // Format users data for autocomplete
-        const formattedUsers = response.data.map((user) => ({
+        const formattedUsers = response.data
+        .filter((user) => user.role && user.role.toLowerCase() === "technician")
+        .map((user) => ({
           id: user.id,
           code: user.employee_id || `TECH-${user.id}`, // Use employee_id as code or generate one
           name: user.full_name || `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Unknown User",
-          location: user.role || user.department || "Technician", // Role or department as location
+          location: user.profession || "Technician", // Role or department as location
         }))
 
         setAllUsers(formattedUsers)
@@ -176,13 +172,13 @@ export default function TaskEditForm({ request = null }) {
               name: requestData.title || "",
               assignTo: technician ? technician.code : "",
               status: interventionData.intv_status || "Not Started",
-              deadline: interventionData.deadline || "",
+              deadline: interventionData.deadline ? new Date(interventionData.deadline).toISOString().split("T")[0] : "",
               report: interventionData.report || "",
               equipmentCode: equipment ? equipment.code : "",
               location: requestData.localisation || (equipment ? equipment.location : ""),
               description: requestData.description || "",
-              priority: requestData.priority || "medium",
-              type: interventionData.intervention_type || "repair",
+              priority: requestData.priority || "Medium",
+              type: interventionData.intervention_type || "Repair",
               requestCode: requestData.request_code || "",
             }
 
@@ -236,8 +232,8 @@ export default function TaskEditForm({ request = null }) {
         equipmentCode: selectedEq ? selectedEq.code : "",
         location: request.location || (selectedEq ? selectedEq.location : ""),
         description: request.description || "",
-        priority: request.priority || "medium", // Use lowercase priority
-        type: request.type || "repair", // Default to repair if not specified
+        priority: request.priority || "Medium", 
+        type: request.type || "Repair", // Default to repair if not specified
         requestCode: request.request_code || "", // Add request code
       }
 
@@ -256,21 +252,7 @@ export default function TaskEditForm({ request = null }) {
     }
   }, [request, allEquipment])
 
-  // Map urgency level to priority (ensure lowercase values)
-  const mapUrgencyToPriority = (urgencyLevel) => {
-    if (!urgencyLevel) return "medium"
-
-    const urgencyMap = {
-      low: "low",
-      medium: "medium",
-      high: "high",
-      Low: "low",
-      Medium: "medium",
-      High: "high",
-    }
-
-    return urgencyMap[urgencyLevel] || "medium"
-  }
+  
 
   // Filter equipment based on location input
   useEffect(() => {
@@ -375,10 +357,6 @@ export default function TaskEditForm({ request = null }) {
     [errors],
   )
 
-  const handleUserSearch = useCallback((value) => {
-    setUserSearchTerm(value)
-  }, [])
-
   const showToast = useCallback((message, type = "success") => {
     setToast({
       visible: true,
@@ -447,7 +425,7 @@ export default function TaskEditForm({ request = null }) {
         console.log("Intervention ID:", interventionId)
 
         // Call the API to update the intervention - keeping the POST method as requested
-        const response = await axios.post(`${API_BASE_URL}/interventions/update/${interventionId}`, interventionData, {
+        const response = await axios.put(`${API_BASE_URL}/interventions/${interventionId}`, interventionData, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -458,7 +436,7 @@ export default function TaskEditForm({ request = null }) {
 
         // Redirect to interventions list or details page after successful update
         setTimeout(() => {
-          router.push("/interventions")
+          router.back()
         }, 2000)
       } catch (error) {
         console.error("Error updating intervention:", error)

@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
-import DynamicTable from "../../components/DynamicTable"
+import DynamicTable from "../../components/dynamicTable"
 import Sidebar from "../../components/sidebar"
+import Toast from "../../components/form_components/toast"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"
 import { Box, Settings, CheckCircle, XCircle, AlertTriangle } from "lucide-react"
 import { ArrowRight2 } from "iconsax-react"
@@ -18,6 +19,13 @@ export default function EquipmentManagement() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, equipment: null })
+
+  // State for toast notifications
+  const [toast, setToast] = useState({
+    visible: false,
+    message: "",
+    type: "success",
+  })
 
   // State for storing equipment statistics
   const [equipmentData, setEquipmentData] = useState({
@@ -34,13 +42,34 @@ export default function EquipmentManagement() {
     const fetchEquipment = async () => {
       try {
         setLoading(true)
-        const response = await axios.get("http://localhost:5000/equipments")
+        const response = await axios.get("https://esi-flow-back.onrender.com/equipments")
+
+        console.log("Fetched equipment data:", response.data)
+        // object exemple received from the API
+      //   {
+      //     "id": 10,
+      //     "inventorie_code": "INV3",
+      //     "picture": "https://res.cloudinary.com/di1wbg7qo/image/upload/v1746616952/uploads/Pastel%20Aesthetic%20departments%20Professional%20Gantt%20Graph%20%283%29.png",
+      //     "automatic_maintenance_interval": null,
+      //     "seasonal_maintenance_months": [
+      //         1
+      //     ],
+      //     "type": "Router",
+      //     "category": "Networking Equipment",
+      //     "acquisition_date": "2025-05-08T00:00:00.000Z",
+      //     "date_of_commissioning": "2025-05-08T00:00:00.000Z",
+      //     "localisation": "S26",
+      //     "eqp_status": "Out of service",
+      //     "documentation": "",
+      //     "maintenance_history": [],
+      //     "createdAt": "2025-05-08T09:41:51.896Z",
+      //     "updatedAt": "2025-05-08T09:48:10.703Z"
+      // }
 
         // Process the data to ensure consistent field names
         const processedData = response.data.map((item) => ({
           id: item.id,
-          "Inventory Code": item.inventory_code || `INV${item.id.toString().padStart(4, "0")}`,
-          ID: item.id.toString(),
+          "Inventory Code": item.inventorie_code || `INV${item.id.toString().padStart(4, "0")}`,
           Type: item.type || "Unknown",
           Category: item.category || "Unknown",
           Location: item.localisation || "Unknown",
@@ -53,10 +82,10 @@ export default function EquipmentManagement() {
         // Calculate statistics
         const totalEquipment = processedData.length
         const needsMaintenance = processedData.filter(
-          (item) => item.Status.toLowerCase() === "needs_maintenance" || item.Status.toLowerCase() === "needs_maintenance",
+          (item) => item.Status === "Needs Maintenance" || item.Status === "Needs Maintenance",
         ).length
-        const working = processedData.filter((item) => item.Status.toLowerCase() === "working").length
-        const outOfService = processedData.filter((item) => item.Status.toLowerCase() === "out_of_service").length
+        const working = processedData.filter((item) => item.Status === "Working").length
+        const outOfService = processedData.filter((item) => item.Status === "Out of service").length
 
         setEquipmentData({
           totalEquipment,
@@ -99,9 +128,21 @@ export default function EquipmentManagement() {
     }
   }
 
+  const showToast = useCallback((message, type = "success") => {
+      setToast({
+        visible: true,
+        message,
+        type,
+      })
+    }, [])
+  
+    const hideToast = useCallback(() => {
+      setToast((prev) => ({ ...prev, visible: false }))
+    }, [])
+
   // Handle edit equipment
   const handleEdit = (row) => {
-    router.push(`edit/${row.ID}`)
+    router.push(`edit/${row.id}`)
   }
 
   // Handle add equipment
@@ -120,28 +161,31 @@ export default function EquipmentManagement() {
       const equipment = deleteModal.equipment
       if (!equipment) return
 
-      await axios.delete(`http://localhost:5000/equipments/${equipment.ID}`)
+      await axios.delete(`https://esi-flow-back.onrender.com/equipments/${equipment.id}`)
 
       // Remove the deleted equipment from the state
-      setData((prevData) => prevData.filter((item) => item.ID !== equipment.ID))
+      setData((prevData) => prevData.filter((item) => item.id !== equipment.id))
 
       // Update statistics
       setEquipmentData((prev) => {
-        const status = equipment.Status.toLowerCase()
+        const status = equipment.Status
         return {
           ...prev,
           totalEquipment: prev.totalEquipment - 1,
           needsMaintenance:
-            status === "maintenance" || status === "media_meritservice"
+            status === "Needs Maintenance"
               ? prev.needsMaintenance - 1
               : prev.needsMaintenance,
-          working: status === "working" ? prev.working - 1 : prev.working,
-          outOfService: status === "out of service" ? prev.outOfService - 1 : prev.outOfService,
+          working: status === "Working" ? prev.working - 1 : prev.working,
+          outOfService: status === "Out of service" ? prev.outOfService - 1 : prev.outOfService,
         }
       })
 
       // Close modal
       setDeleteModal({ isOpen: false, equipment: null })
+
+      // Show success toast
+      showToast( "Equipment deleted successfully", "success")
     } catch (error) {
       console.error("Error deleting equipment:", error)
       alert(t("equipmentList", "deleteError") || "Failed to delete equipment")
@@ -154,25 +198,25 @@ export default function EquipmentManagement() {
     {
       title: t("equipmentList", "cards", "sub", 1) || "Total Equipment",
       count: equipmentData.totalEquipment,
-      increase: t("uniquetache") || "Items",
+      increase: "Items",
       icon: <Box className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("equipmentList", "cards", "sub", 2) || "Needs Maintenance",
       count: equipmentData.needsMaintenance,
-      increase: t("uniquetache") || "Items",
+      increase: "Items",
       icon: <Settings className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("equipmentList", "cards", "sub", 3) || "Working",
       count: equipmentData.working,
-      increase: t("uniquetache") || "Items",
+      increase: "Items",
       icon: <CheckCircle className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("equipmentList", "cards", "sub", 4) || "Out of Service",
       count: equipmentData.outOfService,
-      increase: t("uniquetache") || "Items",
+      increase: "Items",
       icon: <XCircle className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
   ]
@@ -235,7 +279,11 @@ export default function EquipmentManagement() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 h-full">
+    <div className="pt-14 lg:pt-0 flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 min-h-screen">
+
+      {/* Toast Notification */}
+      <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
+
       <div>
         <Sidebar activeItem={"equipment"} />
       </div>
@@ -269,18 +317,17 @@ export default function EquipmentManagement() {
             columnConfig={{
               id: { hidden: true }, // Hide ID column
               "Inventory Code": { title: t("equipmentList", "tablehead", 1) || "Inventory Code" },
-              ID: { title: t("equipmentList", "tablehead", 2) || "ID" },
               Type: { title: t("equipmentList", "tablehead", 3) || "Type" },
               Category: { title: t("equipmentList", "tablehead", 4) || "Category" },
               Location: { title: t("equipmentList", "tablehead", 5) || "Location" },
               "Acquisition date": { title: t("equipmentList", "tablehead", 6) || "Acquisition Date" },
               Status: { title: t("equipmentList", "tablehead", 7) || "Status" },
             }}
-            addButtonText={t("equipmentList", "searchbar", "buttons", 3) || "Add Equipment"}
+            addButtonText={t("equipmentList", "searchbar", "buttons", 3)}
             dropdownFields={["Type", "Category", "Status", "Location"]}
             onEdit={handleEdit}
             onDelete={confirmDelete}
-            onAdd={handleAdd}
+            onAddNew={handleAdd}
             styled={["Status"]}
           />
         )}

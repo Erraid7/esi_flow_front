@@ -5,6 +5,7 @@ import { useLanguage } from "../translations/contexts/languageContext"
 import { useDarkMode } from "../darkLightMode/darkModeContext"
 import Sidebar from "../components/sidebar"
 import { useRouter } from "next/navigation"
+import axios from "axios"
 import {
   SettingsIcon,
   User,
@@ -94,7 +95,11 @@ const ProfilePicture = ({ profileImage, setProfileImage }) => {
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setProfileImage(reader.result)
+        // Store both the file and the preview URL
+        setProfileImage({
+          file: file,
+          preview: reader.result,
+        })
       }
       reader.readAsDataURL(file)
     }
@@ -110,7 +115,17 @@ const ProfilePicture = ({ profileImage, setProfileImage }) => {
       <div className="relative group cursor-pointer" onClick={handleImageClick}>
         <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary-100 dark:border-primary-900 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
           {profileImage ? (
-            <img src={profileImage || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
+            <img
+              src={
+                profileImage.preview
+                  ? profileImage.preview
+                  : typeof profileImage === "string"
+                  ? profileImage
+                  : profileImage
+              }
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
           ) : (
             <UserCircle size={120} className="text-gray-400 dark:text-gray-600" />
           )}
@@ -163,8 +178,11 @@ export default function SettingsPage() {
     dataSharing: false,
   })
 
-  // User info state
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+
+  // Updated user state to include ID:
   const [user, setUser] = useState({
+    id: "",
     full_name: "",
     email: "",
     phone: "",
@@ -182,8 +200,63 @@ export default function SettingsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Available options for dropdowns
-  const professionOptions = ["Teacher", "Administrator", "Engineer", "Technician", "Manager", "Other"]
-  const roleOptions = ["Admin", "User", "Technician"]
+  const professionOptions = [
+    "Teacher",   
+    "Security", 
+    "Cleaning", 
+    "Student", 
+    "Researcher",
+    "IT Technician",         // General IT support, software/hardware maintenance
+    "Network Technician",    // Manages routers, switches, and networking issues
+    "Server Administrator",  // Responsible for servers, data centers
+    "Security Technician",   // Handles firewall, cybersecurity, and access control
+    "Electrical Technician", // Maintains electrical systems, wiring, circuits
+    "Mechanical Technician", // Repairs heavy machinery, HVAC, electromechanical systems
+    "Multimedia Technician", // Manages projectors, sound systems, multimedia devices
+    "Lab Technician",        // Handles laboratory equipment, testing instruments
+    "HVAC Technician",       // Heating, ventilation, and air conditioning systems
+    "Plumber",               // Repairs and installs plumbing fixtures
+    "Carpenter",             // Constructs and repairs wooden structures
+    "Painter",               // Paints walls, ceilings, and other surfaces
+    "Gardener",              // Maintains gardens, lawns, and outdoor areas
+    "Driver",                // Transports people, goods, or equipment
+    "Office Equipment Technician", // Maintains printers, scanners, photocopiers 
+    "Other"
+  ]
+  const roleOptions = ["Admin", "Technician", "Personal"]
+
+  // New function added:
+const uploadProfileImage = async (imageFile) => {
+  if (!imageFile) return null
+
+  try {
+    setIsUploadingImage(true)
+
+    const formData = new FormData()
+    formData.append("image", imageFile)
+
+    const response = await axios.post("https://esi-flow-back.onrender.com/requests/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    })
+
+    // Check the response structure and extract the URL
+    const imageUrl = response.data.imageUrl || response.data.url
+
+    if (!imageUrl) {
+      console.error("Upload response missing URL:", response.data)
+      throw new Error("Upload response missing URL")
+    }
+
+    return imageUrl
+  } catch (error) {
+    console.error("Profile image upload error:", error)
+    throw new Error(`Failed to upload profile image: ${error.message}`)
+  } finally {
+    setIsUploadingImage(false)
+  }
+}
 
   // Update theme and language when they change in context
   useEffect(() => {
@@ -198,21 +271,22 @@ export default function SettingsPage() {
   useEffect(() => {
     const loadUserData = () => {
       try {
-        const userData = localStorage.getItem("userData")
+        const userData = localStorage.getItem("user")
         if (userData) {
           const parsedData = JSON.parse(userData)
           setUser({
+            id: parsedData.id || "",
             full_name: parsedData.full_name || "",
             email: parsedData.email || "",
             phone: parsedData.phone || "",
-            biography: parsedData.biography || "",
+            biography: parsedData.bio || "",
             profession: parsedData.profession || "",
             role: parsedData.role || "",
           })
 
           // Load profile image if exists
-          if (parsedData.profileImage) {
-            setProfileImage(parsedData.profileImage)
+          if (parsedData.pictures) {
+            setProfileImage(parsedData.pictures)
           }
         }
       } catch (error) {
@@ -309,7 +383,7 @@ export default function SettingsPage() {
   }
 
   // Handle save user info
-  const handleSaveUserInfo = (e) => {
+  const handleSaveUserInfo = async (e) => {
     e.preventDefault()
 
     const formErrors = validateUserInfoForm()
@@ -319,19 +393,59 @@ export default function SettingsPage() {
       setIsSubmitting(true)
 
       try {
-        // Save user data to localStorage
-        const userData = {
-          ...user,
-          password: password ? password : undefined,
-          profileImage: profileImage,
+        // Step 1: Upload profile image if it's a new one
+        let profileImageUrl = null
+
+        if (profileImage && profileImage.file) {
+          // If profileImage has a file property, it's a new image that needs to be uploaded
+          profileImageUrl = await uploadProfileImage(profileImage.file)
+        } else if (profileImage) {
+          // If profileImage is a string or has only a preview, use the existing URL
+          profileImageUrl = typeof profileImage === "string" ? profileImage : profileImage.preview
         }
-        localStorage.setItem("userData", JSON.stringify(userData))
+
+        // Step 2: Prepare user data for update
+        const userData = {
+          full_name: user.full_name,
+          email: user.email,
+          phone: user.phone,
+          bio: user.biography,
+          profession: user.profession,
+          role: user.role,
+          wants_email_notifications: generalSettings.emailNotifications,
+        }
+
+        // Add profile image URL if available
+        if (profileImageUrl) {
+          console.log("Profile image URL:", profileImageUrl)
+          userData.pictures = profileImageUrl
+        }
+
+        // Add password if it's being changed
+        if (password) {
+          userData.password = password
+        }
+
+        console.log("User id:", user.id)
+
+        // Step 3: Update user data in the backend
+        const response = await axios.put(`https://esi-flow-back.onrender.com/auth/edit-user/${user.id}`, userData)
+
+        // Step 4: Update local storage with the updated user data
+        const updatedUserData = response.data
+        localStorage.setItem("user", JSON.stringify(updatedUserData.user))
 
         showToast(t("settings","toast","userSuccess"), "success")
 
         // Reset password fields after successful update
         setPassword("")
         setConfirmPassword("")
+
+        // refresh the page to reflect changes after delay
+        setTimeout(() => {
+          router.refresh()
+        }, 1000)
+        
       } catch (error) {
         console.error("Error updating user:", error)
         showToast(t("settings","toast","userError"), "error")
@@ -343,25 +457,13 @@ export default function SettingsPage() {
     }
   }
 
-  // Current user for sidebar
-  const currentUser = {
-    name: "MEHDAOUI Lokman",
-    role: "admin",
-    initials: "AD",
-  }
-
   return (
     <div className="flex min-h-screen bg-neutral-50 dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
       {/* Sidebar */}
-      <Sidebar
-        activeItem={"settings"}
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userInitials={currentUser.initials}
-      />
+      <Sidebar activeItem={"settings"}/>
 
       {/* Main content */}
       <div className="pt-14 lg:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
@@ -453,17 +555,6 @@ export default function SettingsPage() {
                   />
                 </FormSection>
 
-                <FormSection title={t("settings","general","advancedSettings")} className="mt-6">
-                  {/* Data Sharing */}
-                  <ToggleSwitch
-                    label={t("settings","general","dataSharing")}
-                    isChecked={generalSettings.dataSharing}
-                    onChange={() => handleGeneralSettingChange("dataSharing", !generalSettings.dataSharing)}
-                    icon={<Database size={18} />}
-                    description={t("settings","general","dataSharingDescription")}
-                  />
-                </FormSection>
-
                 {/* Save Button */}
                 <div className="mt-6 flex justify-end">
                   <button
@@ -523,35 +614,37 @@ export default function SettingsPage() {
                     </div>
                   </FormSection>
 
-                  {/* Profession & Role */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    {/* Profession */}
-                    <FormSection>
-                      <DropdownField
-                        title={t("settings","user","profession")}
-                        value={user.profession}
-                        onChange={(value) => handleUserInfoChange("profession", value)}
-                        icon={<School size={24} strokeWidth={2} className="text-primary-500" />}
-                        iconBg="bg-[#284CFF] bg-opacity-5 p-2 rounded rounded-lg"
-                        updateText={t("settings","user","professionUpdate")}
-                        options={professionOptions}
-                      />
-                    </FormSection>
+                  {user.role === "Admin" && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                      {/* Profession */}
+                      <FormSection>
+                        <DropdownField
+                          title={t("settings","user","profession")}
+                          value={user.profession}
+                          onChange={(value) => handleUserInfoChange("profession", value)}
+                          icon={<School size={24} strokeWidth={2} className="text-primary-500" />}
+                          iconBg="bg-[#284CFF] bg-opacity-5 p-2 rounded rounded-lg"
+                          updateText={t("settings","user","professionUpdate")}
+                          options={professionOptions}
+                        />
+                      </FormSection>
 
-                    {/* Role & Permissions */}
-                    <FormSection>
-                      <DropdownField
-                        title={t("settings","user","role")}
-                        value={user.role}
-                        onChange={(value) => handleUserInfoChange("role", value)}
-                        icon={<span className="text-neutral-50 dark:text-neutral-990 font-russo text-base ">AD</span>}
-                        iconBg="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9"
-                        updateText={t("settings","user","roleUpdate")}
-                        description={t("settings","user","roleDescription")}
-                        options={roleOptions}
-                      />
-                    </FormSection>
-                  </div>
+                      {/* Role & Permissions */}
+                      <FormSection>
+                        <DropdownField
+                          title={t("settings","user","role")}
+                          value={user.role}
+                          onChange={(value) => handleUserInfoChange("role", value)}
+                          icon={<span className="text-neutral-50 dark:text-neutral-990 font-russo text-base ">AD</span>}
+                          iconBg="flex items-center justify-center bg-[#2EA95C] outline outline-[5px] outline-[#2EA95C25] rounded-full h-9 w-9"
+                          updateText={t("settings","user","roleUpdate")}
+                          description={t("settings","user","roleDescription")}
+                          options={roleOptions}
+                        />
+                      </FormSection>
+                    </div>  
+                  )}
+                  
 
                   {/* Account Setup */}
                   <FormSection title={t("settings","user","accountSecurity")}>

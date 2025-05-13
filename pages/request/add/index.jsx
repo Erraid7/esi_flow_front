@@ -53,7 +53,7 @@ export default function RequestAddForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Available options for dropdowns with translations
-  const urgencyLevelOptions = ["low", "medium", "high"]
+  const urgencyLevelOptions = ["Low", "Medium", "High"]
 
   // Fetch equipment data from API
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function RequestAddForm() {
       setIsLoadingEquipment(true)
       try {
         // Fetch equipment from your API
-        const response = await axios.get("http://localhost:5000/equipments")
+        const response = await axios.get("https://esi-flow-back.onrender.com/equipments")
            console.log("API response:", response.data)
         // Format equipment data for display
         const formattedEquipment = response.data.map((equip) => ({
@@ -164,7 +164,7 @@ export default function RequestAddForm() {
     if (!request.title.trim()) newErrors.title = t("requestForm", "validation", "titleRequired")
     if (!request.description.trim()) newErrors.description = t("requestForm", "validation", "descriptionRequired")
     if (!request.urgencyLevel) newErrors.urgencyLevel = t("requestForm", "validation", "urgencyLevelRequired")
-    if (!selectedEquipment.id) newErrors.equipmentCode = t("requestForm", "validation", "equipmentRequired")
+    if (!selectedEquipment || !selectedEquipment.id) newErrors.equipmentCode = t("requestForm", "validation", "equipmentRequired")
     if (!request.location.trim()) newErrors.location = t("requestForm", "validation", "locationRequired")
 
     return newErrors
@@ -182,7 +182,7 @@ export default function RequestAddForm() {
     formData.append("image", photo.file)
 
     try {
-      const response = await axios.post("http://localhost:5000/requests/upload", formData, {
+      const response = await axios.post("https://esi-flow-back.onrender.com/requests/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -266,7 +266,7 @@ export default function RequestAddForm() {
         console.log("Submitting request:", requestData)
 
         // Submit the request to create a new request
-        const response = await axios.post("http://localhost:5000/requests", requestData)
+        const response = await axios.post("https://esi-flow-back.onrender.com/requests", requestData)
 
         console.log("Request created successfully:", response.data)
 
@@ -286,7 +286,7 @@ export default function RequestAddForm() {
         setSelectedEquipment(null)
 
         // Navigate to requests list after successful submission
-        setTimeout(() => router.push('/requests'), 2000)
+        setTimeout(() => router.back(), 2000)
       } catch (error) {
         console.error("Error submitting request:", error)
         const errorMessage = error.response?.data?.message || t("requestForm", "toast", "submitError")
@@ -304,12 +304,6 @@ export default function RequestAddForm() {
     router.back()
   }
 
-  // Current user for sidebar
-  const currentUser = {
-    name: "BOULAMI Amira",
-    role: "personal",
-    initials: "BA",
-  }
 
   // Format equipment for display in the autocomplete
   const formatEquipmentForDisplay = (equipment) => {
@@ -330,12 +324,7 @@ export default function RequestAddForm() {
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
       {/* Show sidebar */}
-      <Sidebar
-        activeItem={"requests"}
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userInitials={currentUser.initials}
-      />
+      <Sidebar activeItem={"requests"}/>
 
       {/* Main content */}
       <div className="pt-14 md:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
@@ -469,7 +458,7 @@ export default function RequestAddForm() {
                       ></path>
                     </svg>
                     {uploadingPhotos
-                      ? t("requestForm", "actions", "uploadingPhotos") || "Uploading photos..."
+                      ? "Uploading photos..."
                       : t("requestForm", "actions", "submitting")}
                   </span>
                 ) : (

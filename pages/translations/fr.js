@@ -109,6 +109,19 @@ export const fr = {
     },
   },
   dashboard: {
+    tasks: {
+      title: "Mes Tâches",
+      taskId: "ID de la tâche",
+      report: "Rapport",
+      type: "Type",
+      status: "Statut",
+      deadline: "Date limite",
+      createdAt: "Créé le",
+      requestId: "ID de la demande",
+      addButton: "Ajouter une tâche",
+      noTasks: "Aucune tâche ne vous a été assignée"
+    },
+    
     technician: {
       title: "Tableau de bord du technicien",
       mostFrequentIssues: "Problèmes les plus fréquents",
@@ -118,6 +131,8 @@ export const fr = {
       lastTaskProgress: "Progression de la dernière tâche",
       clickAndDiscover: "Cliquez et découvrez, notification ici",
       makeReport: "Faire le rapport",
+      equipmentStatus : "État de l'équipement",
+      progress : "Voici votre progression dans la tâche selon votre statut",
     },
   
     personal: {
@@ -313,52 +328,39 @@ export const fr = {
       edit: "Modifier l'équipement"
     },
     title: {
-      add: "Ajouter un enregistrement de maintenance",
+      add: "Ajouter un équipement",
       edit: "Modifier l'équipement"
     },
     sections: {
       equipmentInfo: "Informations sur l'équipement",
-      recordDetails: "Détails de l'enregistrement"
+      recordDetails: "Détails de l'enregistrement",
+      maintenanceSchedule: "Calendrier de maintenance"
     },
     fields: {
-      code: "Code Inventaire",
-      codePlaceholder: "Entrer le code",
+      code: "Code d'inventaire",
+      codePlaceholder: "Entrez le code",
       type: "Type",
-      typePlaceholder: "Sélectionner le type d'équipement",
+      typePlaceholder: "Sélectionnez le type d'équipement",
       category: "Catégorie",
-      categoryPlaceholder: "Sélectionner la catégorie d'équipement",
+      categoryPlaceholder: "Sélectionnez la catégorie d'équipement",
       acquisition: "Date d'acquisition",
       commissioning: "Date de mise en service",
       location: "Emplacement",
-      locationPlaceholder: "Préciser l'emplacement",
-      status: "Statut",
-      statusPlaceholder: "Sélectionner le statut",
+      locationPlaceholder: "Précisez l'emplacement",
+      status: "État",
+      statusPlaceholder: "Sélectionnez l'état",
       description: "Description",
-      descriptionPlaceholder: "Entrer une description détaillée de la maintenance effectuée"
+      descriptionPlaceholder: "Entrez une description détaillée",
+      codeComment: "Code d'identification de l'équipement",
+      image: "Image de l'équipement",
+      picture: "Photo de l'équipement",
+      imageHelp: "Téléchargez une image de l'équipement. Si aucune n'est fournie, l'image actuelle sera conservée.",
+      maintenanceInterval: "Intervalle de maintenance automatique (jours)",
+      maintenanceIntervalPlaceholder: "ex., 90 pour une maintenance tous les 3 mois",
+      maintenanceIntervalHelp: "Entrez le nombre de jours entre les vérifications de maintenance régulières",
+      seasonalMonths: "Mois de maintenance saisonnière",
+      seasonalMonthsHelp: "Sélectionnez les mois où la maintenance saisonnière doit être effectuée"
     },
-    typeOptions: [
-      "Mécanique", 
-      "Électrique", 
-      "Hydraulique", 
-      "Pneumatique", 
-      "Électronique", 
-      "Autre"
-    ],
-    categoryOptions: [
-      "Production", 
-      "Maintenance", 
-      "Sécurité", 
-      "Contrôle Qualité", 
-      "Logistique", 
-      "Bureau"
-    ],
-    statusOptions: [
-      "Opérationnel", 
-      "En maintenance", 
-      "Hors service", 
-      "Installation en attente", 
-      "Retiré"
-    ],
     actions: {
       create: "Créer",
       update: "Mettre à jour",
@@ -381,7 +383,8 @@ export const fr = {
       acquisitionRequired: "La date d'acquisition est requise",
       commissioningRequired: "La date de mise en service est requise",
       locationRequired: "L'emplacement est requis",
-      statusRequired: "Le statut est requis"
+      statusRequired: "L'état est requis",
+      maintenanceIntervalInvalid: "L'intervalle de maintenance doit être un nombre"
     },
     loading: "Chargement des données d'équipement..."
   },
@@ -593,7 +596,8 @@ export const fr = {
       error: "Veuillez remplir tous les champs obligatoires",
       loadError: "Échec du chargement des données de la tâche",
       equipmentError: "Échec du chargement des données d'équipement",
-      userError: "Échec du chargement des données des utilisateurs"
+      userError: "Échec du chargement des données des utilisateurs",
+      createBothSuccess: "Tâche et demande créées avec succès",
     },
     loading: "Chargement des données de la tâche..."
   },
@@ -669,6 +673,7 @@ export const fr = {
       status: "Statut",
       createdAt: "Créé le",
       inventoryCode : "code inventaire",
+      requestCode : "code demande",
     },
     tablehead: {
       clearfilter: "Effacer le filtre",
@@ -682,6 +687,7 @@ export const fr = {
 
 
 equipmentList: {
+  deleteConfirm: "Confirmer la suppression",
         path: {
           1: "Tableau de bord",
           2: "Équipement",
@@ -709,7 +715,7 @@ equipmentList: {
           buttons: {
             1: "Rechercher",
             2: "Réinitialiser",
-            3: "Ajouter Nouveau",
+            3: "Ajouter un Équipement",
           },
         },
       },
@@ -729,11 +735,12 @@ equipmentList: {
         },
         tablehead: {
           1: "Nom de la tâche",
-          2: "Emplacement",
+          2: "Emplacement",
           3: "Responsable",
           4: "Priorité",
           5: "Échéance",
           6: "Statut",
+          7: "Type",
         },
         searchbar: {
           title: "Tableau des Tâches",
@@ -756,65 +763,86 @@ equipmentList: {
           3: "Élevée",
         },
       },
-      uniquetache:"task",
-  notifications: {
+ notifications: {
     title: "Notifications",
+    unread: "non lues",
+    loading: "Chargement des notifications...",
+    noNotifications: "Aucune notification trouvée",
+    checkBackLater: "Revenez plus tard pour de nouvelles notifications",
+    clearSearch: "Effacer la recherche",
+    searchPlaceholder: "Rechercher des notifications...",
+    refresh: "Actualiser les notifications",
+    markAsRead: "Marquer comme lue",
+    delete: "Supprimer la notification",
+    markAllAsRead: "Tout marquer comme lu",
+    loadMore: "Charger plus",
+
     breadcrumb: {
       dashboard: "Tableau de bord",
       notifications: "Notifications"
     },
-    searchTitle: "Recherche de Notifications",
-    searchPlaceholder: "Recherchez des notifications par mot-clé, type ou date",
+
     filters: {
-      all: "Tout",
-      unread: "Non lus",
-      urgent: "Urgent",
+      title: "Filtres",
+      all: "Toutes",
+      unread: "Non lues",
+      requests: "Demandes",
       tasks: "Tâches",
-      info: "Infos"
+      system: "Système"
     },
-    markAllAsRead: "Marquer tout comme lu",
+
     groups: {
       today: "Aujourd'hui",
       yesterday: "Hier",
       thisWeek: "Cette semaine"
     },
+
     timeFormat: {
-      minutesAgo: "il y a {{count}} min",
-      hoursAgo: "il y a {{count}} heure",
-      hoursAgo_plural: "il y a {{count}} heures",
-      daysAgo: "il y a {{count}} jour",
-      daysAgo_plural: "il y a {{count}} jours"
+      minutesAgo: "il y a {{count}} minutes",
+      hoursAgo: "il y a {{count}} heures",
+      daysAgo: "il y a {{count}} jours"
     },
-    noNotifications: "Aucune notification trouvée",
-    checkBackLater: "Revenez plus tard pour les mises à jour",
-    loadMore: "Charger plus",
-    loading: "Chargement des notifications...",
+
     toast: {
+      refreshSuccess: "Notifications actualisées avec succès",
       fetchError: "Échec du chargement des notifications",
+      markedAsRead: "Notification marquée comme lue",
+      deleted: "Notification supprimée",
       markedAllRead: "Toutes les notifications ont été marquées comme lues",
-      loadingMore: "Chargement de plus de notifications..."
+      loadingMore: "Chargement de notifications supplémentaires...",
+      noUnreadNotifications: "Aucune notification non lue",
     },
+
     mockData: {
-      taskAssigned: "Nouvelle tâche assignée: Défaillance de l'unité de climatisation",
-      taskAssignedDesc: "Dysfonctionnement du système de refroidissement dans la salle de conférence",
-      equipmentAlert: "Alerte équipement: Le système CVC fonctionne à pleine capacité",
-      equipmentAlertDesc: "Augmentation de la consommation d'énergie détectée dans le bâtiment DE",
-      filterReplacement: "Rappel de tâche: Remplacement du filtre à air requis",
-      filterReplacementDesc: "Accumulation de poussière dans les bouches d'aération de la bibliothèque",
-      taskCompleted: "Tâche accomplie: Normalisation de la pression du système de chaudière",
-      taskCompletedDesc: "Un contrôle de routine a permis de résoudre le problème de haute pression dans la chauffe CP3",
-      newEquipment: "Nouvel équipement ajouté: Tour de refroidissement",
-      newEquipmentDesc: "Bâtiment A • ID: HVAC-2310",
-      maintenanceUpdate: "Mise à jour du calendrier de maintenance",
-      maintenanceUpdateDesc: "Système • 3 tâches replanifiées",
-      newEquipments: "Nouveaux équipements ajoutés: Radiateurs",
-      newEquipmentsDesc: "Amphithéâtre AP2 • ID: RAD-AP2-004",
-      maintenanceReport: "Rapport de maintenance disponible",
-      maintenanceReportDesc: "Système • Résumé de la maintenance du deuxième trimestre",
-      softwareUpdate: "Mise à jour logicielle disponible",
-      softwareUpdateDesc: "Système • Version 2.4.1",
-      todayDeadline: "À faire pour aujourd'hui à 17h",
-      tomorrowDeadline: "À faire pour demain"
+      welcome: "Bienvenue sur ESI Flow",
+      welcomeDesc: "Votre compte a été créé avec succès.",
+
+      newRequest: "Nouvelle demande de maintenance",
+      newRequestDesc: "Une nouvelle demande de maintenance a été soumise pour le climatiseur du bâtiment A.",
+
+      requestRefused: "Demande refusée",
+      requestRefusedDesc: "Votre demande de maintenance pour l'imprimante dans la salle 101 a été refusée. Raison : Équipement prévu pour remplacement la semaine prochaine.",
+
+      requestAccepted: "Demande acceptée",
+      requestAcceptedDesc: "Votre demande de maintenance pour le serveur dans le centre de données B a été acceptée. L'équipement est maintenant en maintenance.",
+
+      taskAssigned: "Nouvelle tâche assignée",
+      taskAssignedDesc: "Une nouvelle tâche de maintenance vous a été assignée pour le système HVAC du bâtiment C.",
+
+      taskCompleted: "Tâche terminée",
+      taskCompletedDesc: "Le technicien Ahmed a terminé la tâche de maintenance du commutateur réseau dans la salle des serveurs A.",
+
+      requestFulfilled: "Demande complétée",
+      requestFulfilledDesc: "Votre demande de maintenance pour le projecteur dans la salle de conférence D a été complétée. Veuillez vérifier que l'équipement fonctionne correctement.",
+
+      interventionUpdated: "Statut de l'intervention mis à jour",
+      interventionUpdatedDesc: "Le statut de l'intervention n°49 a été mis à jour de 'En cours' à 'En attente'. Raison : En attente de pièces de rechange.",
+
+      scheduledMaintenance: "Maintenance planifiée",
+      scheduledMaintenanceDesc: "Une maintenance planifiée pour toutes les imprimantes du 2e étage aura lieu ce week-end. Veuillez enregistrer votre travail et éteindre les équipements avant de partir vendredi.",
+
+      todayDeadline: "Échéance aujourd'hui",
+      tomorrowDeadline: "Échéance demain"
     }
   },
   settings: {
@@ -1013,4 +1041,102 @@ equipmentList: {
       },
     },
   },
+  reportPage: {
+    path: {
+      dashboard: "Tableau de bord",
+      reports: "Rapports",
+    },
+    title: "Rapports",
+    sections: {
+      taskStats: "Statistiques des tâches",
+      tasks: "Tâches",
+      equipmentStats: "Statistiques des équipements",
+      equipment: "Équipements",
+      userStats: "Statistiques des utilisateurs",
+      users: "Utilisateurs",
+      requestStats: "Statistiques des demandes",
+      requests: "Demandes",
+    },
+    stats: {
+      pending: "En attente",
+      inProgress: "En cours",
+      completed: "Terminé",
+      toDo: "À faire",
+      totalEquipment: "Total des équipements",
+      needsMaintenance: "Nécessite maintenance",
+      working: "Fonctionnel",
+      outOfService: "Hors service",
+      totalUsers: "Total des utilisateurs",
+      maintenanceTeam: "Équipe de maintenance",
+      administrators: "Administrateurs",
+      totalRequests: "Total des demandes",
+      pendingRequests: "Demandes en attente",
+      completedRequests: "Demandes terminées",
+    },
+    tables: {
+      tasks: {
+        title: "Gestion des tâches",
+        addButton: "Ajouter une tâche",
+        columns: {
+          taskName: "Nom de la tâche",
+          location: "Emplacement",
+          responsible: "Responsable",
+          priority: "Priorité",
+          deadline: "Date limite",
+          status: "Statut",
+        },
+      },
+      equipment: {
+        title: "Gestion des équipements",
+        addButton: "Ajouter un équipement",
+        columns: {
+          inventoryCode: "Code d'inventaire",
+          type: "Type",
+          category: "Catégorie",
+          location: "Emplacement",
+          acquisitionDate: "Date d'acquisition",
+          status: "Statut",
+        },
+      },
+      users: {
+        title: "Gestion des utilisateurs",
+        addButton: "Ajouter un utilisateur",
+        columns: {
+          name: "Nom",
+          profession: "Profession",
+          email: "Email",
+          phoneNumber: "Numéro de téléphone",
+          role: "Rôle",
+        },
+      },
+      requests: {
+        title: "Gestion des demandes",
+        addButton: "Ajouter une demande",
+        columns: {
+          requestCode: "Code de demande",
+          title: "Titre",
+          location: "Emplacement",
+          requestedBy: "Demandé par",
+          urgencyLevel: "Niveau d'urgence",
+          status: "Statut",
+        },
+      },
+    },
+    actions: {
+      edit: "Modifier",
+      delete: "Supprimer",
+      accept: "Accepter",
+      reject: "Rejeter",
+      export: "Exporter",
+      print: "Imprimer",
+      filter: "Filtrer",
+    },
+    notifications: {
+      deleteConfirm: "Confirmer la suppression",
+      deleteSuccess: "Élément supprimé avec succès",
+      deleteError: "Échec de la suppression de l'élément",
+      loadError: "Échec du chargement des données",
+      loading: "Chargement des données...",
+    },
+  }
 };

@@ -14,16 +14,17 @@ import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 
 // API base URL - replace with your actual backend URL
-const API_BASE_URL = "http://localhost:5000"
+const API_BASE_URL = "https://esi-flow-back.onrender.com"
 
 // Main Component
 export default function TaskAddForm({ request = null }) {
   const { t } = useLanguage()
   const formInitialized = useRef(false)
   const router = useRouter()
-  const params = useParams()
-  const requestId = params?.id || "" // Get ID directly from params
-  console.log("Request ID:", requestId)
+  // get requestId from router query 
+  // route call example: /task/add?requestId=123
+  const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null
+  const requestId = searchParams ? searchParams.get("requestId") : null
 
   // State for toast notifications
   const [toast, setToast] = useState({
@@ -69,19 +70,13 @@ export default function TaskAddForm({ request = null }) {
   const [isLoading, setIsLoading] = useState(false)
 
   // Available options for dropdowns
-  const statusOptions = [
-    t("taskForm", "statusOptions", 0),
-    t("taskForm", "statusOptions", 1),
-    t("taskForm", "statusOptions", 2),
-    t("taskForm", "statusOptions", 3),
-    t("taskForm", "statusOptions", 4),
-  ]
+  const statusOptions = ["To Do", "In Progress", "Pending", "Completed", "Cancelled"]
 
   // Define priority options with lowercase values to match backend ENUM
-  const priorityOptions = ["low", "medium", "high"]
+  const priorityOptions = ["Low", "Medium", "High"]
 
   // Define intervention types that match the backend ENUM values
-  const taskTypes = ["repair", "maintenance", "replacement"]
+  const taskTypes = ["Repair", "Maintenance", "Replacement"]
 
   // Fetch equipment data from backend
   useEffect(() => {
@@ -113,6 +108,21 @@ export default function TaskAddForm({ request = null }) {
     fetchEquipment()
   }, [])
 
+  // Add this function to your component
+  const getCurrentUserId = () => {
+    // This is a placeholder - implement based on your auth system
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        return JSON.parse(userData).id;
+      } catch (e) {
+        console.error("Error parsing user data");
+      }
+    }
+    // If no user is found, you may want to show an error
+    throw new Error("User not authenticated");
+  }
+
   // Fetch users data from backend
   useEffect(() => {
     const fetchUsers = async () => {
@@ -121,12 +131,15 @@ export default function TaskAddForm({ request = null }) {
         const response = await axios.get(`${API_BASE_URL}/users`)
 
         // Format users data for autocomplete
-        const formattedUsers = response.data.map((user) => ({
-          id: user.id,
-          code: user.employee_id || `TECH-${user.id}`, // Use employee_id as code or generate one
-          name: user.full_name || `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Unknown User",
-          location: user.role || user.department || "Technician", // Role or department as location
-        }))
+        // Filter the list and show only technicians
+        const formattedUsers = response.data
+          .filter((user) => user.role && user.role.toLowerCase() === "technician")
+          .map((user) => ({
+            id: user.id,
+            code: user.employee_id || `TECH-${user.id}`, // Use employee_id as code or generate one
+            name: user.full_name || `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Unknown User",
+            location: user.profession || "Technician",
+          }))
 
         setAllUsers(formattedUsers)
         setUsersList(formattedUsers)
@@ -152,21 +165,21 @@ export default function TaskAddForm({ request = null }) {
           // Fetch request data from backend
           const response = await axios.get(`${API_BASE_URL}/requests/${requestId}`)
           const requestData = response.data
-          console.log("Request Data:", requestData)
+          
 
           if (requestData) {
             // Initialize task with request data
             const initialTask = {
               name: requestData.title || "",
               assignTo: "",
-              status: requestData.req_status || "Not Started",
+              status: "To Do",
               deadline: "",
               report: "",
               equipmentCode: "", // We'll set this after finding the equipment
               location: requestData.localisation || "",
               description: requestData.description || "",
-              priority: requestData.priority || "medium", // Use lowercase priority
-              type: requestData.type || "repair", // Default to repair if not specified
+              priority: requestData.priority || "Medium", // Use lowercase priority
+              type: requestData.type || "Repair", // Default to repair if not specified
               requestCode: requestData.request_code || "", // Add request code
             }
 
@@ -200,6 +213,8 @@ export default function TaskAddForm({ request = null }) {
         } finally {
           setIsLoading(false)
         }
+      } else {
+        console.log("No requestId provided or form already initialized")
       }
     }
 
@@ -227,8 +242,8 @@ export default function TaskAddForm({ request = null }) {
         equipmentCode: selectedEq ? selectedEq.code : "",
         location: request.location || (selectedEq ? selectedEq.location : ""),
         description: request.description || "",
-        priority: request.priority || "medium", // Use lowercase priority
-        type: request.type || "repair", // Default to repair if not specified
+        priority: request.priority || "Medium", // Use lowercase priority
+        type: request.type || "Repair", // Default to repair if not specified
         requestCode: request.request_code || "", // Add request code
       }
 
@@ -247,21 +262,7 @@ export default function TaskAddForm({ request = null }) {
     }
   }, [request, allEquipment])
 
-  // Map urgency level to priority (ensure lowercase values)
-  const mapUrgencyToPriority = (urgencyLevel) => {
-    if (!urgencyLevel) return "medium"
-
-    const urgencyMap = {
-      low: "low",
-      medium: "medium",
-      high: "high",
-      Low: "low",
-      Medium: "medium",
-      High: "high",
-    }
-
-    return urgencyMap[urgencyLevel] || "medium"
-  }
+  
 
   // Filter equipment based on location input
   useEffect(() => {
@@ -401,69 +402,64 @@ export default function TaskAddForm({ request = null }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     const formErrors = validateForm()
     setErrors(formErrors)
 
     if (Object.keys(formErrors).length === 0) {
       setIsSubmitting(true)
-
       try {
-        // Determine which requestId to use
-        const targetRequestId = requestId || (request && request.id)
-
-        if (!targetRequestId) {
-          throw new Error("No request ID provided")
-        }
-
-        // Get the actual equipment ID if we have the equipment object
-        // IMPORTANT: We need to send the equipment ID to the backend, not the code
+        // Determine which requestId to use - now supports 'new' for creating from scratch
+        const targetRequestId = requestId || (request && request.id) || 'new'
+        
+        // Get the actual equipment ID
         const equipmentId = selectedEquipment ? selectedEquipment.id : null
-
         if (!equipmentId) {
           throw new Error("No equipment selected")
         }
 
-        // Create intervention data object matching backend requirements
+        // Create intervention data object
         const interventionData = {
           technician_id: selectedUser?.id,
           intv_status: task.status,
           deadline: task.deadline,
-          intervention_type: task.type, // Fixed: Use task.type for intervention_type
+          intervention_type: task.type,
           report: task.report,
-
-          // These fields will update the request
+          
+          // Fields for creating/updating the request
           title: task.name,
           description: task.description,
           localisation: task.location,
-          equipment_id: equipmentId, // Use the actual ID, not the code
-          priority: task.priority, // Now using lowercase priority
-          picture: photoUrl || null, // Use the existing photo URL
-          request_code: task.requestCode, // Added request code
+          equipment_id: equipmentId,
+          priority: task.priority,
+          picture: photoUrl || null,
+          request_code: task.requestCode,
+          
+          // Add requester_id - only needed for new requests
+          requester_id: targetRequestId === 'new' ? getCurrentUserId() : undefined
         }
 
-        console.log("Intervention Data:", interventionData)
-        console.log("Target Request ID:", targetRequestId)
-
-        // Call the API to create intervention from request
+        // Call the API
         const response = await axios.post(
           `${API_BASE_URL}/interventions/from-request/${targetRequestId}`,
           interventionData,
           {
             headers: {
               "Content-Type": "application/json",
-              // Add authorization header if needed
-              // 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
           },
         )
 
-        // Show success message
-        showToast(t("taskForm", "toast", "createSuccess"), "success")
+        // Show success message with different text based on whether we created a new request
+        showToast(
+          targetRequestId === 'new' 
+            ? t("taskForm", "toast", "createBothSuccess") || "Request and task created successfully!" 
+            : t("taskForm", "toast", "createSuccess"),
+          "success"
+        )
 
-        // Redirect to interventions list or details page after successful creation
+        // Redirect to interventions list
         setTimeout(() => {
-          router.push("/interventions")
+          router.push("/task/list")
         }, 2000)
       } catch (error) {
         console.error("Error creating intervention:", error)
@@ -476,21 +472,11 @@ export default function TaskAddForm({ request = null }) {
     }
   }
 
-  // Current user for sidebar
-  const currentUser = {
-    name: "BOULAMI Amira",
-    role: "admin",
-    initials: "BA",
-  }
-
   if (isLoading) {
     return (
       <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
         <Sidebar
           activeItem={"tasks"}
-          userRole={currentUser.role}
-          userName={currentUser.name}
-          userInitials={currentUser.initials}
         />
         <div className="flex items-center justify-center w-full">
           <div className="text-center">
@@ -510,9 +496,6 @@ export default function TaskAddForm({ request = null }) {
       {/* Show sidebar */}
       <Sidebar
         activeItem={"tasks"}
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userInitials={currentUser.initials}
       />
 
       {/* Main content */}

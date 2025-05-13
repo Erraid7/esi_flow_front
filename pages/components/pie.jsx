@@ -43,7 +43,7 @@ export default function DynamicPieChart({
 
   return (
     <div
-      className="rounded-xl p-4 md:p-6 bg-card-bg flex flex-col"
+      className="rounded-xl p-4 md:p-6 bg-card-bg flex flex-col h-full"
       style={{ width: cardWidth }}
     >
       {/* Header */}
@@ -51,7 +51,7 @@ export default function DynamicPieChart({
         onClick={isMobile ? toggleOpen : undefined}
         className={`flex justify-between items-center ${isMobile ? 'cursor-pointer' : ''}`}
       >
-        <h2 className=" md:text-2xl text-neutral-990  font-russo">
+        <h2 className=" md:text-2xl text-neutral-990  font-russo dark:text-white">
           {title}
         </h2>
         {isMobile && (
@@ -90,14 +90,14 @@ export default function DynamicPieChart({
           </div>
 
           {/* Custom Legends */}
-          <div className="flex flex-wrap gap-6 justify-center mt-8">
+          <div className="flex flex-wrap gap-6 justify-center mt-8 ">
             {data.map((entry, index) => (
               <div key={index} className="flex items-center gap-2">
                 <div
                   className="w-4 h-4 rounded-full"
                   style={{ backgroundColor: colors[index % colors.length] }}
                 ></div>
-                <span className="text-sm font-medium text-neutral-900 font-inter">
+                <span className="text-sm font-medium text-neutral-900 font-inter dark:text-white">
                   {entry.name}
                 </span>
               </div>

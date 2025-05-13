@@ -3,9 +3,9 @@
 
 import { useState, useEffect } from "react"
 import dynamic from 'next/dynamic'
-import { Edit, Trash } from "lucide-react"
+import { Check, Edit, Trash, X } from "lucide-react"
 import { FilterProvider, useFilter } from "./FilterContext"
-import { ColumnHeader, DropdownHeader, SearchHeader } from "./HeaderComponents"
+import { ColumnHeader, DropdownHeader, SearchHeader } from "./headerComponents"
 import { getStylesForField, StyledBadge } from "./styleConfigs"
 import { 
   createDarkTheme, 
@@ -14,7 +14,7 @@ import {
   DefaultEmptyComponent 
 } from "./themes"
 import { useLanguage } from '../../translations/contexts/languageContext'
-import { RowDetailModal } from "./RowDetailModal"
+import { RowDetailModal } from "./rowDetailModal"
 import { exportCSV } from "./exportUtils"
 
 // Initialize themes
@@ -47,6 +47,15 @@ export const DynamicTable = ({
   dropdownFields = [],
   styled = [],
   actionColumn = true,
+  // New props for controlling individual action visibility
+  showEditAction = true,
+  showDeleteAction = true,
+  showAcceptAction = true,
+  showRefuseAction = true,
+  // New prop for status field that controls accept/refuse visibility
+  statusField = "status",
+  // New prop for status value that enables accept/refuse actions
+  reviewingStatus = null,
   onEdit,
   onAddNew,
   onExportCSV, // New prop for custom export function
@@ -54,8 +63,11 @@ export const DynamicTable = ({
   addButtonText = "Add User",
   addButtonLink = "",
   onDelete,
+  onAccepte,
+  onRefuse,
   showRowDetailsModal = true,
-  showExport = true // New prop to toggle export button visibility
+  showExport = true, // New prop to toggle export button visibility
+  showAddButton = true, // New prop to toggle add button visibility
 }) => {
   return (
     <FilterProvider initialData={data}>
@@ -78,15 +90,24 @@ export const DynamicTable = ({
         dropdownFields={dropdownFields}
         styled={styled}
         actionColumn={actionColumn}
+        showEditAction={showEditAction}
+        showDeleteAction={showDeleteAction}
+        showAcceptAction={showAcceptAction}
+        showRefuseAction={showRefuseAction}
+        statusField={statusField}
+        reviewingStatus={reviewingStatus}
         onEdit={onEdit}
         onAddNew={onAddNew}
         onDelete={onDelete}
+        onAccepte={onAccepte}
+        onRefuse={onRefuse}
         onExportCSV={onExportCSV}
         exportFilename={exportFilename}
         addButtonLink={addButtonLink} 
         addButtonText={addButtonText}
         showRowDetailsModal={showRowDetailsModal}
         showExport={showExport}
+        showAddButton={showAddButton}
       />
     </FilterProvider>
   )
@@ -112,15 +133,24 @@ const DynamicTableInner = ({
   dropdownFields,
   styled = [],
   actionColumn,
+  showEditAction,
+  showDeleteAction,
+  showAcceptAction,
+  showRefuseAction,
+  statusField,
+  reviewingStatus,
   onEdit,
   onAddNew,
   onDelete,
+  onAccepte,
+  onRefuse,
   onExportCSV,
   exportFilename,
   addButtonText,
   addButtonLink,
   showRowDetailsModal,
-  showExport = true
+  showExport = true,
+  showAddButton = true,
 }) => {
   const { filteredData, updateFilter, clearFilters, filters, getUniqueValues } = useFilter()
   const [searchQuery, setSearchQuery] = useState("")
@@ -221,24 +251,64 @@ const DynamicTableInner = ({
         name: t('userList', 'tablehead', 6),
         cell: (row) => (
           <div className="flex space-x-2">
-            <button 
-              className="text-gray-600 hover:text-blue-600"
-              onClick={e => {
-                e.stopPropagation();
-                if (onEdit) onEdit(row);
-              }}
-            >
-              <Edit size={18} />
-            </button>
-            <button 
-              className="text-gray-600 hover:text-red-600"
-              onClick={e => {
-                e.stopPropagation();
-                if (onDelete) onDelete(row);
-              }}
-            >
-              <Trash size={18} />
-            </button>
+            {/* Actions buttons */}
+            {/* Accept button - only shown when status is "Reviewing" */}
+            {showAcceptAction && onAccepte && row[statusField] === reviewingStatus && (
+              <button 
+                className="text-gray-600 hover:text-green-600"
+                onClick={e => {
+                  e.stopPropagation();
+                  onAccepte(row);
+                }}
+              >
+                <Check size={18} />
+              </button>
+            )}
+            
+            {/* Refuse button - only shown when status is "Reviewing" */}
+            {showRefuseAction && onRefuse && row[statusField] === reviewingStatus && (
+              <button 
+                className="text-gray-600 hover:text-red-600"
+                onClick={e => {
+                  e.stopPropagation();
+                  onRefuse(row);
+                }}
+              >
+                <X size={18} />
+              </button>
+            )}
+            
+            {/* Edit button */}
+            {showEditAction && onEdit && (!reviewingStatus || row[statusField] === reviewingStatus) && (
+              <button 
+                className="text-gray-600 hover:text-blue-600"
+                onClick={e => {
+                  e.stopPropagation();
+                  onEdit(row);
+                }}
+              >
+                <Edit size={18} />
+              </button>
+            )}
+            
+            {/* Delete button */}
+            {showDeleteAction && onDelete && (
+              <button 
+                className="text-gray-600 hover:text-red-600"
+                onClick={e => {
+                  e.stopPropagation();
+                  onDelete(row);
+                }}
+              >
+                <Trash size={18} />
+              </button>
+            )}
+            {/* if no action is provided, return a placeholder with all cases */}
+            {!(showDeleteAction && onDelete) && !(showEditAction && onEdit && (!reviewingStatus || row[statusField] === reviewingStatus)) && !(showAcceptAction && onAccepte && row[statusField] === reviewingStatus) && !(showRefuseAction && onRefuse && row[statusField] === reviewingStatus) && (
+              <div className="text-gray-400">
+                <span className="text-sm">---</span>
+              </div>
+            )}
           </div>
         ),
         button: true,
@@ -282,6 +352,7 @@ const DynamicTableInner = ({
           data={filteredData}
           columnConfig={columnConfig}
           showExport={showExport}
+          showAddButton={showAddButton}
         />
       )}
 

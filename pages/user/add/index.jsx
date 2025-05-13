@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from "react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import Sidebar from "../../components/sidebar"
 import axios from "axios"
-import { Mail, Phone, School, ShieldHalf } from "lucide-react"
-
+import { Mail, Phone, Router, School, ShieldHalf } from "lucide-react"
+import { useRouter } from "next/navigation"
 import Toast from "../../components/form_components/toast"
 import FormField from "../../components/form_components/form_field"
 import DropdownField from "../../components/form_components/dropdown_field"
@@ -15,6 +15,7 @@ import FormSection from "../../components/form_components/form_section"
 // Main Component
 export default function UserCreateForm() {
   const { t, toggleLanguage } = useLanguage()
+  const router = useRouter()
 
   // State for mobile menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -46,11 +47,11 @@ export default function UserCreateForm() {
 
   // Available options for dropdowns
   const professionOptions = [
-    "teacher",
-    "security",
-    "cleaning",
-    "student",
-    "researcher",
+    "Teacher",
+    "Security",
+    "Cleaning",
+    "Student",
+    "Researcher",
     "IT Technician",
     "Network Technician",
     "Server Administrator",
@@ -66,10 +67,10 @@ export default function UserCreateForm() {
     "Gardener",
     "Driver",
     "Office Equipment Technician",
-    "other",
+    "Other",
   ]
 
-  const roleOptions = ["admin", "technician", "personal"]
+  const roleOptions = ["Admin", "Technician", "Personal"]
 
   const handleInputChange = (field, value) => {
     setUser({ ...user, [field]: value })
@@ -160,7 +161,7 @@ export default function UserCreateForm() {
         }
 
         // Using axios to send the request to our API route
-        const response = await axios.post("http://localhost:5000/auth/register", userData)
+        const response = await axios.post("https://esi-flow-back.onrender.com/auth/register", userData)
 
         // Show success message
         showToast("User created successfully", "success")
@@ -176,6 +177,9 @@ export default function UserCreateForm() {
         })
         setPassword("")
         setConfirmPassword("")
+
+        // redirect to user list page
+        setTimeout(() => { router.back() }, 2000)
       } catch (error) {
         console.error("Registration error:", error)
 
@@ -213,25 +217,13 @@ export default function UserCreateForm() {
     setRequirePasswordSwitch(value)
   }
 
-  // Current user for sidebar
-  const currentUser = {
-    name: "MEHDAOUI Lokman",
-    role: "admin",
-    initials: "AD",
-  }
-
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
       {/* Show sidebar for desktop or when mobile menu is open */}
-      <Sidebar
-        activeItem={"users"}
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userInitials={currentUser.initials}
-      />
+      <Sidebar activeItem={"users"}/>
 
       {/* Main content */}
       <div className="pt-14 lg:pt-0 flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
@@ -378,37 +370,6 @@ export default function UserCreateForm() {
                       className="sr-only peer"
                       checked={switchValue}
                       onChange={(e) => handleSwitchChange("role", e.target.checked)}
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
-                  </label>
-                </div>
-
-                {/* Password Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
-                      <ShieldHalf
-                        strokeWidth={2}
-                        size={25}
-                        className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                        {t("userEdit", "requirePassword")}
-                      </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        {t("userEdit", "requirePasswordComment")}
-                      </p>
-                    </div>
-                  </div>
-
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={requirePasswordSwitch}
-                      onChange={(e) => handlepassChange("role", e.target.checked)}
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
                   </label>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import DynamicTable from "../../components/DynamicTable"
+import DynamicTable from "../../components/dynamicTable"
 import Sidebar from "../../components/sidebar"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"
 import { Users, Settings, UserCog, AlertTriangle } from "lucide-react"
@@ -15,7 +15,7 @@ import { checkAuth } from '@/pages/authWrapper/apiver';
 
 export default function UserManagement() {
   useEffect(() => {
-    const { authorized } = checkAuth(['admin']);
+    const { authorized } = checkAuth(['Admin']);
     if (!authorized) {
       router.push("/login")
     }
@@ -43,15 +43,17 @@ export default function UserManagement() {
     const fetchUsers = async () => {
       try {
         setLoading(true)
-        const response = await axios.get("http://localhost:5000/users")
+        const response = await axios.get("https://esi-flow-back.onrender.com/users")
         setData(response.data)
+
+        console.log("Fetched users:", response.data)
 
         // Calculate statistics
         const totalUsers = response.data.length
         const maintenanceTeam = response.data.filter(
-          (user) => user.role === "technician" || user.role === "technician",
+          (user) => user.role === "Technician",
         ).length
-        const administrators = response.data.filter((user) => user.role === "admin").length
+        const administrators = response.data.filter((user) => user.role === "Admin").length
 
         setUserData({
           totalUsers,
@@ -95,7 +97,7 @@ export default function UserManagement() {
       const row = deleteModal.user
       if (!row) return
       
-      await axios.delete(`http://localhost:5000/users/${row.id}`) // Updated API endpoint
+      await axios.delete(`https://esi-flow-back.onrender.com/users/${row.id}`) // Updated API endpoint
       // Remove the deleted user from the state
       setData((prevData) => prevData.filter((user) => user.id !== row.id))
 
@@ -104,7 +106,7 @@ export default function UserManagement() {
         ...prev,
         totalUsers: prev.totalUsers - 1,
         maintenanceTeam:
-          row.role === "Moderator" || row.role === "Technician" ? prev.maintenanceTeam - 1 : prev.maintenanceTeam,
+          row.role === "Technician" ? prev.maintenanceTeam - 1 : prev.maintenanceTeam,
         administrators: row.role === "Admin" ? prev.administrators - 1 : prev.administrators,
       }))
 
@@ -122,19 +124,19 @@ export default function UserManagement() {
     {
       title: t("userList", "cards", "sub", 1),
       count: userData.totalUsers,
-      increase: 15, // Percentage increase
+      increase: "Users", 
       icon: <Users className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("userList", "cards", "sub", 2),
       count: userData.maintenanceTeam,
-      increase: 10, // Percentage increase
+      increase: "Technicians", 
       icon: <Settings className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("userList", "cards", "sub", 3),
       count: userData.administrators,
-      increase: 5, // Percentage increase
+      increase: "Admins", 
       icon: <UserCog className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
   ]
@@ -152,7 +154,7 @@ export default function UserManagement() {
               <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
             </div>
             <h3 className="text-lg font-medium text-neutral-900 dark:text-white">
-              {t("userList", "deleteConfirm") || "Confirm Deletion"}
+              {t("equipmentList", "deleteConfirm") || "Confirm Deletion"}
             </h3>
           </div>
           
@@ -194,23 +196,10 @@ export default function UserManagement() {
     )
   }
 
-
-  // Current user for sidebar
-  const currentUser = {
-    name: "MEHDAOUI Lokman",
-    role: "admin",
-    initials: "AD",
-  }
-
   return (
-    <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 h-full">
+    <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 min-h-screen">
       <div>
-        <Sidebar
-        activeItem={"users"}
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userInitials={currentUser.initials}
-      />
+        <Sidebar activeItem={"users"}/>
       </div>
 
       <div className="w-full px-4 py-4">
@@ -245,10 +234,12 @@ export default function UserManagement() {
               email: { title: t("userList", "tablehead", 3) },
               phoneNumber: { title: t("userList", "tablehead", 4) },
               role: { title: t("userList", "tablehead", 5) },
-              password : { hidden: true }, // Hide password column
-              created_at : { hidden: true }, // Hide password column
-              updated_at : { hidden: true }, // Hide password column
-              bio : { hidden: true }, // Hide password column
+              password : { hidden: true }, 
+              created_at : { hidden: true }, 
+              updated_at : { hidden: true }, 
+              bio : { hidden: true }, 
+              pictures : { hidden: true },
+              wants_email_notifications : { hidden: true },
             }}
             addButtonText={t("userList", "searchbar", "buttons", 3)}
             dropdownFields={["role", "profession"]}

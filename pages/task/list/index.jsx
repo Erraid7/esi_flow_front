@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { useRouter } from "next/router"
-import DynamicTable from "../../components/DynamicTable"
+import DynamicTable from "../../components/dynamicTable"
 import Sidebar from "../../components/sidebar"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"
 import { Clock, Activity, CheckCircle, ListTodo, AlertCircle, X, AlertTriangle } from "lucide-react"
@@ -12,12 +12,13 @@ import { useLanguage } from "../../translations/contexts/languageContext"
 import { Card } from "../../components/cards"
 
 // Define your API base URL - adjust this to match your backend URL
-const API_URL = "http://localhost:5000"
+const API_URL = "https://esi-flow-back.onrender.com"
 
 export default function TasksManagement() {
   const { t } = useLanguage()
   const { isDarkMode } = useDarkMode()
   const router = useRouter()
+  const [userRole, setUserRole] = useState("")
 
   // State for interventions data
   const [interventions, setInterventions] = useState([])
@@ -51,9 +52,23 @@ export default function TasksManagement() {
   const fetchInterventions = async () => {
     try {
       setLoading(true)
-      // Get all interventions
-      const interventionsResponse = await axios.get(`${API_URL}/interventions`)
-      const interventionsData = interventionsResponse.data
+      // Get all interventions if the current user is an admin
+      // If not, get only the interventions assigned to the current user
+      let interventionsData = []
+      // get the current user from local storage
+      const user = JSON.parse(localStorage.getItem("user"))
+      setUserRole(user.role)
+      if (user.role === "Admin") {
+        const response = await axios.get(`${API_URL}/interventions`)
+        interventionsData = response.data
+      } else if (user.role === "Technician") {
+        // Get only the interventions assigned to the current user
+        const response = await axios.get(`${API_URL}/interventions/technician/${user.id}`)
+        interventionsData = response.data
+      }
+
+      
+
 
       // Create an array to store the formatted data
       const formattedData = []
@@ -89,9 +104,10 @@ export default function TasksManagement() {
             "Task name": request.title || "Untitled Task",
             Location: request.localisation || "N/A",
             Responsible: technicianName,
-            Priority: request.priority || "medium",
+            urgency: request.priority || "Medium",
             Deadline: formattedDeadline,
-            Status: intervention.intv_status || "To Do",
+            intervention_type: intervention.intervention_type || "N/A",
+            status: intervention.intv_status || "To Do",
             id: intervention.id,
             // Store only the IDs if needed for reference
             intervention_id: intervention.id,
@@ -104,9 +120,10 @@ export default function TasksManagement() {
             "Task name": "Unknown Task",
             Location: "N/A",
             Responsible: "Unassigned",
-            Priority: "medium",
+            urgency: "Medium",
             Deadline: intervention.deadline ? new Date(intervention.deadline).toISOString().split("T")[0] : "N/A",
-            Status: intervention.intv_status || "To Do",
+            intervention_type: intervention.intervention_type || "N/A",
+            status: intervention.intv_status || "To Do",
             id: intervention.id,
             intervention_id: intervention.id,
             request_id: intervention.request_id,
@@ -136,7 +153,7 @@ export default function TasksManagement() {
     }
 
     data.forEach((item) => {
-      const status = item.Status.toLowerCase()
+      const status = item.status.toLowerCase()
       if (status.includes("pend")) {
         stats.pending++
       } else if (status.includes("progress")) {
@@ -187,10 +204,10 @@ export default function TasksManagement() {
   }
 
   // Handle add new intervention
-  const handleAdd = async (newIntervention) => {
+  const handleAdd = async () => {
     try {
       // Redirect to add page
-      router.push("/tasks/add")
+      router.push("/task/add")
     } catch (err) {
       console.error("Error navigating to add page:", err)
       showNotification("error", "Failed to navigate to add page. Please try again.")
@@ -207,36 +224,31 @@ export default function TasksManagement() {
     {
       title: t("tasksList", "cards", "sub", 1),
       count: taskStats.pending,
-      increase: t("uniquetache"),
+      increase: "Tasks",
       icon: <Clock className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("tasksList", "cards", "sub", 2),
       count: taskStats.inProgress,
-      increase: t("uniquetache"),
+      increase: "Tasks",
       icon: <Activity className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("tasksList", "cards", "sub", 3),
       count: taskStats.completed,
-      increase: t("uniquetache"),
+      increase: "Tasks",
       icon: <CheckCircle className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("tasksList", "cards", "sub", 4),
       count: taskStats.toDo,
-      increase: t("uniquetache"),
+      increase: "Tasks",
       icon: <ListTodo className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
   ]
 
-  //handleadd  function
-    const handleadd = (row) => {
-        router.push(`add`) // Fixed double slash
-    }
-
   return (
-    <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 h-full">
+    <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 min-h-screen">
       <div>
         <Sidebar activeItem={"tasks"} />
       </div>
@@ -279,7 +291,7 @@ export default function TasksManagement() {
                     <strong>Task:</strong> {deleteConfirm["Task name"]}
                   </p>
                   <p>
-                    <strong>Status:</strong> {deleteConfirm.Status}
+                    <strong>Status:</strong> {deleteConfirm.status}
                   </p>
                   <p>
                     <strong>Responsible:</strong> {deleteConfirm.Responsible}
@@ -340,22 +352,23 @@ export default function TasksManagement() {
               "Task name": { title: t("tasksList", "tablehead", 1) },
               Location: { title: t("tasksList", "tablehead", 2) },
               Responsible: { title: t("tasksList", "tablehead", 3) },
-              Priority: { title: t("tasksList", "tablehead", 4) },
+              urgency: { title: t("tasksList", "tablehead", 4) },
               Deadline: { title: t("tasksList", "tablehead", 5) },
-              Status: { title: t("tasksList", "tablehead", 6) },
+              intervention_type: { title: t("tasksList", "tablehead", 7) },
+              status: { title: t("tasksList", "tablehead", 6) },
               id : { hidden: true }, // Hide password column
               intervention_id : { hidden: true }, // Hide password column
               request_id : { hidden: true }, // Hide password column
             }}
             addButtonText={t("tasksList", "searchbar", "buttons", 3)}
-            dropdownFields={["Priority", "Status"]}
+            dropdownFields={["urgency", "status"]}
             onEdit={handleEdit}
             onDelete={confirmDelete} // Changed to show confirmation first
-            onAdd={handleAdd}
-            styled={["Priority", "Status"]}
+            onAddNew={handleAdd}
+            styled={["urgency", "status"]}
             addButtonLink="../../tasks/add" // You might want to handle this differently
             refreshData={fetchInterventions}
-            onAddNew={handleadd} // Added onAddNew prop for adding new users
+            showAddButton={userRole === "Admin"} // Show add button only for Admin
           />
         )}
       </div>

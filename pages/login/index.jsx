@@ -26,9 +26,6 @@ const Login = () => {
    // States for forgot password flow
    const [resetEmail, setResetEmail] = useState("")
    const [currentModal, setCurrentModal] = useState(null)
-   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false)
-   const [showVerificationModal, setShowVerificationModal] = useState(false)
-   const [showSuccessModal, setShowSuccessModal] = useState(false)
   
   // Define your backend URL - you should use environment variables for this in production
   const handleChange = (e) => {
@@ -37,7 +34,7 @@ const Login = () => {
     // Clear error when user types
     if (error) setError('');
   };
-  const BACKEND_URL = 'http://localhost:5000';
+  const BACKEND_URL = 'https://esi-flow-back.onrender.com';
   const handleSubmit = async (e) => {    
     e.preventDefault();
     setLoading(true);
@@ -68,11 +65,10 @@ const Login = () => {
       
       //push user info in the local storage
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      localStorage.setItem('token', response.data.token);
       // Redirection based on role
-      if (response.data.role === 'admin') {
+      if (response.data.role === 'Admin') {
         router.push('/dashboard/admin');
-      } else if (response.data.role === 'technician') {
+      } else if (response.data.role === 'Technician') {
         router.push('/dashboard/technician');
       } else {
         router.push('/dashboard/personal');
@@ -98,12 +94,14 @@ const Login = () => {
     setCurrentModal("forgot")
   }
 
-  const handleContinue = () => {
+  const handleContinue = (email) => {
     setCurrentModal("verification")
+    setResetEmail(email)
   }
 
-  const handleVerify = () => {
+  const handleVerify = (email) => {
     setCurrentModal("newPassword")
+    setResetEmail(email)
   }
 
   const handlePasswordReset = (newPassword) => {
@@ -247,6 +245,7 @@ const Login = () => {
 
       {currentModal === "verification" && (
         <VerificationModal 
+          email={resetEmail}
           onClose={handleCloseModal} 
           onVerify={handleVerify} 
         />
@@ -254,6 +253,7 @@ const Login = () => {
 
       {currentModal === "newPassword" && (
         <NewPasswordModal 
+          email={resetEmail}
           onClose={handleCloseModal} 
           onSubmit={handlePasswordReset} 
         />

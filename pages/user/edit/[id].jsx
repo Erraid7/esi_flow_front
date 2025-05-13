@@ -59,11 +59,11 @@ export default function UserEditForm() {
 
   // Available options for dropdowns
   const professionOptions = [
-    "teacher",
-    "security",
-    "cleaning",
-    "student",
-    "researcher",
+    "Teacher",
+    "Security",
+    "Cleaning",
+    "Student",
+    "Researcher",
     "IT Technician",
     "Network Technician",
     "Server Administrator",
@@ -79,10 +79,10 @@ export default function UserEditForm() {
     "Gardener",
     "Driver",
     "Office Equipment Technician",
-    "other",
+    "Other",
   ]
 
-  const roleOptions = ["admin", "technician", "personal"]
+  const roleOptions = ["Admin", "Technician", "Personal"]
 
   // Update user ID when params change
   useEffect(() => {
@@ -103,7 +103,7 @@ export default function UserEditForm() {
       try {
         setIsLoading(true)
         // Use relative path for API endpoint
-        const response = await axios.get(`http://localhost:5000/users/${userId}`)
+        const response = await axios.get(`https://esi-flow-back.onrender.com/users/${userId}`)
         const userData = response.data
 
         setUser({
@@ -217,18 +217,17 @@ export default function UserEditForm() {
         if (originalUser && user.role !== originalUser.role) updateData.role = user.role
         if (originalUser && user.profession !== originalUser.profession) updateData.profession = user.profession
 
-        // Add sendWelcomeEmail to the update data
-        updateData.sendWelcomeEmail = switchValue
-
         // Add password if it's being changed
         if (changePassword && password) {
           updateData.password = password
         }
 
+        console.log("Update Data:", updateData)
+
         // Only proceed if there are changes to submit
         if (Object.keys(updateData).length > 1 || (changePassword && password)) {
           // Using axios to send the request to our API route - use relative path
-          const response = await axios.put(`http://localhost:5000/auth/edit-user/${userId}`, updateData)
+          const response = await axios.put(`https://esi-flow-back.onrender.com/auth/edit-user/${userId}`, updateData)
 
           // Update original user data with new values
           setOriginalUser({
@@ -247,6 +246,9 @@ export default function UserEditForm() {
 
           // Show success message
           showToast("User updated successfully", "success")
+
+          // redirect to user list page
+          setTimeout(() => { router.back() }, 2000)
         } else {
           showToast("No changes to save", "info")
         }
@@ -277,21 +279,6 @@ export default function UserEditForm() {
     }
   }, [isMobileMenuOpen])
 
-  const [switchValue, setSwitchValue] = useState(false)
-  const handleSwitchChange = (field, value) => {
-    setSwitchValue(value)
-  }
-
-  const [requirePasswordSwitch, setRequirePasswordSwitch] = useState(false)
-  const handlepassChange = (field, value) => {
-    setRequirePasswordSwitch(value)
-  }
-
-  const currentUser = {
-    name: "MEHDAOUI Lokman",
-    role: "admin",
-    initials: "AD",
-  }
   // const getCurrentUser = () => {
   //   if (typeof window === 'undefined') {
   //     // Prevent running on server
@@ -342,7 +329,7 @@ export default function UserEditForm() {
     <div className="flex min-h-screen bg-red dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
-      <Sidebar activeItem={"users"} userRole={currentUser.role} userName={currentUser.name} userInitials="AD" />
+      <Sidebar activeItem={"users"} />
       {/* Main content */}
       <div className="flex overflow-y-auto pb-8 w-full bg-neutral-50 dark:bg-neutral-990">
         <div className="px-4 sm:px-10 lg:px-20 w-full">
@@ -459,68 +446,6 @@ export default function UserEditForm() {
                   />
                 </div>
            
-            </FormSection>
-
-            <FormSection>
-              <div className="flex flex-col gap-6">
-                {/* Send Email Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
-                      <Mail size={25} className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                        {t("userEdit", "sendMail")}
-                      </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        {t("userEdit", "sendMailComment")}
-                      </p>
-                    </div>
-                  </div>
-
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={switchValue}
-                      onChange={(e) => handleSwitchChange("role", e.target.checked)}
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
-                  </label>
-                </div>
-
-                {/* Password Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center bg-card-bg rounded-lg h-10 w-10">
-                      <ShieldHalf
-                        strokeWidth={2}
-                        size={25}
-                        className="text-neutral-50 dark:text-[#0f0f11] fill-primary-500"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                        {t("userEdit", "requirePassword")}
-                      </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        {t("userEdit", "requirePasswordComment")}
-                      </p>
-                    </div>
-                  </div>
-
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={requirePasswordSwitch}
-                      onChange={(e) => handlepassChange("role", e.target.checked)}
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2EA95C50] dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 relative" />
-                  </label>
-                </div>
-              </div>
             </FormSection>
 
             {/* Form Actions */}

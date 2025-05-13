@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, use } from "react"
 import axios from "axios"
-import DynamicTable from "../../components/DynamicTable"
+import DynamicTable from "../../components/dynamicTable"
 import Sidebar from "../../components/sidebar"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"
 import { ClipboardList, Clock, CheckCircle, AlertTriangle } from "lucide-react"
@@ -10,6 +10,7 @@ import { ArrowRight2 } from "iconsax-react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import { Card } from "../../components/cards"
 import { useRouter } from "next/navigation"
+import Toast from "@/pages/components/form_components/toast"
 
 export default function RequestListPage() {
   const { t } = useLanguage()
@@ -18,6 +19,14 @@ export default function RequestListPage() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, request: null })
+  const [userRole, setUserRole] = useState("")
+
+  // State for toast notifications
+  const [toast, setToast] = useState({
+    visible: false,
+    message: "",
+    type: "success",
+  })
 
   // State for storing request statistics
   const [requestStats, setRequestStats] = useState({
@@ -33,8 +42,24 @@ export default function RequestListPage() {
     const fetchRequests = async () => {
       try {
         setLoading(true)
-        const response = await axios.get("http://localhost:5000/requests")
-        console.log("Raw API response:", response.data)
+        // Fetch all requests if the user is an admin
+        // if not, fetch only the requests requsted by the user
+        const user = JSON.parse(localStorage.getItem("user"))
+        if (!user) {
+          console.error("User not found in local storage")
+          return
+        }
+        setUserRole(user.role)
+        const response = await axios.get(
+          user.role === "Admin"
+            ? "https://esi-flow-back.onrender.com/requests"
+            : `https://esi-flow-back.onrender.com/requests/user/${user.id}`
+        )
+        console.log("Fetched requests:", response.data)
+
+        // sort the requests by created_at date in descending order
+        response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        
 
         // Process the data to include all required information
         const processedData = response.data.map((request) => {
@@ -72,6 +97,7 @@ export default function RequestListPage() {
           // Make sure all fields are primitive values (strings, numbers) not objects
           return {
             id: request.id,
+            req_code: request.request_code|| "N/A",
             title: request.title || "No Title",
             location: location,
             requestedBy: requesterName,
@@ -92,9 +118,9 @@ export default function RequestListPage() {
         // Calculate statistics
         const totalRequests = processedData.length
         const pendingRequests = processedData.filter(
-          (request) => request.status === "reviewing" || request.status === "in progress",
+          (request) => request.status === "Reviewing"
         ).length
-        const completedRequests = processedData.filter((request) => request.status === "completed").length
+        const completedRequests = processedData.filter((request) => request.status === "Accepted" || request.status === "Refused").length
 
         setRequestStats({
           totalRequests,
@@ -119,6 +145,18 @@ export default function RequestListPage() {
     fetchRequests()
   }, [])
 
+  const showToast = useCallback((message, type = "success") => {
+    setToast({
+      visible: true,
+      message,
+      type,
+    })
+  }, [])
+  
+  const hideToast = useCallback(() => {
+    setToast((prev) => ({ ...prev, visible: false }))
+  }, [])
+
   // Handle edit request
   const handleEdit = (row) => {
     router.push(`edit/${row.id}`)
@@ -140,7 +178,7 @@ export default function RequestListPage() {
       const row = deleteModal.request
       if (!row) return
 
-      await axios.delete(`http://localhost:5000/requests/${row.id}`)
+      await axios.delete(`https://esi-flow-back.onrender.com/requests/${row.id}`)
 
       // Remove the deleted request from the state
       setData((prevData) => prevData.filter((request) => request.id !== row.id))
@@ -150,16 +188,45 @@ export default function RequestListPage() {
         ...prev,
         totalRequests: prev.totalRequests - 1,
         pendingRequests:
-          row.status === "reviewing" || row.status === "in progress" ? prev.pendingRequests - 1 : prev.pendingRequests,
-        completedRequests: row.status === "completed" ? prev.completedRequests - 1 : prev.completedRequests,
+          row.status === "Reviewing" ? prev.pendingRequests - 1 : prev.pendingRequests,
+        completedRequests: row.status === "Accepted" ? prev.completedRequests - 1 : prev.completedRequests,
       }))
 
       // Close modal
       setDeleteModal({ isOpen: false, request: null })
+      showToast("Request deleted successfully", "success")
     } catch (error) {
       console.error("Error deleting request:", error)
-      alert(t("requestList", "deleteError") || "Failed to delete request")
+      alert("Failed to delete request")
       setDeleteModal({ isOpen: false, request: null })
+    }
+  }
+
+  // Handle accept request
+  const handleAccept = async (row) => {
+    router.push(`/task/add?requestId=${row.id}`)
+  }
+
+  // Handle reject request
+  const handleReject = async (row) => {
+    try {
+      const updatedRequest = { ...row, status: "Refused" }
+      updatedRequest.req_status = "Refused"
+      
+      const response = await axios.put(`https://esi-flow-back.onrender.com/requests/${row.id}`, updatedRequest)
+      console.log("API response:", response.data)
+      setData((prevData) =>
+        prevData.map((request) => (request.id === row.id ? updatedRequest : request))
+      )
+      setRequestStats((prev) => ({
+        ...prev,
+        pendingRequests: prev.pendingRequests - 1,
+        completedRequests: prev.completedRequests + 1,
+      }))
+      showToast("Request rejected successfully", "success")
+    } catch (error) {
+      console.error("Error rejecting request:", error)
+      alert("Failed to reject request")
     }
   }
 
@@ -168,19 +235,19 @@ export default function RequestListPage() {
     {
       title: t("requestList", "cards", "totalRequests") || "Total Requests",
       count: requestStats.totalRequests,
-      increase: 12, // This could be dynamic if you have historical data
+      increase: "Requests", 
       icon: <ClipboardList className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("requestList", "cards", "pendingRequests") || "Pending Requests",
       count: requestStats.pendingRequests,
-      increase: 8, // This could be dynamic if you have historical data
+      increase: "Requests", 
       icon: <Clock className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
     {
       title: t("requestList", "cards", "completedRequests") || "Completed Requests",
       count: requestStats.completedRequests,
-      increase: 15, // This could be dynamic if you have historical data
+      increase: "Requests", 
       icon: <CheckCircle className="h-5 w-5 text-neutral-950 dark:text-white" />,
     },
   ]
@@ -200,7 +267,7 @@ export default function RequestListPage() {
               <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
             </div>
             <h3 className="text-lg font-medium text-neutral-900 dark:text-white">
-              {t("requestList", "deleteConfirm") || "Confirm Deletion"}
+              {t("equipmentList", "deleteConfirm") || "Confirm Deletion"}
             </h3>
           </div>
 
@@ -241,25 +308,15 @@ export default function RequestListPage() {
       </div>
     )
   }
-  // Current user for sidebar
-  const currentUser = {
-    name: "MEHDAOUI Lokman",
-    role: "admin",
-    initials: "AD",
-  }
+  
 
   return (
-    <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 h-full">
+    <div className="flex flex-col md:flex-row bg-neutral-50 dark:bg-neutral-990 min-h-screen">
+      {/* Toast Notification */}
+      <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
       <div>
-      <Sidebar
-        activeItem={"users"}
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userInitials={currentUser.initials}
-      />
+      <Sidebar activeItem={"requests"}/>
       </div>
-
-     
 
       <div className="w-full px-4 py-4">
         <div>
@@ -289,22 +346,31 @@ export default function RequestListPage() {
             title={t("requestList", "searchbar", "title") || "Request List"}
             columnConfig={{
               id: { hidden: true }, // Hide ID column
+              req_code: { title: t("requestList", "columns", "requestCode") || "Request Code" },
               title: { title: t("requestList", "columns", "title") || "Title" },
               location: { title: t("requestList", "columns", "location") || "Location" },
               requestedBy: { title: t("requestList", "columns", "requestedBy") || "Requested By" },
               urgency: { title: t("requestList", "columns", "urgencyLevel") || "Urgency" },
               status: { title: t("requestList", "columns", "status") || "Status" },
-              createdAt: { title: t("requestList", "columns", "createdAt") || "Created At" },
-              inventoryCode: { title: t("requestList", "columns", "inventoryCode") || "Inventory Code" },
+              createdAt: { hidden: true }, // Hide createdAt column
+              inventoryCode: { hidden: true }, // Hide inventoryCode column
               description: { hidden: true }, // Hide description column
               _equipment: { hidden: true }, // Hide equipment object
               _requester: { hidden: true }, // Hide requester object
             }}
             addButtonText={t("requestList", "searchbar", "addButton") || "Add Request"}
             dropdownFields={["urgency", "status"]}
+            showAcceptAction= {userRole === "Admin"} // Show accept action only for admin
+            showRefuseAction= {userRole === "Admin"} // Show reject action only for admin
+            showDeleteAction={userRole === "Admin"} // Show delete action only for admin
             onEdit={handleEdit}
             onDelete={confirmDelete} // Changed to open the confirmation modal
             onAddNew={handleadd} // Added onAddNew prop for adding new users
+            statusField="status"
+            reviewingStatus="Reviewing"
+            // Add the accept and reject functions if the user is an admin
+            onAccepte={handleAccept}
+            onRefuse={handleReject}
             styled={["status", "urgency"]}
           />
         )}

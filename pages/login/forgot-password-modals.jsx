@@ -1,9 +1,19 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useLanguage } from "../translations/contexts/languageContext"
 import PasswordField from "../components/form_components/password_field"
 import { AlertTriangle, CheckCircle, Mail, Lock, KeyRound, ArrowLeft } from "lucide-react"
+import axios from "axios"
+
+// Configure axios base URL - you should set this to your Express backend URL
+const API_URL = "https://esi-flow-back.onrender.com/auth"
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+})
 
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -41,19 +51,20 @@ const Alert = ({ type, message }) => {
 }
 
 // ForgotPasswordModal Component
-const ForgotPasswordModal = ({ email, setEmail, onClose, onContinue }) => {
+const ForgotPasswordModal = ({ onClose, onContinue }) => {
   const { t } = useLanguage()
+  const [email, setEmail] = useState("")
   const [error, setError] = useState("")
   const [isValid, setIsValid] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const emailInputRef = useRef(null)
+  const [emailInputRef, setEmailInputRef] = useState(null)
 
   // Focus email input on mount
   useEffect(() => {
-    if (emailInputRef.current) {
-      emailInputRef.current.focus()
+    if (emailInputRef) {
+      emailInputRef.focus()
     }
-  }, [])
+  }, [emailInputRef])
 
   // Validate email whenever it changes
   useEffect(() => {
@@ -82,14 +93,19 @@ const ForgotPasswordModal = ({ email, setEmail, onClose, onContinue }) => {
     if (isValid) {
       setIsSubmitting(true)
       try {
-        // Simulate API call to check if email exists
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Call the Express backend directly using axios
+        const response = await api.post("/forgot-password", { email })
 
-        // In a real app, you would check if the email exists in your database
-        // For demo purposes, we'll just continue
-        onContinue()
+        // If successful, move to the next step with the email
+        console.log("Response:", response.data)
+        if (response.data.success) {
+          onContinue(email)
+        } else {
+          setError(t("forgotPassword", "emailNotFound"))
+        }
       } catch (error) {
-        setError(t("forgotPassword", "emailNotFound"))
+        console.error("Error in forgot-password:", error)
+        setError(error.response?.data?.message || error.message || t("forgotPassword", "emailNotFound"))
       } finally {
         setIsSubmitting(false)
       }
@@ -124,7 +140,7 @@ const ForgotPasswordModal = ({ email, setEmail, onClose, onContinue }) => {
           <div className="relative">
             <input
               id="reset-email"
-              ref={emailInputRef}
+              ref={setEmailInputRef}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -189,19 +205,19 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
   const [timeLeft, setTimeLeft] = useState(60)
   const [isResending, setIsResending] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const inputRefs = useRef([])
+  const [inputRefs, setInputRefs] = useState([])
 
   // Initialize input refs
   useEffect(() => {
-    inputRefs.current = inputRefs.current.slice(0, 6)
+    setInputRefs(Array(6).fill(null))
   }, [])
 
   // Focus first input on mount
   useEffect(() => {
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus()
+    if (inputRefs[0]) {
+      inputRefs[0].focus()
     }
-  }, [])
+  }, [inputRefs])
 
   // Countdown timer for resend code
   useEffect(() => {
@@ -235,8 +251,8 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
       setVerificationCode(newCode)
 
       // Auto-focus next input
-      if (value && index < 5) {
-        inputRefs.current[index + 1].focus()
+      if (value && index < 5 && inputRefs[index + 1]) {
+        inputRefs[index + 1].focus()
       }
     }
   }
@@ -244,18 +260,18 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
   const handleKeyDown = (index, e) => {
     // Handle backspace
     if (e.key === "Backspace") {
-      if (verificationCode[index] === "" && index > 0) {
+      if (verificationCode[index] === "" && index > 0 && inputRefs[index - 1]) {
         // If current input is empty and backspace is pressed, focus previous input
-        inputRefs.current[index - 1].focus()
+        inputRefs[index - 1].focus()
       }
     }
     // Handle left arrow
-    else if (e.key === "ArrowLeft" && index > 0) {
-      inputRefs.current[index - 1].focus()
+    else if (e.key === "ArrowLeft" && index > 0 && inputRefs[index - 1]) {
+      inputRefs[index - 1].focus()
     }
     // Handle right arrow
-    else if (e.key === "ArrowRight" && index < 5) {
-      inputRefs.current[index + 1].focus()
+    else if (e.key === "ArrowRight" && index < 5 && inputRefs[index + 1]) {
+      inputRefs[index + 1].focus()
     }
     // Handle enter key
     else if (e.key === "Enter" && isValid) {
@@ -280,8 +296,8 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
 
         // Focus the appropriate input based on how many digits were pasted
         const focusIndex = Math.min(pastedCode.length, 5)
-        if (inputRefs.current[focusIndex]) {
-          inputRefs.current[focusIndex].focus()
+        if (inputRefs[focusIndex]) {
+          inputRefs[focusIndex].focus()
         }
       })
     }
@@ -304,8 +320,8 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
 
       // Focus the appropriate input based on how many digits were pasted
       const focusIndex = Math.min(pastedCode.length, 5)
-      if (inputRefs.current[focusIndex]) {
-        inputRefs.current[focusIndex].focus()
+      if (inputRefs[focusIndex]) {
+        inputRefs[focusIndex].focus()
       }
     }
   }
@@ -315,14 +331,19 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
     if (isValid) {
       setIsSubmitting(true)
       try {
-        // Simulate API call to verify code
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Combine the verification code digits into a single string
+        const code = verificationCode.join("")
+        console.log("Verification code:", code)
+        console.log("Email:", email)
 
-        // In a real app, you would verify the code with your backend
-        // For demo purposes, we'll just continue
-        onVerify()
+        // Call the Express backend directly using axios
+        const response = await api.post("/verify-reset-code", { email, code })
+
+        // If successful, move to the next step
+        onVerify(email)
       } catch (error) {
-        setError(t("verification", "invalidCode"))
+        console.error("Error in verify-reset-code:", error)
+        setError(error.response?.data?.message || error.message || t("verification", "invalidCode"))
       } finally {
         setIsSubmitting(false)
       }
@@ -336,8 +357,8 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
 
     setIsResending(true)
     try {
-      // Simulate API call to resend code
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Call the Express backend directly using axios
+      const response = await api.post("/resend-reset-code", { email })
 
       // Reset timer
       setTimeLeft(60)
@@ -346,7 +367,8 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
       // Show success message
       setError(t("verification", "codeSent"))
     } catch (error) {
-      setError(t("verification", "resendFailed"))
+      console.error("Error in resend-reset-code:", error)
+      setError(error.response?.data?.message || error.message || t("verification", "resendFailed"))
     } finally {
       setIsResending(false)
     }
@@ -377,7 +399,9 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
           {verificationCode.map((digit, index) => (
             <input
               key={index}
-              ref={(el) => (inputRefs.current[index] = el)}
+              ref={(el) => {
+                inputRefs[index] = el;
+              }}
               id={`code-${index}`}
               type="text"
               inputMode="numeric"
@@ -446,21 +470,21 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
 }
 
 // NewPasswordModal Component
-const NewPasswordModal = ({ onClose, onSubmit }) => {
+const NewPasswordModal = ({ email, onClose, onSubmit }) => {
   const { t } = useLanguage()
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
   const [isValid, setIsValid] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const passwordInputRef = useRef(null)
+  const [passwordInputRef, setPasswordInputRef] = useState(null)
 
   // Focus password input on mount
   useEffect(() => {
-    if (passwordInputRef.current) {
-      passwordInputRef.current.focus()
+    if (passwordInputRef) {
+      passwordInputRef.focus()
     }
-  }, [])
+  }, [passwordInputRef])
 
   // Validate passwords whenever they change
   useEffect(() => {
@@ -516,13 +540,14 @@ const NewPasswordModal = ({ onClose, onSubmit }) => {
     // If validation passes, call the onSubmit function
     setIsSubmitting(true)
     try {
-      // Simulate API call to reset password
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Call the Express backend directly using axios
+      const response = await api.post("/reset-password", { email, password })
 
-      // In a real app, you would send the new password to your backend
+      // If successful, move to the next step
       onSubmit(password)
     } catch (error) {
-      setError(t("newPassword", "resetFailed"))
+      console.error("Error in reset-password:", error)
+      setError(error.response?.data?.message || error.message || t("newPassword", "resetFailed"))
     } finally {
       setIsSubmitting(false)
     }
@@ -556,7 +581,7 @@ const NewPasswordModal = ({ onClose, onSubmit }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={null}
-            inputRef={passwordInputRef}
+            inputRef={setPasswordInputRef}
             icon={<Lock size={16} className="text-neutral-500 dark:text-neutral-400" />}
           />
         </div>
@@ -620,13 +645,13 @@ const SuccessModal = ({ onClose }) => {
         </h2>
         <div className="flex justify-center mb-4">
           <div className="flex justify-center mb-2 md:mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="w-16 h-16 md:w-20 md:h-20 fill-neutral-950 dark:fill-neutral-100"
-              >
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-              </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-16 h-16 md:w-20 md:h-20 fill-neutral-950 dark:fill-neutral-100"
+            >
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+            </svg>
           </div>
         </div>
         <p className="text-xs md:text-sm text-neutral-600 dark:text-neutral-400 mb-4 md:mb-6 text-center">
@@ -656,8 +681,9 @@ const PasswordResetFlow = () => {
     setEmail("")
   }
 
-  const handleContinue = () => {
-    // Move to verification step
+  const handleContinue = (submittedEmail) => {
+    // Store the email received from the ForgotPasswordModal
+    setEmail(submittedEmail)
     setCurrentStep("verification")
   }
 
@@ -674,7 +700,7 @@ const PasswordResetFlow = () => {
   return (
     <>
       {currentStep === "forgot" && (
-        <ForgotPasswordModal email={email} setEmail={setEmail} onClose={handleClose} onContinue={handleContinue} />
+        <ForgotPasswordModal onClose={handleClose} onContinue={handleContinue} />
       )}
 
       {currentStep === "verification" && (
@@ -682,7 +708,7 @@ const PasswordResetFlow = () => {
       )}
 
       {currentStep === "newPassword" && (
-        <NewPasswordModal onClose={() => setCurrentStep("verification")} onSubmit={handleSubmit} />
+        <NewPasswordModal email={email} onClose={() => setCurrentStep("verification")} onSubmit={handleSubmit} />
       )}
 
       {currentStep === "success" && <SuccessModal onClose={handleClose} />}

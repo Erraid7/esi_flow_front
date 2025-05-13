@@ -10,10 +10,12 @@ import DropdownField from "../../components/form_components/dropdown_field"
 import FormSection from "../../components/form_components/form_section"
 import DateField from "../../components/form_components/date_field"
 import axios from "axios"
+import { useRouter } from "next/navigation"
 
 // Main Component
 export default function EquipmentAddForm() {
   const { t } = useLanguage()
+  const router = useRouter()
   const fileInputRef = useRef(null)
 
   // State for toast notifications
@@ -89,7 +91,7 @@ export default function EquipmentAddForm() {
   ]
 
   // Update the statusOptions array to match the backend ENUM
-  const statusOptions = ["working", "needs_maintenance", "out_of_service"]
+  const statusOptions = ["Working", "Needs Maintenance", "Out of service"]
 
   // Months for seasonal maintenance
   const monthOptions = [
@@ -150,6 +152,10 @@ export default function EquipmentAddForm() {
         }
       }
     })
+  }
+
+  const handleCancel = () => {
+    router.back()
   }
 
   const showToast = useCallback((message, type = "success") => {
@@ -239,7 +245,7 @@ export default function EquipmentAddForm() {
         }
 
         // Make the API call with FormData
-        const response = await axios.post("http://localhost:5000/equipments", formData, {
+        const response = await axios.post("https://esi-flow-back.onrender.com/equipments", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -263,6 +269,8 @@ export default function EquipmentAddForm() {
           seasonalMaintenanceMonths: [],
         })
         setImagePreview(null)
+        // Optionally navigate back to equipment list after successful update
+        setTimeout(() => router.back(), 2000)
       } catch (error) {
         console.error("Error adding equipment:", error)
         showToast(error.response?.data?.error || error.message || "Failed to add equipment", "error")
@@ -282,7 +290,7 @@ export default function EquipmentAddForm() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-neutral-900">
+    <div className="pt-14 lg:pt-0 flex min-h-screen bg-gray-50 dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
@@ -307,69 +315,72 @@ export default function EquipmentAddForm() {
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-            {/* Equipment Information */}
-            <FormSection title={t("equipmentEdit", "sections", "equipmentInfo")}>
-              <div className="flex flex-col gap-4">
-                <FormField
-                  title={t("equipmentEdit", "fields", "code")}
-                  placeholder={t("equipmentEdit", "fields", "codePlaceholder")}
-                  value={equipment.code}
-                  onChange={(e) => handleInputChange("code", e.target.value)}
-                  error={errors.code}
-                  required={true}
-                />
-              </div>
-            </FormSection>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Equipment Information */}
+              <FormSection title={t("equipmentEdit", "sections", "equipmentInfo")}>
+                <div className="flex flex-col gap-4">
+                  <FormField
+                    title={t("equipmentEdit", "fields", "code")}
+                    placeholder={t("equipmentEdit", "fields", "codePlaceholder")}
+                    value={equipment.code}
+                    onChange={(e) => handleInputChange("code", e.target.value)}
+                    error={errors.code}
+                    required={true}
+                    comment={t("equipmentEdit", "fields", "codeComment")}
+                  />
+                </div>
+              </FormSection>
 
-            {/* Equipment Image */}
-            <FormSection title="Equipment Image">
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-200">
-                    Equipment Picture
-                  </label>
+              {/* Equipment Image */}
+              <FormSection title="Equipment Image">
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-neutral-900 dark:text-neutral-200">
+                      Equipment Picture
+                    </label>
 
-                  <div className="flex items-start gap-4">
-                    {/* Image preview */}
-                    <div className="w-32 h-32 border rounded-lg overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
-                      {imagePreview ? (
-                        <img
-                          src={imagePreview || "/placeholder.svg"}
-                          alt="Equipment preview"
-                          className="w-full h-full object-cover"
+                    <div className="flex items-start gap-4">
+                      {/* Image preview */}
+                      <div className="w-16 h-16 lg:w-24 lg:h-24 border rounded-lg overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+                        {imagePreview ? (
+                          <img
+                            src={imagePreview || "/placeholder.svg"}
+                            alt="Equipment preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-neutral-400 flex flex-col items-center justify-center p-2 text-center">
+                            <Upload size={24} />
+                            <span className="text-xs mt-1">No image</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Upload controls */}
+                      <div className="flex flex-col gap-2">
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          onChange={handleFileChange}
+                          accept="image/*"
+                          className="hidden"
                         />
-                      ) : (
-                        <div className="text-neutral-400 flex flex-col items-center justify-center p-2 text-center">
-                          <Upload size={24} />
-                          <span className="text-xs mt-1">No image</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Upload controls */}
-                    <div className="flex flex-col gap-2">
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="image/*"
-                        className="hidden"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current.click()}
-                        className="h-9 px-4 text-sm bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-200 font-medium rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-colors"
-                      >
-                        Select Image
-                      </button>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        Upload an image of the equipment. If none is provided, a default image will be used.
-                      </p>
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current.click()}
+                          className="h-9 px-4 text-sm bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-200 font-medium rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-colors"
+                        >
+                          Select Image
+                        </button>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          Upload an image of the equipment. If none is provided, a default image will be used.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </FormSection>
+              </FormSection>
+            </div>
 
             {/* Record Details */}
             <FormSection title={t("equipmentEdit", "sections", "recordDetails")}>
@@ -537,6 +548,7 @@ export default function EquipmentAddForm() {
               </button>
 
               <button
+                onClick={handleCancel}
                 type="button"
                 className="h-10 w-32 text-neutral-900 dark:text-neutral-300 text-sm font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-colors"
               >

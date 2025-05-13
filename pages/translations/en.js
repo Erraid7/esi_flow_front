@@ -110,19 +110,34 @@ export const en = {
 
   },
   dashboard: {
+    tasks: {
+      title: "My Tasks",                         // Mes Tâches
+      taskId: "Task ID",                         // ID de la tâche
+      report: "Report",                     // Description
+      type: "Type",                              // Type
+      status: "Status",                          // Statut
+      deadline: "Deadline",                      // Date limite
+      createdAt: "Created At",                   // Créé le
+      requestId: "Request ID",                   // ID de la demande
+      addButton: "Add Task",                     // Ajouter une tâche
+      noTasks: "No tasks assigned to you"        // Aucune tâche ne vous a été assignée
+    },
     technician: {
       title: "Technician Dashboard",
-      mostFrequentIssues: "Most frequent issues",
+      mostFrequentIssues: "Most Frequent Issues",
       highPriority: "High priorty",
       mediumPriority: "Meduim priority",
       lowPriority: "Low priority",
       lastTaskProgress: "Last Task Progress",
       clickAndDiscover: "click and discover, notification here",
       makeReport: "Make a report",
+      equipmentStatus : "Equipment Status",
+      progress :  "here you progres in your task according to your status"
+     
     },
     personal: {
       title: "Personal Dashboard",
-      requestStatus: "Status of my requests",
+      requestStatus: "Status of my accepted requests",
       requestStatuses: {
         completed: "Completed",
         pending: "Pending",
@@ -158,9 +173,9 @@ export const en = {
     charts: {
       priority: {
         title: "Priority Request",
-        high: "High priority",
-        medium: "Medium priority",
-        low: "Low priority",
+        high: "repair",
+        medium: "maintenance",
+        low: "replacement",
       },
       equipment: {
         title: "Equipment Status",
@@ -315,15 +330,16 @@ export const en = {
       edit: "Edit Equipment"
     },
     title: {
-      add: "Add Maintenance Record",
+      add: "Add Equipment",
       edit: "Edit Equipment"
     },
     sections: {
       equipmentInfo: "Equipment Information",
-      recordDetails: "Record Details"
+      recordDetails: "Record Details",
+      maintenanceSchedule: "Maintenance Schedule"
     },
     fields: {
-      code: "Code Inventaire",
+      code: "Inventory Code",
       codePlaceholder: "Enter code",
       type: "Type",
       typePlaceholder: "Select equipment type",
@@ -336,13 +352,21 @@ export const en = {
       status: "Status",
       statusPlaceholder: "Select status",
       description: "Description",
-      descriptionPlaceholder: "Enter detailed description of maintenance performed"
+      descriptionPlaceholder: "Enter detailed description",
+      codeComment: "Equipment identification code",
+      image: "Equipment Image",
+      picture: "Equipment Picture",
+      imageHelp: "Upload an image of the equipment. If none is provided, the current image will be kept.",
+      maintenanceInterval: "Automatic Maintenance Interval (days)",
+      maintenanceIntervalPlaceholder: "e.g., 90 for maintenance every 3 months",
+      maintenanceIntervalHelp: "Enter the number of days between regular maintenance checks",
+      seasonalMonths: "Seasonal Maintenance Months",
+      seasonalMonthsHelp: "Select months when seasonal maintenance should be performed"
     },
-   
     actions: {
       create: "Create",
       update: "Update",
-      cancel: "cancel",
+      cancel: "Cancel",
       saving: "Saving...",
       creating: "Creating...",
       updating: "Updating..."
@@ -361,7 +385,8 @@ export const en = {
       acquisitionRequired: "Acquisition date is required",
       commissioningRequired: "Commissioning date is required",
       locationRequired: "Location is required",
-      statusRequired: "Status is required"
+      statusRequired: "Status is required",
+      maintenanceIntervalInvalid: "Maintenance interval must be a number"
     },
     loading: "Loading equipment data..."
   },
@@ -570,7 +595,8 @@ export const en = {
       error: "Please fill in all required fields",
       loadError: "Failed to load task data",
       equipmentError: "Failed to load equipment data",
-      userError: "Failed to load users data"
+      userError: "Failed to load users data",
+      createBothSuccess: "Request and maintenance task created successfully!"
     },
     loading: "Loading task data..."
   },
@@ -648,6 +674,7 @@ export const en = {
       status: "Status",
       createdAt: "Created At",
       inventoryCode : "Inventory Code",
+      requestCode : "Request Code",
     },
     tablehead: {
       clearfilter: "Clear Filter",
@@ -661,6 +688,7 @@ export const en = {
 
 
  equipmentList: {
+  deleteConfirm: "Confirm Deletion",
       path: {
         1: "Dashboard",
         2: "Equipment",
@@ -688,7 +716,7 @@ export const en = {
         buttons: {
           1: "Search",
           2: "Reset",
-          3: "Add New",
+          3: "Add Equipment",
         },
       },
     },
@@ -713,6 +741,7 @@ export const en = {
         4: "Priority",
         5: "Deadline",
         6: "Status",
+        7: "Type",
       },
       searchbar: {
         title: "Task Table",
@@ -735,64 +764,85 @@ export const en = {
         3: "High",
       },
     },
-    uniquetache:"tache",
   notifications: {
     title: "Notifications",
+    unread: "unread",
+    loading: "Loading notifications...",
+    noNotifications: "No notifications found",
+    checkBackLater: "Check back later for new notifications",
+    clearSearch: "Clear search",
+    searchPlaceholder: "Search notifications...",
+    refresh: "Refresh notifications",
+    markAsRead: "Mark as read",
+    delete: "Delete notification",
+    markAllAsRead: "Mark all as read",
+    loadMore: "Load more",
+
     breadcrumb: {
       dashboard: "Dashboard",
       notifications: "Notifications"
     },
-    searchTitle: "Search Notifications",
-    searchPlaceholder: "Search by keyword, type or date",
+
     filters: {
+      title: "Filters",
       all: "All",
       unread: "Unread",
-      urgent: "Urgent",
+      requests: "Requests",
       tasks: "Tasks",
-      info: "Info"
+      system: "System"
     },
-    markAllAsRead: "Mark all as read",
+
     groups: {
       today: "Today",
       yesterday: "Yesterday",
-      thisWeek: "This week"
+      thisWeek: "This Week"
     },
+
     timeFormat: {
-      minutesAgo: "{{count}} min ago",
-      hoursAgo: "{{count}} hour ago",
-      hoursAgo_plural: "{{count}} hours ago",
-      daysAgo: "{{count}} day ago",
-      daysAgo_plural: "{{count}} days ago"
+      minutesAgo: "{{count}} minutes ago",
+      hoursAgo: "{{count}} hours ago",
+      daysAgo: "{{count}} days ago"
     },
-    noNotifications: "No notifications found",
-    checkBackLater: "Check back later for updates",
-    loadMore: "Load more",
-    loading: "Loading notifications...",
+
     toast: {
-      fetchError: "Failed to load notifications",
+      refreshSuccess: "Notifications refreshed successfully",
+      fetchError: "Failed to fetch notifications",
+      markedAsRead: "Notification marked as read",
+      deleted: "Notification deleted",
       markedAllRead: "All notifications marked as read",
-      loadingMore: "Loading more notifications..."
+      loadingMore: "Loading more notifications...",
+      noUnreadNotifications: "No unread notifications",
     },
+
     mockData: {
-      taskAssigned: "New task assigned: HVAC unit malfunction",
-      taskAssignedDesc: "Cooling system malfunction in conference room",
-      equipmentAlert: "Equipment alert: CVC system at full capacity",
-      equipmentAlertDesc: "Increased energy consumption detected in building DE",
-      filterReplacement: "Reminder: Air filter replacement required",
-      filterReplacementDesc: "Dust accumulation in library ventilation ducts",
-      taskCompleted: "Task completed: System pressure normalization",
-      taskCompletedDesc: "Routine check resolved high pressure issue in boiler",
-      newEquipment: "New equipment added: Cooling tower",
-      newEquipmentDesc: "Building A • ID: HVAC-2310",
-      maintenanceUpdate: "Maintenance calendar updated",
-      maintenanceUpdateDesc: "System • 3 tasks rescheduled",
-      newEquipments: "New equipment added: Radiators",
-      newEquipmentsDesc: "Amphitheater AP2 • ID: RAD-AP2-004",
-      maintenanceReport: "Maintenance report available",
-      maintenanceReportDesc: "System • Q2 maintenance summary",
-      softwareUpdate: "Software update available",
-      softwareUpdateDesc: "System • Version 2.4.1",
-      todayDeadline: "Due today at 5PM",
+      welcome: "Welcome to ESI Flow",
+      welcomeDesc: "Your account has been created successfully.",
+
+      newRequest: "New Maintenance Request",
+      newRequestDesc: "A new maintenance request has been submitted for the air conditioning unit in Building A.",
+
+      requestRefused: "Request Refused",
+      requestRefusedDesc: "Your maintenance request for the printer in Room 101 has been refused. Reason: Equipment scheduled for replacement next week.",
+
+      requestAccepted: "Request Accepted",
+      requestAcceptedDesc: "Your maintenance request for the server in Data Center B has been accepted. The equipment is now under maintenance.",
+
+      taskAssigned: "New Task Assignment",
+      taskAssignedDesc: "You have been assigned a new maintenance task for the HVAC system in Building C.",
+
+      taskCompleted: "Task Completed",
+      taskCompletedDesc: "Technician Ahmed has completed the maintenance task for the network switch in Server Room A.",
+
+      requestFulfilled: "Request Fulfilled",
+      requestFulfilledDesc: "Your maintenance request for the projector in Conference Room D has been completed. Please verify the equipment is working properly.",
+
+      interventionUpdated: "Intervention Status Updated",
+      interventionUpdatedDesc: "The status of intervention #49 has been updated from 'In Progress' to 'On Hold'. Reason: Waiting for replacement parts.",
+
+      scheduledMaintenance: "Scheduled Maintenance",
+      scheduledMaintenanceDesc: "Scheduled maintenance for all printers on Floor 2 will occur this weekend. Please save your work and turn off the equipment before leaving on Friday.",
+
+      todayDeadline: "Due today",
       tomorrowDeadline: "Due tomorrow"
     }
   },
@@ -943,29 +993,40 @@ export const en = {
   // Report page translations
   reportPage: {
     path: {
-      1: "Dashboard",
-      2: "Reports",
+      dashboard: "Dashboard",
+      reports: "Reports",
     },
-    title: "System Reports",
+    title: "Reports",
     sections: {
-      users: "Users Report",
-      tasks: "Tasks Report",
-      equipment: "Equipment Report",
+      taskStats: "Task Statistics",
+      tasks: "Tasks",
+      equipmentStats: "Equipment Statistics",
+      equipment: "Equipment",
+      userStats: "User Statistics",
+      users: "Users",
+      requestStats: "Request Statistics",
+      requests: "Requests",
+    },
+    stats: {
+      pending: "Pending",
+      inProgress: "In Progress",
+      completed: "Completed",
+      toDo: "To Do",
+      totalEquipment: "Total Equipment",
+      needsMaintenance: "Needs Maintenance",
+      working: "Working",
+      outOfService: "Out of Service",
+      totalUsers: "Total Users",
+      maintenanceTeam: "Maintenance Team",
+      administrators: "Administrators",
+      totalRequests: "Total Requests",
+      pendingRequests: "Pending Requests",
+      completedRequests: "Completed Requests",
     },
     tables: {
-      users: {
-        title: "User Management",
-        columns: {
-          name: "Name",
-          profession: "Profession",
-          email: "Email",
-          phoneNumber: "Phone Number",
-          role: "Role",
-        },
-        addButton: "Add User",
-      },
       tasks: {
-        title: "Task Management",
+        title: "Tasks Management",
+        addButton: "Add Task",
         columns: {
           taskName: "Task Name",
           location: "Location",
@@ -974,21 +1035,145 @@ export const en = {
           deadline: "Deadline",
           status: "Status",
         },
-        addButton: "Add Task",
       },
       equipment: {
         title: "Equipment Management",
+        addButton: "Add Equipment",
         columns: {
           inventoryCode: "Inventory Code",
-          id: "ID",
           type: "Type",
           category: "Category",
           location: "Location",
           acquisitionDate: "Acquisition Date",
           status: "Status",
         },
-        addButton: "Add Equipment",
+      },
+      users: {
+        title: "User Management",
+        addButton: "Add User",
+        columns: {
+          name: "Name",
+          profession: "Profession",
+          email: "Email",
+          phoneNumber: "Phone Number",
+          role: "Role",
+        },
+      },
+      requests: {
+        title: "Request Management",
+        addButton: "Add Request",
+        columns: {
+          requestCode: "Request Code",
+          title: "Title",
+          location: "Location",
+          requestedBy: "Requested By",
+          urgencyLevel: "Urgency Level",
+          status: "Status",
+        },
       },
     },
+    actions: {
+      edit: "Edit",
+      delete: "Delete",
+      accept: "Accept",
+      reject: "Reject",
+      export: "Export",
+      print: "Print",
+      filter: "Filter",
+    },
+    notifications: {
+      deleteConfirm: "Confirm Deletion",
+      deleteSuccess: "Item deleted successfully",
+      deleteError: "Failed to delete item",
+      loadError: "Failed to load data",
+      loading: "Loading data...",
+    },
+  },
+  // Common translations used across multiple components
+  common: {
+    actions: {
+      close: "Close",
+      save: "Save",
+      cancel: "Cancel",
+      edit: "Edit",
+      delete: "Delete",
+      copy: "Copy",
+      "Copy to clipboard": "Copy to clipboard",
+      "Clear filters": "Clear filters"
+    },
+    navigation: {
+      "Previous record": "Previous record",
+      "Next record": "Next record"
+    },
+    search: {
+      "Search fields...": "Search fields...",
+      "No matching fields": "No matching fields",
+      "Try a different search term or filter": "Try a different search term or filter"
+    },
+    filters: {
+      "All": "All",
+      "IDs": "IDs",
+      "Dates": "Dates",
+      "Contact Info": "Contact Info",
+      "Other": "Other"
+    },
+    boolean: {
+      "Yes": "Yes",
+      "No": "No",
+      "True": "True",
+      "False": "False"
+    },
+    status: {
+      "Active": "Active",
+      "Inactive": "Inactive",
+      "Pending": "Pending",
+      "Completed": "Completed"
+    },
+    errors: {
+      "Something went wrong": "Something went wrong",
+      "Please try again": "Please try again"
+    }
+  },
+
+  // Specific to RowDetailModal component
+  rowDetails: {
+    title: "Row Details",
+    buttons: {
+      "Close": "Close",
+      "Edit": "Edit",
+      "Export": "Export"
+    },
+    messages: {
+      "No data available": "No data available",
+      "Field copied to clipboard": "Field copied to clipboard"
+    },
+    fields: {
+      // Common field names that might be used
+      "id": "ID",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "created_at": "Created At",
+      "updated_at": "Updated At",
+      "status": "Status",
+      "description": "Description"
+    }
+  },
+
+  // Date formatting
+  dates: {
+    formats: {
+      short: "MM/DD/YYYY",
+      long: "MMMM D, YYYY",
+      time: "h:mm A"
+    },
+    relative: {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "days_ago": "{{count}} days ago",
+      "in_days": "In {{count}} days"
+    }
   }
 }
