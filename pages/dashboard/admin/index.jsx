@@ -6,8 +6,8 @@ import Sidebar from "../../components/sidebar";
 import axios from "axios";
 import DynamicTable from "../../components/dynamicTable1";
 
-import EquipmentStatusChart from "./equipmentStatusChart";
-import StateCards from "./stateCard";
+import EquipmentStatusChart from "./equipmentStatusChart.jsx";
+import StateCards from "./stateCard.jsx";
 import NotificationAndCreateUserCards from "./notcraete";
 import { useLanguage } from "../../translations/contexts/languageContext";
 import { useDarkMode } from "../../darkLightMode/darkModeContext";
