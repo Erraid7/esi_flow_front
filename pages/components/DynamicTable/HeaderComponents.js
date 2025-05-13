@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { ArrowDown2, ArrowUp2, DocumentDownload } from "iconsax-react"
-import { useFilter } from "./FilterContext"
+import { useFilter } from "./filterContext"
 import { createPortal } from "react-dom"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"

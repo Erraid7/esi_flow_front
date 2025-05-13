@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react"
 import dynamic from 'next/dynamic'
 import { Check, Edit, Trash, X } from "lucide-react"
-import { FilterProvider, useFilter } from "./FilterContext"
+import { FilterProvider, useFilter } from "./filterContext"
 import { ColumnHeader, DropdownHeader, SearchHeader } from "./headerComponents"
 import { getStylesForField, StyledBadge } from "./styleConfigs"
 import { 

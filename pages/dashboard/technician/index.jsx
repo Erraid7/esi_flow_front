@@ -116,7 +116,6 @@ export default function Dashboard() {
       }
     } catch (err) {
       console.error("Error fetching tasks:", err)
-      setError(err.message || "Failed to fetch tasks")
       showToast("Failed to load tasks. Please try again.", "error")
     } finally {
       setLoading(false)
