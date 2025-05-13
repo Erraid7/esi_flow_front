@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import Sidebar from "../../components/sidebar";
 import axios from "axios";
-import DynamicTable from "../../components/dynamicTable";
+import DynamicTable from "../../components/dynamicTable1";
 
 import EquipmentStatusChart from "./equipmentStatusChart";
 import StateCards from "./stateCard";

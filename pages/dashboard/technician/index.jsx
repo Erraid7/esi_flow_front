@@ -8,7 +8,7 @@ import Sidebar from "../../components/sidebar"
 import { Plus, Shield, X, AlertTriangle, Loader2 } from "lucide-react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"
-import DynamicTable from "../../components/dynamicTable"
+import DynamicTable from "../../components/dynamicTable1"
 
 export default function Dashboard() {
   const { t } = useLanguage()

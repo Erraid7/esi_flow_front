@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import axios from "axios"
-import DynamicTable from "../components/dynamicTable"
+import DynamicTable from "../components/dynamicTable1"
 import Sidebar from "../components/sidebar"
 import { useDarkMode } from "../darkLightMode/darkModeContext"
 import { ArrowRight2 } from "iconsax-react"

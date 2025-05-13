@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import DynamicTable from "../../components/dynamicTable"
+import DynamicTable from "../../components/dynamicTable1"
 import Sidebar from "../../components/sidebar"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"
 import { Users, Settings, UserCog, AlertTriangle } from "lucide-react"

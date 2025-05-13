@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
-import DynamicTable from "../../components/dynamicTable"
+import DynamicTable from "../../components/dynamicTable1"
 import Sidebar from "../../components/sidebar"
 import Toast from "../../components/form_components/toast"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"

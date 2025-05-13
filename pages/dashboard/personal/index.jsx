@@ -8,7 +8,7 @@ import Sidebar from "../../components/sidebar"
 import { Menu, Plus, Bell } from "lucide-react"
 import { useLanguage } from "../../translations/contexts/languageContext"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"
-import DynamicTable from "../../components/dynamicTable"
+import DynamicTable from "../../components/dynamicTable1"
 
 export default function PersonalDashboard() {
   const { t } = useLanguage()

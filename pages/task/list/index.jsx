@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { useRouter } from "next/router"
-import DynamicTable from "../../components/dynamicTable"
+import DynamicTable from "../../components/dynamicTable1"
 import Sidebar from "../../components/sidebar"
 import { useDarkMode } from "../../darkLightMode/darkModeContext"
 import { Clock, Activity, CheckCircle, ListTodo, AlertCircle, X, AlertTriangle } from "lucide-react"
