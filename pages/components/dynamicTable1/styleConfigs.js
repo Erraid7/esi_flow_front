@@ -1,7 +1,7 @@
 // File: components/DynamicTable/styleConfigs.js
 
 // Define styles for different fields and their values
-const styleConfigs = {
+export const styleConfigs = {
   'role': {
     'Admin': 'bg-green-100 text-green-800 dark:bg-green-800/10 dark:text-green-400 border border-green-400',
     'Technician': 'bg-purple-100 text-purple-800 dark:bg-purple-800/10 dark:text-purple-400 border border-purple-400',
@@ -50,4 +50,6 @@ export const StyledBadge = ({ value, style }) => (
   </div>
 )
 
-export default styleConfigs
+export default function Placeholder() {
+  return null;
+}

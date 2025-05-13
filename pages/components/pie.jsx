@@ -5,7 +5,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function DynamicPieChart({
-  data,
+  data = [],
   colors = ['#FF6384', '#FFCE56', '#36A2EB'],
   width = '100%',
   height = 300,

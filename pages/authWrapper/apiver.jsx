@@ -1,6 +1,6 @@
 // utils/auth.js
 
-export function getTokenFromCookies() {
+export default function getTokenFromCookies() {
     if (typeof document === 'undefined') return null;
   
     const match = document.cookie.match('(^|;)\\s*jwt\\s*=\\s*([^;]+)');

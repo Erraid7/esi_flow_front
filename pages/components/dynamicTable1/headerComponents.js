@@ -422,3 +422,5 @@ export const SearchHeader = ({
     </div>
   )
 }
+
+export default SearchHeader

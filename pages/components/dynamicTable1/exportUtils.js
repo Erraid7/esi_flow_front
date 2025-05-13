@@ -292,3 +292,7 @@ export const exportPDF = async (data, columnConfig, title, filename = "export.pd
     alert("Failed to generate PDF. Please try again later.")
   }
 }
+
+export default function Placeholder() {
+  return null;
+}

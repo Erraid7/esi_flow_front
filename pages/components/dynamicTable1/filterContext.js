@@ -101,3 +101,5 @@ export const FilterProvider = ({ children, initialData }) => {
 
   return <FilterContext.Provider value={value}>{children}</FilterContext.Provider>
 }
+
+export default FilterContext

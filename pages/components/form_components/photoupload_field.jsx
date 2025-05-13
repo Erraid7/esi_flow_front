@@ -3,7 +3,7 @@ import { useRef } from "react"
 
 const PhotoUpload = ({ 
   title = "Photos",
-  photos, 
+  photos = [], 
   setPhotos, 
   maxPhotos = 3, 
   error = null,
@@ -56,7 +56,7 @@ const PhotoUpload = ({
       <div className="relative">
         <div className="border border-none bg-neutral-100 dark:bg-neutral-950 rounded-lg shadow-sm p-4">
           <div className="flex flex-wrap gap-4 mb-4">
-            {photos.map((photo, index) => (
+            {Array.isArray(photos) && photos.map((photo, index) => (
               <div key={index} className="relative w-24 h-24">
                 <img
                   src={photo.preview || "/placeholder.svg"}

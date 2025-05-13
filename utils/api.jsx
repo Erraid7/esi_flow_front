@@ -159,3 +159,5 @@ export const updateEquipmentStatus = async (id, status) => {
     throw error
   }
 }
+
+export default apiClient;

@@ -1177,3 +1177,7 @@ export const en = {
     }
   }
 }
+
+export default function Placeholder() {
+  return null;
+}

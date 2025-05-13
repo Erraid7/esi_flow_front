@@ -124,3 +124,7 @@ export const DefaultEmptyComponent = () => (
     No data found
   </div>
 )
+
+export default function Placeholder() {
+  return null;
+}

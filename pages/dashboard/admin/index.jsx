@@ -17,7 +17,7 @@ import { AlertTriangle, X } from 'lucide-react';
 import Toast from "@/pages/components/form_components/toast";
 
 // API service for data fetching
-import { fetchDashboardData } from "../../components/api";
+import { fetchDashboardData } from "../../../utils/api";
 
 const Dashboard = () => {
   const { t } = useLanguage();

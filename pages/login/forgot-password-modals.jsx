@@ -19,7 +19,7 @@ const api = axios.create({
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // Password strength validation
-const validatePasswordStrength = (password) => {
+export const validatePasswordStrength = (password) => {
   const hasMinLength = password.length >= 8
   const hasUpperCase = /[A-Z]/.test(password)
   const hasLowerCase = /[a-z]/.test(password)
@@ -51,7 +51,7 @@ const Alert = ({ type, message }) => {
 }
 
 // ForgotPasswordModal Component
-const ForgotPasswordModal = ({ onClose, onContinue }) => {
+export const ForgotPasswordModal = ({ onClose, onContinue }) => {
   const { t } = useLanguage()
   const [email, setEmail] = useState("")
   const [error, setError] = useState("")
@@ -197,7 +197,7 @@ const ForgotPasswordModal = ({ onClose, onContinue }) => {
 }
 
 // VerificationModal Component with automatic code input
-const VerificationModal = ({ email, onClose, onVerify }) => {
+export const VerificationModal = ({ email, onClose, onVerify }) => {
   const { t } = useLanguage()
   const [verificationCode, setVerificationCode] = useState(["", "", "", "", "", ""])
   const [error, setError] = useState("")
@@ -470,7 +470,7 @@ const VerificationModal = ({ email, onClose, onVerify }) => {
 }
 
 // NewPasswordModal Component
-const NewPasswordModal = ({ email, onClose, onSubmit }) => {
+export const NewPasswordModal = ({ email, onClose, onSubmit }) => {
   const { t } = useLanguage()
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -634,7 +634,7 @@ const NewPasswordModal = ({ email, onClose, onSubmit }) => {
 }
 
 // SuccessModal Component
-const SuccessModal = ({ onClose }) => {
+export const SuccessModal = ({ onClose }) => {
   const { t } = useLanguage()
 
   return (
@@ -670,7 +670,7 @@ const SuccessModal = ({ onClose }) => {
 }
 
 // Main component to manage the password reset flow
-const PasswordResetFlow = () => {
+export const PasswordResetFlow = () => {
   const { t } = useLanguage()
   const [email, setEmail] = useState("")
   const [currentStep, setCurrentStep] = useState("forgot")
@@ -716,4 +716,6 @@ const PasswordResetFlow = () => {
   )
 }
 
-export { ForgotPasswordModal, VerificationModal, NewPasswordModal, SuccessModal, PasswordResetFlow }
+export default function Placeholder() {
+  return null;
+}
