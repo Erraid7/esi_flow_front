@@ -267,6 +267,7 @@ const Sidebar = ({ activeItem = "dashboard" }) => {
 
       if (token) {
         // Call the logout endpoint
+        console.log("deleting the token...");
         await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL || "https://esi-flow-back.onrender.com"}/auth/logout`,
           {},
@@ -279,12 +280,13 @@ const Sidebar = ({ activeItem = "dashboard" }) => {
 
         // Clear the token and local user data
         Cookies.remove("jwt")
-        localStorage.removeItem("user")
+        localStorage.clear();
 
         // Redirect to landing page
         window.location.href = "/"
       } else {
         // No token? Just redirect.
+        localStorage.clear();
         window.location.href = "/"
       }
     } catch (error) {
