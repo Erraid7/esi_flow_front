@@ -236,7 +236,7 @@ export const SearchHeader = ({
 
   return (
     <div className="flex flex-col md:flex-row items-start justify-between md:items-center w-full gap-4 px-2">
-      <h2 className="text-xl font-russo text-neutral-950 dark:text-white">{title}</h2>
+      <h2 className="text-2xl font-russo text-neutral-950 dark:text-white">{title}</h2>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto">
         <div className="relative w-full sm:w-64 border-solid border border-neutral-200 dark:border-neutral-700 rounded-lg">

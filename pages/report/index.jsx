@@ -690,20 +690,22 @@ export default function ReportPage() {
 
       <div className="w-full px-4 py-4">
         <div>
-          <div className="flex items-center gap-2 mb-8 text-neutral-950 dark:text-neutral-50">
-            {t("reportPage", "path", "dashboard")} <ArrowRight2 size="14" color="#697689" />{" "}
-            {t("reportPage", "path", "reports")}
-          </div>
+
+          <div className="text-sm flex items-center font-inter">
+              <span>{t("reportPage", "path", "dashboard")}</span>
+              <span className="mx-2 text-lg">›</span>
+              <span>{t("reportPage", "path", "reports")}</span>
+            </div>
 
           {/* Title with border */}
-          <div className="inline-block mb-6 border-b-2 border-neutral-500 dark:border-neutral-200 pb-2 w-full">
-            <h1 className="text-2xl font-bold text-neutral-950 dark:text-neutral-50 ">{t("reportPage", "title")}</h1>
+          <div className="inline-block w-full my-6">
+            <h1 className="text-3xl font-russo text-neutral-950 dark:text-neutral-50">{t("reportPage", "title")}</h1>
           </div>
         </div>
 
         {/* Task Statistics */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-neutral-950 dark:text-neutral-50 mb-4">
+          <h2 className="text-2xl font-russo text-neutral-950 dark:text-neutral-50 mb-4">
             {t("reportPage", "sections", "taskStats")}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
@@ -715,9 +717,6 @@ export default function ReportPage() {
 
         {/* Tasks Table */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-neutral-950 dark:text-neutral-50 mb-4">
-            {t("reportPage", "sections", "tasks")}
-          </h2>
 
           {loadingTasks ? (
             <div className="flex justify-center items-center h-64">
@@ -756,9 +755,13 @@ export default function ReportPage() {
           )}
         </div>
 
+        {/*add a line to seperate the sections */}
+        <hr className="my-10 border-t-4 border-neutral-200 dark:border-neutral-700 rounded" />
+
+
         {/* Equipment Statistics */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-neutral-950 dark:text-neutral-50 mb-4">
+          <h2 className="text-2xl font-russo text-neutral-950 dark:text-neutral-50 mb-4">
             {t("reportPage", "sections", "equipmentStats")}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
@@ -770,9 +773,6 @@ export default function ReportPage() {
 
         {/* Equipment Table */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-neutral-950 dark:text-neutral-50 mb-4">
-            {t("reportPage", "sections", "equipment")}
-          </h2>
 
           {loadingEquipment ? (
             <div className="flex justify-center items-center h-64">
@@ -809,9 +809,12 @@ export default function ReportPage() {
           )}
         </div>
 
+        {/*add a line to seperate the sections */}
+        <hr className="my-10 border-t-4 border-neutral-200 dark:border-neutral-700 rounded" />
+
         {/* User Statistics */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-neutral-950 dark:text-neutral-50 mb-4">
+          <h2 className="text-2xl font-russo text-neutral-950 dark:text-neutral-50 mb-4">
             {t("reportPage", "sections", "userStats")}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -823,10 +826,7 @@ export default function ReportPage() {
 
         {/* Users Table */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-neutral-950 dark:text-neutral-50 mb-4">
-            {t("reportPage", "sections", "users")}
-          </h2>
-
+          
           {loadingUsers ? (
             <div className="flex justify-center items-center h-64">
               <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
@@ -861,9 +861,12 @@ export default function ReportPage() {
           )}
         </div>
 
+        {/*add a line to seperate the sections */}
+        <hr className="my-10 border-t-4 border-neutral-200 dark:border-neutral-700 rounded" />
+
         {/* Request Statistics */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-neutral-950 dark:text-neutral-50 mb-4">
+          <h2 className="text-2xl font-russo text-neutral-950 dark:text-neutral-50 mb-4">
             {t("reportPage", "sections", "requestStats")}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -875,10 +878,7 @@ export default function ReportPage() {
 
         {/* Requests Table */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-neutral-950 dark:text-neutral-50 mb-4">
-            {t("reportPage", "sections", "requests")}
-          </h2>
-
+          
           {loadingRequests ? (
             <div className="flex justify-center items-center h-64">
               <Loader2 className="h-12 w-12 animate-spin text-blue-500" />

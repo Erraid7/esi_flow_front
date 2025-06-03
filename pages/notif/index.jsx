@@ -27,6 +27,7 @@ import {
   MessageSquare,
   Shield,
 } from "lucide-react"
+import Toast from "../components/form_components/toast"
 
 // Main Component
 export default function NotificationsPage() {
@@ -445,87 +446,14 @@ export default function NotificationsPage() {
     setSearchQuery("")
   }, [])
 
-  // Toast Component
-  const Toast = ({ message, type, visible, onClose, duration = 3000 }) => {
-    useEffect(() => {
-      if (visible) {
-        const timer = setTimeout(() => {
-          onClose()
-        }, duration)
-
-        return () => clearTimeout(timer)
-      }
-    }, [visible, onClose, duration])
-
-    const getIcon = () => {
-      switch (type) {
-        case "Success":
-          return <CheckCircle className="h-5 w-5 text-green-500" />
-        case "Error":
-          return <AlertTriangle className="h-5 w-5 text-red-500" />
-        case "Info":
-          return <Info className="h-5 w-5 text-blue-500" />
-        case "Warning":
-          return <AlertTriangle className="h-5 w-5 text-amber-500" />
-        default:
-          return <Info className="h-5 w-5 text-blue-500" />
-      }
-    }
-
-    const getBgColor = () => {
-      switch (type) {
-        case "Success":
-          return "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800"
-        case "Error":
-          return "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800"
-        case "Info":
-          return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800"
-        case "Warning":
-          return "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800"
-        default:
-          return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800"
-      }
-    }
-
-    const getTextColor = () => {
-      switch (type) {
-        case "Success":
-          return "text-green-800 dark:text-green-200"
-        case "Error":
-          return "text-red-800 dark:text-red-200"
-        case "Info":
-          return "text-blue-800 dark:text-blue-200"
-        case "Warning":
-          return "text-amber-800 dark:text-amber-200"
-        default:
-          return "text-blue-800 dark:text-blue-200"
-      }
-    }
-
-    return visible ? (
-      <div className="fixed top-4 right-4 z-50 max-w-md animate-fade-in-down">
-        <div className={`flex items-center p-4 rounded-lg shadow-lg border ${getBgColor()}`}>
-          <div className="flex-shrink-0 mr-3">{getIcon()}</div>
-          <div className={`flex-1 ${getTextColor()}`}>{message}</div>
-          <button
-            onClick={onClose}
-            className="ml-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          >
-            <X className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-          </button>
-        </div>
-      </div>
-    ) : null
-  }
-
   // Filter Tab Component
   const FilterTab = ({ label, active, count, onClick }) => {
     return (
       <button
-        className={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+        className={`px-3 py-2 text-sm font-medium font-inter rounded-t-lg transition-colors ${
           active
-            ? "text-blue-600 border-b-2 border-blue-600 dark:text-blue-400 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/10"
-            : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+            ? "text-primary-600 border-b-2 border-primary-600 dark:text-primary-400 dark:border-primary-400 bg-primary-50/50 dark:bg-primary-900/10"
+            : "text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
         }`}
         onClick={onClick}
       >
@@ -535,8 +463,8 @@ export default function NotificationsPage() {
             <span
               className={`ml-1.5 px-1.5 py-0.5 text-xs rounded-full ${
                 active
-                  ? "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
-                  : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                  ? "bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300"
+                  : "bg-neutral-100 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-400"
               }`}
             >
               {count}
@@ -587,7 +515,7 @@ export default function NotificationsPage() {
         case "Success":
           return <CheckCircle size={20} className="text-green-500" />
         default:
-          return <Bell size={20} className="text-gray-500" />
+          return <Bell size={20} className="text-neutral-500" />
       }
     }
 
@@ -611,7 +539,7 @@ export default function NotificationsPage() {
     // Get background color based on notification type and read status
     const getBackgroundColor = () => {
       if (!notification.seen) {
-        return "bg-blue-50 dark:bg-blue-900/10"
+        return "bg-primary-50 dark:bg-primary-900/10"
       }
 
       switch (notification.type) {
@@ -624,31 +552,31 @@ export default function NotificationsPage() {
         case "Warning":
           return isDarkMode ? "hover:bg-amber-900/10" : "hover:bg-amber-50"
         default:
-          return isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-50"
+          return isDarkMode ? "hover:bg-neutral-800" : "hover:bg-neutral-50"
       }
     }
 
     return (
       <div
-        className={`flex p-4 border-b border-gray-100 dark:border-gray-700 transition-colors ${
-          !notification.seen ? "bg-blue-50 dark:bg-blue-900/10" : ""
+        className={`flex p-4 border-b border-neutral-100 dark:border-neutral-700 transition-colors ${
+          !notification.seen ? "bg-primary-50 dark:bg-primary-900/10" : ""
         } ${getBackgroundColor()}`}
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
       >
         <div className="mr-4 mt-1">
-          <div className="p-2 rounded-full bg-white dark:bg-neutral-800 shadow-sm">{getIcon()}</div>
+          <div className="p-2 rounded-full bg-white dark:bg-neutral-900 shadow-sm">{getIcon()}</div>
         </div>
         <div className="flex-1">
           <h3
-            className={`text-sm font-medium ${
-              !notification.seen ? "text-blue-600 dark:text-blue-400" : "text-neutral-950 dark:text-neutral-100"
+            className={`text-sm font-medium font-inter ${
+              !notification.seen ? "text-primary-600 dark:text-primary-400" : "text-neutral-950 dark:text-neutral-100"
             }`}
           >
             {notification.message}
           </h3>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{notification.title}</p>
-          <div className="flex items-center mt-2 text-xs text-gray-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 font-inter">{notification.title}</p>
+          <div className="flex items-center mt-2 text-xs text-neutral-500 font-inter">
             <span className="flex items-center">
               <Clock size={12} className="mr-1" />
               {formatTime(notification.created_at)}
@@ -673,7 +601,7 @@ export default function NotificationsPage() {
               {!notification.seen && (
                 <button
                   onClick={() => onMarkAsRead(notification.id)}
-                  className="p-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                  className="p-1.5 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-full hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors"
                   title="Mark as read"
                 >
                   <Eye size={14} />
@@ -681,7 +609,7 @@ export default function NotificationsPage() {
               )}
               <button
                 onClick={() => onDelete(notification.id)}
-                className="p-1.5 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-full hover:bg-red-100 hover:text-red-500 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-colors"
+                className="p-1.5 bg-neutral-100 dark:bg-neutral-900 text-neutral-500 dark:text-neutral-400 rounded-full hover:bg-red-100 hover:text-red-500 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-colors"
                 title="Delete"
               >
                 <Trash2 size={14} />
@@ -689,8 +617,8 @@ export default function NotificationsPage() {
             </>
           )}
           {!showActions && notification.seen && (
-            <button className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
-              <MoreVertical size={16} className="text-gray-500" />
+            <button className="p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-full">
+              <MoreVertical size={16} className="text-neutral-500" />
             </button>
           )}
         </div>
@@ -705,12 +633,12 @@ export default function NotificationsPage() {
     return (
       <div className="mb-6 animate-fade-in">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-base font-medium text-gray-900 dark:text-gray-100">{title}</h2>
-          <span className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-full">
+          <h2 className="text-base font-medium font-russo text-neutral-900 dark:text-neutral-100">{title}</h2>
+          <span className="text-xs bg-neutral-100 dark:bg-neutral-950 text-neutral-600 dark:text-neutral-400 px-2 py-1 rounded-full font-inter">
             {notifications.length}
           </span>
         </div>
-        <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+        <div className="bg-white dark:bg-neutral-950 rounded-lg shadow-sm overflow-hidden border border-neutral-100 dark:border-neutral-700">
           {notifications.map((notification) => (
             <NotificationItem
               key={notification.id}
@@ -725,54 +653,55 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-neutral-900">
+    <div className="flex min-h-screen bg-neutral-50 dark:bg-neutral-900">
       {/* Toast Notification */}
       <Toast message={toast.message} type={toast.type} visible={toast.visible} onClose={hideToast} />
 
       {/* Show sidebar */}
-      <Sidebar
-        activeItem={"notifications"}/>
+      <Sidebar activeItem={"notifications"} />
 
       {/* Main content */}
-      <div className=" flex-1 overflow-y-auto pb-8 bg-gray-50 dark:bg-neutral-990">
-        <div className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <div className="pt-14 lg:pt-0 flex-1 overflow-y-auto pb-8 bg-neutral-50 dark:bg-neutral-990">
+        <div className="px-4 sm:px-10 lg:px-20 w-full">
           {/* Breadcrumb */}
-          <div className="flex items-center py-4 text-sm">
-            <span className="text-gray-500 dark:text-gray-400">Dashboard</span>
-            <ChevronRight className="h-4 w-4 text-gray-400 mx-1" />
-            <span className="font-medium text-gray-900 dark:text-gray-200">Notifications</span>
-          </div>
+          <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
+            <div className="text-sm flex items-center font-inter">
+              <span className="text-neutral-500 dark:text-neutral-400">Dashboard</span>
+              <ChevronRight className="h-4 w-4 text-neutral-400 mx-1" />
+              <span className="font-medium text-neutral-900 dark:text-neutral-200">Notifications</span>
+            </div>
 
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-medium text-gray-900 dark:text-white flex items-center">
-              Notifications
-              <div className="ml-2 p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                <Bell className="text-blue-600 dark:text-blue-400" size={20} />
+            {/* Header */}
+            <div className="flex items-center justify-between w-full">
+              <h1 className="text-xl lg:text-2xl font-russo text-neutral-900 dark:text-white flex items-center">
+                Notifications
+                <div className="ml-3 p-1.5 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+                  <Bell className="text-primary-600 dark:text-primary-400" size={20} />
+                </div>
+                {notificationCounts.unread > 0 && (
+                  <span className="ml-3 px-2 py-1 text-xs font-medium font-inter bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-full">
+                    {notificationCounts.unread} unread
+                  </span>
+                )}
+              </h1>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleRefresh}
+                  className={`p-2 rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors ${isRefreshing ? "animate-spin" : ""}`}
+                  disabled={isRefreshing}
+                  title="Refresh"
+                >
+                  <RefreshCw size={18} />
+                </button>
+                <button
+                  onClick={handleMarkAllAsRead}
+                  className="hidden sm:flex items-center px-3 py-1.5 text-sm font-inter bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-800/50 transition-colors"
+                >
+                  <Eye size={16} className="mr-1.5" />
+                  Mark all as read
+                </button>
               </div>
-              {notificationCounts.unread > 0 && (
-                <span className="ml-3 px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full">
-                  {notificationCounts.unread} unread
-                </span>
-              )}
-            </h1>
-
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={handleRefresh}
-                className={`p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${isRefreshing ? "animate-spin" : ""}`}
-                disabled={isRefreshing}
-                title="Refresh"
-              >
-                <RefreshCw size={18} />
-              </button>
-              <button
-                onClick={handleMarkAllAsRead}
-                className="hidden sm:flex items-center px-3 py-1.5 text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors"
-              >
-                <Eye size={16} className="mr-1.5" />
-                Mark all as read
-              </button>
             </div>
           </div>
 
@@ -784,13 +713,13 @@ export default function NotificationsPage() {
                 placeholder="Search notifications..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-10 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className="w-full pl-10 pr-10 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-990 text-neutral-900 dark:text-white font-inter focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
               />
-              <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+              <Search className="absolute left-3 top-2.5 text-neutral-400" size={18} />
               {searchQuery && (
                 <button
                   onClick={handleClearSearch}
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  className="absolute right-3 top-2.5 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
                 >
                   <X size={18} />
                 </button>
@@ -802,7 +731,7 @@ export default function NotificationsPage() {
           <div className="sm:hidden mb-4">
             <button
               onClick={() => setShowMobileFilters(!showMobileFilters)}
-              className="w-full flex items-center justify-center px-4 py-2 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300"
+              className="w-full flex items-center justify-center px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-neutral-700 dark:text-neutral-300 font-inter"
             >
               <Filter size={16} className="mr-2" />
               Filters
@@ -812,7 +741,7 @@ export default function NotificationsPage() {
 
           {/* Filters */}
           <div
-            className={`${showMobileFilters ? "block" : "hidden"} sm:block mb-6 border-b border-gray-200 dark:border-gray-700`}
+            className={`${showMobileFilters ? "block" : "hidden"} sm:block mb-6 border-b border-neutral-200 dark:border-neutral-700`}
           >
             <div className="flex flex-wrap">
               <FilterTab
@@ -850,21 +779,25 @@ export default function NotificationsPage() {
 
           {/* Notifications List */}
           {isLoading ? (
-            <div className="flex flex-col justify-center items-center h-64 bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-8">
-              <Loader2 className="h-10 w-10 animate-spin text-blue-500 mb-4" />
-              <span className="text-gray-600 dark:text-gray-400">Loading notifications...</span>
+            <div className="flex flex-col justify-center items-center h-64 bg-white dark:bg-neutral-900 rounded-lg shadow-sm p-8">
+              <Loader2 className="h-10 w-10 animate-spin text-primary-500 mb-4" />
+              <span className="text-neutral-600 dark:text-neutral-400 font-inter">Loading notifications...</span>
             </div>
           ) : filteredNotifications.length === 0 ? (
-            <div className="text-center py-12 bg-white dark:bg-neutral-800 rounded-lg shadow-sm animate-fade-in">
-              <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-full inline-flex">
-                <Bell className="h-8 w-8 text-gray-400 dark:text-gray-500" />
+            <div className="text-center py-12 bg-white dark:bg-neutral-900 rounded-lg shadow-sm animate-fade-in">
+              <div className="p-3 bg-neutral-100 dark:bg-neutral-700 rounded-full inline-flex">
+                <Bell className="h-8 w-8 text-neutral-400 dark:text-neutral-500" />
               </div>
-              <h3 className="mt-4 text-base font-medium text-gray-900 dark:text-gray-100">No notifications found</h3>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Check back later for new notifications</p>
+              <h3 className="mt-4 text-base font-medium font-russo text-neutral-900 dark:text-neutral-100">
+                No notifications found
+              </h3>
+              <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400 font-inter">
+                Check back later for new notifications
+              </p>
               {searchQuery && (
                 <button
                   onClick={handleClearSearch}
-                  className="mt-4 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-sm hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors"
+                  className="mt-4 px-4 py-2 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-lg text-sm font-inter hover:bg-primary-200 dark:hover:bg-primary-800/50 transition-colors"
                 >
                   Clear search
                 </button>
@@ -908,7 +841,7 @@ export default function NotificationsPage() {
               {hasMore && (
                 <div className="mt-6 text-center animate-fade-in">
                   <button
-                    className="px-4 py-2 text-sm bg-white dark:bg-neutral-800 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm hover:shadow transition-all"
+                    className="px-4 py-2 text-sm font-inter bg-white dark:bg-neutral-900 text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 border border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow transition-all"
                     onClick={handleLoadMore}
                   >
                     Load more
@@ -922,33 +855,3 @@ export default function NotificationsPage() {
     </div>
   )
 }
-
-// Add these animations to your globals.css
-// @keyframes fade-in-down {
-//   0% {
-//     opacity: 0;
-//     transform: translateY(-10px);
-//   }
-//   100% {
-//     opacity: 1;
-//     transform: translateY(0);
-//   }
-// }
-
-// @keyframes fade-in {
-//   0% {
-//     opacity: 0;
-//   }
-//   100% {
-//     opacity: 1;
-//     transform: translateY(0);
-//   }
-// }
-
-// .animate-fade-in-down {
-//   animation: fade-in-down 0.3s ease-out forwards;
-// }
-
-// .animate-fade-in {
-//   animation: fade-in 0.3s ease-out forwards;
-// }

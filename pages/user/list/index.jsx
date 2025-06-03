@@ -204,12 +204,14 @@ export default function UserManagement() {
 
       <div className="w-full px-4 py-4">
         <div>
-          <div className="flex items-center gap-2 mb-8 text-neutral-950 dark:text-neutral-50">
-            {t("userList", "path", 1)} <ArrowRight2 size="14" color="#697689" /> {t("userList", "path", 2)}
+          <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
+            <div className="text-sm flex items-center font-inter">
+              <span>{t("userList", "path", 1)}</span>
+              <span className="mx-2 text-lg">›</span>
+              <span>{t("userList", "path", 2)}</span>
+            </div>
+            <h1 className="text-xl lg:text-2xl font-russo">{t("userList", "cards", "titel")}</h1>
           </div>
-          <h1 className="text-2xl font-bold text-neutral-950 dark:text-neutral-50 mb-6">
-            {t("userList", "cards", "titel")}
-          </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {stats.map((stat, index) => (

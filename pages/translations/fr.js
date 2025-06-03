@@ -173,9 +173,9 @@ export const fr = {
     charts: {
       priority: {
         title: "Demandes par Priorité",
-        high: "Haute priorité",
-        medium: "Priorité moyenne",
-        low: "Basse priorité",
+        high: "réparation",
+        medium: "maintenance",
+        low: "remplacement",
       },
       equipment: {
         title: "État des Équipements",
@@ -417,7 +417,6 @@ export const fr = {
       },
       location: {
         label: "Localisation",
-        placeholder: "Ex: Bâtiment A, Étage 3, Salle 302",
         selectPlaceholder: "Sélectionnez un emplacement"
       },
       equipmentCode: {
@@ -478,8 +477,7 @@ export const fr = {
       updateError: "Échec de la mise à jour de la demande",
       fetchError: "Échec du chargement des données de la demande",
       equipmentFetchError: "Échec du chargement des données d'équipement"
-    },
-    loading: "Chargement des données de la demande..."
+    }
   },
   // Add translations for task forms
   taskForm: {
@@ -558,10 +556,9 @@ export const fr = {
       "Maintenance",
       "Réparation",
       "Installation",
-      "Inspection"
     ],
     statusOptions: [
-      "Non commencé",
+      "À faire",
       "En cours",
       "En attente",
       "Terminé",
@@ -597,7 +594,7 @@ export const fr = {
       loadError: "Échec du chargement des données de la tâche",
       equipmentError: "Échec du chargement des données d'équipement",
       userError: "Échec du chargement des données des utilisateurs",
-      createBothSuccess: "Tâche et demande créées avec succès",
+      createBothSuccess: "Demande et tâche de maintenance créées avec succès !"
     },
     loading: "Chargement des données de la tâche..."
   },
@@ -631,17 +628,18 @@ export const fr = {
       4: "Numéro de téléphone",
       5: "Rôle",
       6: "Actions",
-      clearfilter: "Effacer le filtre"
-    },
-    deleteConfirm : "Confirmer la suppression",
-    deleteDescription : "Êtes-vous sûr de vouloir supprimer l'utilisateur {name} ? Cette action ne peut pas être annulée.",
-    deleteUserDetails : "Détails de l'utilisateur",
-    deleteUserName : "Nom :",
-    deleteUserEmail : "Email :",
-    deleteUserRole : "Rôle :",
-    deleteCancel : "Annuler",
-    deleteConfirmButton : "Supprimer l'utilisateur",
-    deleteError : "Échec de la suppression de l'utilisateur"
+      clearfilter: "Effacer le filtre",
+      // New translations for delete confirmation
+      deleteConfirm : "Confirmer la suppression",
+      deleteDescription : "Êtes-vous sûr de vouloir supprimer l'utilisateur {name} ? Cette action ne peut pas être annulée.",
+      deleteUserDetails : "Détails de l'utilisateur",
+      deleteUserName : "Nom :",
+      deleteUserEmail : "Email :",
+      deleteUserRole : "Rôle :",
+      deleteCancel : "Annuler",
+      deleteConfirmButton : "Supprimer l'utilisateur",
+      deleteError : "Échec de la suppression de l'utilisateur"
+    }
   },
   
   requestList:{
@@ -672,8 +670,8 @@ export const fr = {
       urgencyLevel: "Urgence",
       status: "Statut",
       createdAt: "Créé le",
-      inventoryCode : "code inventaire",
-      requestCode : "code demande",
+      inventoryCode : "Code d'inventaire",
+      requestCode : "Code de demande",
     },
     tablehead: {
       clearfilter: "Effacer le filtre",
@@ -683,87 +681,87 @@ export const fr = {
       deleteSuccess: "Demande supprimée avec succès",
       deleteError: "Échec de la suppression de la demande",
     },
+    emptyState: "Aucune demande trouvée"
   },
 
-
-equipmentList: {
-  deleteConfirm: "Confirmer la suppression",
-        path: {
-          1: "Tableau de bord",
-          2: "Équipement",
-        },
-        cards: {
-          title: "Gestion des Équipements",
-          sub: {
-            1: "Équipement Total",
-            2: "Nécessite Maintenance",
-            3: "En Fonctionnement",
-            4: "Hors Service",
-          },
-        },
-        tablehead: {
-          1: "Code d'Inventaire",
-          2: "ID",
-          3: "Type",
-          4: "Catégorie",
-          5: "Emplacement",
-          6: "Date d'acquisition",
-          7: "Statut",
-        },
-        searchbar: {
-          title: "Table des Équipements",
-          buttons: {
-            1: "Rechercher",
-            2: "Réinitialiser",
-            3: "Ajouter un Équipement",
-          },
-        },
-      },
-      tasksList: {
-        path: {
-          1: "Tableau de bord",
-          2: "Tâches",
-        },
-        cards: {
-          title: "Gestion des Tâches",
-          sub: {
-            1: "En attente",
-            2: "En cours",
-            3: "Terminées",
-            4: "À faire",
-          },
-        },
-        tablehead: {
-          1: "Nom de la tâche",
-          2: "Emplacement",
-          3: "Responsable",
-          4: "Priorité",
-          5: "Échéance",
-          6: "Statut",
-          7: "Type",
-        },
-        searchbar: {
-          title: "Tableau des Tâches",
-          placeholder: "Entrez du texte pour rechercher",
-          buttons: {
-            1: "Rechercher",
-            2: "Réinitialiser",
-            3: "Ajouter une Tâche",
-          },
-        },
-        status: {
-          1: "En attente",
-          2: "En cours",
-          3: "Terminées",
-          4: "À faire",
-        },
-        priority: {
-          1: "Faible",
-          2: "Moyenne",
-          3: "Élevée",
-        },
-      },
- notifications: {
+  equipmentList: {
+    deleteConfirm: "Confirmer la suppression",
+    path: {
+      1: "Tableau de bord",
+      2: "Équipement",
+    },
+    cards: {
+      title: "Gestion des Équipements",
+      sub: {
+        1: "Équipement Total",
+        2: "Nécessite Maintenance",
+        3: "En Fonctionnement",
+        4: "Hors Service",
+      },
+    },
+    tablehead: {
+      1: "Code d'Inventaire",
+      2: "ID",
+      3: "Type",
+      4: "Catégorie",
+      5: "Emplacement",
+      6: "Date d'acquisition",
+      7: "Statut",
+    },
+    searchbar: {
+      title: "Table des Équipements",
+      buttons: {
+        1: "Rechercher",
+        2: "Réinitialiser",
+        3: "Ajouter un Équipement",
+      },
+    },
+  },
+  tasksList: {
+    path: {
+      1: "Tableau de bord",
+      2: "Tâches",
+    },
+    cards: {
+      title: "Gestion des Tâches",
+      sub: {
+        1: "En attente",
+        2: "En cours",
+        3: "Terminées",
+        4: "À faire",
+      },
+    },
+    tablehead: {
+      1: "Nom de la tâche",
+      2: "Emplacement",
+      3: "Responsable",
+      4: "Priorité",
+      5: "Échéance",
+      6: "Statut",
+      7: "Type",
+    },
+    searchbar: {
+      title: "Tableau des Tâches",
+      placeholder: "Entrez du texte pour rechercher",
+      buttons: {
+        1: "Rechercher",
+        2: "Réinitialiser",
+        3: "Ajouter une Tâche",
+      },
+    },
+    status: {
+      1: "En attente",
+      2: "En cours",
+      3: "Terminées",
+      4: "À faire",
+    },
+    priority: {
+      1: "Faible",
+      2: "Moyenne",
+      3: "Élevée",
+    },
+  },
+  notifications: {
     title: "Notifications",
     unread: "non lues",
     loading: "Chargement des notifications...",
@@ -811,6 +809,8 @@ equipmentList: {
       markedAllRead: "Toutes les notifications ont été marquées comme lues",
       loadingMore: "Chargement de notifications supplémentaires...",
       noUnreadNotifications: "Aucune notification non lue",
+      updateError: "Échec de la mise à jour de la notification",
+      deleteError: "Échec de la suppression de la notification"
     },
 
     mockData: {
@@ -932,7 +932,7 @@ equipmentList: {
       loadError: "Échec du chargement des données utilisateur"
     }
   },
-  // Add translations for the user edit form
+  // Add translations for the password reset component
   forgotPassword: {
     title: "Mot de passe oublié",
     description:
@@ -991,56 +991,7 @@ equipmentList: {
       "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
     backButton: "Retour à la connexion",
   },
-  reportPage: {
-    path: {
-      1: "Tableau de bord",
-      2: "Rapports",
-    },
-    title: "Rapports du Système",
-    sections: {
-      users: "Rapport des Utilisateurs",
-      tasks: "Rapport des Tâches",
-      equipment: "Rapport des Équipements",
-    },
-    tables: {
-      users: {
-        title: "Gestion des Utilisateurs",
-        columns: {
-          name: "Nom",
-          profession: "Profession",
-          email: "Email",
-          phoneNumber: "Numéro de Téléphone",
-          role: "Rôle",
-        },
-        addButton: "Ajouter un Utilisateur",
-      },
-      tasks: {
-        title: "Gestion des Tâches",
-        columns: {
-          taskName: "Nom de la Tâche",
-          location: "Emplacement",
-          responsible: "Responsable",
-          priority: "Priorité",
-          deadline: "Échéance",
-          status: "Statut",
-        },
-        addButton: "Ajouter une Tâche",
-      },
-      equipment: {
-        title: "Gestion des Équipements",
-        columns: {
-          inventoryCode: "Code d'Inventaire",
-          id: "ID",
-          type: "Type",
-          category: "Catégorie",
-          location: "Emplacement",
-          acquisitionDate: "Date d'Acquisition",
-          status: "Statut",
-        },
-        addButton: "Ajouter un Équipement",
-      },
-    },
-  },
+  // Report page translations
   reportPage: {
     path: {
       dashboard: "Tableau de bord",
@@ -1138,6 +1089,93 @@ equipmentList: {
       loadError: "Échec du chargement des données",
       loading: "Chargement des données...",
     },
+  },
+  // Common translations used across multiple components
+  common: {
+    actions: {
+      close: "Fermer",
+      save: "Enregistrer",
+      cancel: "Annuler",
+      edit: "Modifier",
+      delete: "Supprimer",
+      copy: "Copier",
+      "Copy to clipboard": "Copier dans le presse-papiers",
+      "Clear filters": "Effacer les filtres"
+    },
+    navigation: {
+      "Previous record": "Enregistrement précédent",
+      "Next record": "Enregistrement suivant"
+    },
+    search: {
+      "Search fields...": "Rechercher des champs...",
+      "No matching fields": "Aucun champ correspondant",
+      "Try a different search term or filter": "Essayez un terme de recherche ou un filtre différent"
+    },
+    filters: {
+      "All": "Tous",
+      "IDs": "IDs",
+      "Dates": "Dates",
+      "Contact Info": "Informations de contact",
+      "Other": "Autre"
+    },
+    boolean: {
+      "Yes": "Oui",
+      "No": "Non",
+      "True": "Vrai",
+      "False": "Faux"
+    },
+    status: {
+      "Active": "Actif",
+      "Inactive": "Inactif",
+      "Pending": "En attente",
+      "Completed": "Terminé"
+    },
+    errors: {
+      "Something went wrong": "Quelque chose s'est mal passé",
+      "Please try again": "Veuillez réessayer"
+    }
+  },
+
+  // Specific to RowDetailModal component
+  rowDetails: {
+    title: "Détails de la ligne",
+    buttons: {
+      "Close": "Fermer",
+      "Edit": "Modifier",
+      "Export": "Exporter"
+    },
+    messages: {
+      "No data available": "Aucune donnée disponible",
+      "Field copied to clipboard": "Champ copié dans le presse-papiers"
+    },
+    fields: {
+      // Common field names that might be used
+      "id": "ID",
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "created_at": "Créé le",
+      "updated_at": "Mis à jour le",
+      "status": "Statut",
+      "description": "Description"
+    }
+  },
+
+  // Date formatting
+  dates: {
+    formats: {
+      short: "DD/MM/YYYY",
+      long: "D MMMM YYYY",
+      time: "HH:mm"
+    },
+    relative: {
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "tomorrow": "Demain",
+      "days_ago": "Il y a {{count}} jours",
+      "in_days": "Dans {{count}} jours"
+    }
   }
 };
 

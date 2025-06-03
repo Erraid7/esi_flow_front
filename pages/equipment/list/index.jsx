@@ -290,13 +290,15 @@ export default function EquipmentManagement() {
 
       <div className="w-full px-4 py-4">
         <div>
-          <div className="flex items-center gap-2 mb-8 text-neutral-950 dark:text-neutral-50">
-            {t("equipmentList", "path", 1) || "Dashboard"} <ArrowRight2 size="14" color="#697689" />{" "}
-            {t("equipmentList", "path", 2) || "Equipment"}
+
+          <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
+            <div className="text-sm flex items-center font-inter">
+              <span>{t("equipmentList", "path", 1)}</span>
+              <span className="mx-2 text-lg">›</span>
+              <span>{t("equipmentList", "path", 2)}</span>
+            </div>
+            <h1 className="text-xl lg:text-2xl font-russo">{t("equipmentList", "cards", "title")}</h1>
           </div>
-          <h1 className="text-2xl font-bold text-neutral-950 dark:text-neutral-50 mb-6">
-            {t("equipmentList", "cards", "title") || "Equipment Management"}
-          </h1>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
             {stats.map((stat, index) => (

@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [filteredTasks, setFilteredTasks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [userRole, setUserRole] = useState("")
   const [progressPercentage, setProgressPercentage] = useState(0)
   const [currentUser, setCurrentUser] = useState({
     id: null,
@@ -100,6 +101,8 @@ export default function Dashboard() {
     try {
       setLoading(true)
       const user = getCurrentUser()
+
+      if (user) setUserRole(user.role);
 
       // Get interventions assigned to the current technician
       const response = await axios.get(`${API_BASE_URL}/interventions/technician/${user.id}`)
@@ -499,6 +502,7 @@ export default function Dashboard() {
                       }}
                       dropdownFields={["Priority", "Status"]}
                       onEdit={handleEditTask}
+                      showDeleteAction={userRole === "Admin"} // Show delete action only for Admin
                       onDelete={confirmDelete}
                       styled={["Priority", "Status"]}
                       showAddButton={false}

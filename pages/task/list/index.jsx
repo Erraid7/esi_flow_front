@@ -320,12 +320,14 @@ export default function TasksManagement() {
         )}
 
         <div>
-          <div className="flex items-center gap-2 mb-8 text-neutral-950 dark:text-neutral-50">
-            {t("tasksList", "path", 1)} <ArrowRight2 size="14" color="#697689" /> {t("tasksList", "path", 2)}
+          <div className="flex flex-col items-start gap-6 mb-6 pt-6 text-neutral-950 dark:text-neutral-100">
+            <div className="text-sm flex items-center font-inter">
+              <span>{t("tasksList", "path", 1)}</span>
+              <span className="mx-2 text-lg">›</span>
+              <span>{t("tasksList", "path", 2)}</span>
+            </div>
+            <h1 className="text-xl lg:text-2xl font-russo">{t("tasksList", "cards", "title")}</h1>
           </div>
-          <h1 className="text-2xl font-bold text-neutral-950 dark:text-neutral-50 mb-6">
-            {t("tasksList", "cards", "title")}
-          </h1>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
             {stats.map((stat, index) => (
@@ -363,6 +365,7 @@ export default function TasksManagement() {
             addButtonText={t("tasksList", "searchbar", "buttons", 3)}
             dropdownFields={["urgency", "status"]}
             onEdit={handleEdit}
+            showDeleteAction={userRole === "Admin"} // Show delete action only for Admin
             onDelete={confirmDelete} // Changed to show confirmation first
             onAddNew={handleAdd}
             styled={["urgency", "status"]}

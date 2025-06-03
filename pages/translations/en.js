@@ -1,13 +1,62 @@
 export const en = {
   common: {
-    toggleLanguage: "Translate to French"
+    toggleLanguage: "Translate to French",
+    actions: {
+      close: "Close",
+      save: "Save",
+      cancel: "Cancel",
+      edit: "Edit",
+      delete: "Delete",
+      copy: "Copy",
+      "Copy to clipboard": "Copy to clipboard",
+      "Clear filters": "Clear filters"
+    },
+    navigation: {
+      "Previous record": "Previous record",
+      "Next record": "Next record"
+    },
+    search: {
+      "Search fields...": "Search fields...",
+      "No matching fields": "No matching fields",
+      "Try a different search term or filter": "Try a different search term or filter"
+    },
+    filters: {
+      "All": "All",
+      "IDs": "IDs",
+      "Dates": "Dates",
+      "Contact Info": "Contact Info",
+      "Other": "Other"
+    },
+    boolean: {
+      "Yes": "Yes",
+      "No": "No",
+      "True": "True",
+      "False": "False"
+    },
+    status: {
+      "Active": "Active",
+      "Inactive": "Inactive",
+      "Pending": "Pending",
+      "Completed": "Completed"
+    },
+    errors: {
+      "Something went wrong": "Something went wrong",
+      "Please try again": "Please try again"
+    }
   },
   login: {
     title: "Login",
     emailPlaceholder: "Email",
     passwordPlaceholder: "Password",
     button: "Login",
-    error: "Invalid credentials"
+    error: "Invalid credentials",
+    welcome: "Welcome back",
+    ph1: "Email",
+    input1: "Email or phone number",
+    ph2: "Password",
+    input2: "Enter password",
+    remember:"Remember me",
+    forgot:"Forgot password?",
   },
   home:{
     navbar:{
@@ -97,17 +146,6 @@ export const en = {
         button: "Contact"
       }
     }
-  },
-  login:{
-    title: "Welcome back",
-    ph1: "Email",
-    input1: "Email or phone number",
-    ph2: "Password",
-    input2: "Enter password",
-    remember:"Remember me",
-    forgot:"Forgot password?",
-    button:"Sign in",
-
   },
   dashboard: {
     tasks: {
@@ -479,7 +517,8 @@ export const en = {
       updateError: "Failed to update request",
       fetchError: "Failed to load request data",
       equipmentFetchError: "Failed to load equipment data"
-    }
+    },
+    loading: "Loading request data..."
   },
   // Add translations for task forms
   taskForm: {
@@ -684,86 +723,87 @@ export const en = {
       deleteSuccess: "Request deleted successfully",
       deleteError: "Failed to delete request",
     },
+    emptyState: "No requests found",
   },
 
 
- equipmentList: {
+ equipmentList: {
   deleteConfirm: "Confirm Deletion",
-      path: {
-        1: "Dashboard",
-        2: "Equipment",
-      },
-      cards: {
-        title: "Equipment Management",
-        sub: {
-          1: "Total Equipment",
-          2: "Needs Maintenance",
-          3: "Working",
-          4: "Out of Service",
-        },
-      },
-      tablehead: {
-        1: "Inventory Code",
-        2: "ID",
-        3: "Type",
-        4: "Category",
-        5: "Location",
-        6: "Acquisition date",
-        7: "Status",
-      },
-      searchbar: {
-        title: "Equipment Table",
-        buttons: {
-          1: "Search",
-          2: "Reset",
-          3: "Add Equipment",
-        },
-      },
-    },
-    tasksList: {
-      path: {
-        1: "Dashboard",
-        2: "Tasks",
-      },
-      cards: {
-        title: "Tasks Management",
-        sub: {
-          1: "Pending",
-          2: "In Progress",
-          3: "Completed",
-          4: "To Do",
-        },
-      },
-      tablehead: {
-        1: "Task name",
-        2: "Location",
-        3: "Responsible",
-        4: "Priority",
-        5: "Deadline",
-        6: "Status",
-        7: "Type",
-      },
-      searchbar: {
-        title: "Task Table",
-        placeholder: "Enter text to search",
-        buttons: {
-          1: "Search",
-          2: "Reset",
-          3: "Add Task",
-        },
-      },
-      status: {
-        1: "Pending",
-        2: "In Progress",
-        3: "Completed",
-        4: "To Do",
-      },
-      priority: {
-        1: "Low",
-        2: "Medium",
-        3: "High",
-      },
-    },
+      path: {
+        1: "Dashboard",
+        2: "Equipment",
+      },
+      cards: {
+        title: "Equipment Management",
+        sub: {
+          1: "Total Equipment",
+          2: "Needs Maintenance",
+          3: "Working",
+          4: "Out of Service",
+        },
+      },
+      tablehead: {
+        1: "Inventory Code",
+        2: "ID",
+        3: "Type",
+        4: "Category",
+        5: "Location",
+        6: "Acquisition date",
+        7: "Status",
+      },
+      searchbar: {
+        title: "Equipment Table",
+        buttons: {
+          1: "Search",
+          2: "Reset",
+          3: "Add Equipment",
+        },
+      },
+    },
+    tasksList: {
+      path: {
+        1: "Dashboard",
+        2: "Tasks",
+      },
+      cards: {
+        title: "Tasks Management",
+        sub: {
+          1: "Pending",
+          2: "In Progress",
+          3: "Completed",
+          4: "To Do",
+        },
+      },
+      tablehead: {
+        1: "Task name",
+        2: "Location",
+        3: "Responsible",
+        4: "Priority",
+        5: "Deadline",
+        6: "Status",
+        7: "Type",
+      },
+      searchbar: {
+        title: "Task Table",
+        placeholder: "Enter text to search",
+        buttons: {
+          1: "Search",
+          2: "Reset",
+          3: "Add Task",
+        },
+      },
+      status: {
+        1: "Pending",
+        2: "In Progress",
+        3: "Completed",
+        4: "To Do",
+      },
+      priority: {
+        1: "Low",
+        2: "Medium",
+        3: "High",
+      },
+    },
   notifications: {
     title: "Notifications",
     unread: "unread",
@@ -812,6 +852,8 @@ export const en = {
       markedAllRead: "All notifications marked as read",
       loadingMore: "Loading more notifications...",
       noUnreadNotifications: "No unread notifications",
+      updateError: "Failed to update notification",
+      deleteError: "Failed to delete notification"
     },
 
     mockData: {
@@ -1089,52 +1131,6 @@ export const en = {
       loading: "Loading data...",
     },
   },
-  // Common translations used across multiple components
-  common: {
-    actions: {
-      close: "Close",
-      save: "Save",
-      cancel: "Cancel",
-      edit: "Edit",
-      delete: "Delete",
-      copy: "Copy",
-      "Copy to clipboard": "Copy to clipboard",
-      "Clear filters": "Clear filters"
-    },
-    navigation: {
-      "Previous record": "Previous record",
-      "Next record": "Next record"
-    },
-    search: {
-      "Search fields...": "Search fields...",
-      "No matching fields": "No matching fields",
-      "Try a different search term or filter": "Try a different search term or filter"
-    },
-    filters: {
-      "All": "All",
-      "IDs": "IDs",
-      "Dates": "Dates",
-      "Contact Info": "Contact Info",
-      "Other": "Other"
-    },
-    boolean: {
-      "Yes": "Yes",
-      "No": "No",
-      "True": "True",
-      "False": "False"
-    },
-    status: {
-      "Active": "Active",
-      "Inactive": "Inactive",
-      "Pending": "Pending",
-      "Completed": "Completed"
-    },
-    errors: {
-      "Something went wrong": "Something went wrong",
-      "Please try again": "Please try again"
-    }
-  },
-
   // Specific to RowDetailModal component
   rowDetails: {
     title: "Row Details",
