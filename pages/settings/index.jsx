@@ -759,7 +759,7 @@ const uploadProfileImage = async (imageFile) => {
 
                   <SystemInfoItem
                     label={t("settings","system","lastUpdate")}
-                    value="Mai 05, 2025 at 08:30 AM"
+                    value="Mai 28, 2025 at 10:37 AM"
                     icon={<Clock size={18} />}
                   />
                 </FormSection>
@@ -768,6 +768,12 @@ const uploadProfileImage = async (imageFile) => {
                   <SystemInfoItem
                     label={t("settings","system","projectLead")}
                     value="DJEMAI Mohamed Erraid"
+                    icon={<User size={18} />}
+                  />
+
+                  <SystemInfoItem
+                    label={t("settings","system","qaEngineer")}
+                    value="DOULAMI Amira"
                     icon={<User size={18} />}
                   />
 
@@ -785,33 +791,28 @@ const uploadProfileImage = async (imageFile) => {
 
                   <SystemInfoItem
                     label={t("settings","system","uiDesigner")}
-                    value="AISSAOUI Dhiaeddine"
-                    icon={<User size={18} />}
-                  />
-
-                  <SystemInfoItem
-                    label={t("settings","system","uiDesigner")}
                     value="HANNACHI Anes"
                     icon={<User size={18} />}
                   />
 
                   <SystemInfoItem
-                    label={t("settings","system","qaEngineer")}
-                    value="DOULAMI Amira"
+                    label={t("settings","system","uiDesigner")}
+                    value="AISSAOUI Dhiaeddine"
                     icon={<User size={18} />}
                   />
+
                 </FormSection>
 
                 <FormSection title={t("settings","system","supportInformation")} className="mt-6">
                   <SystemInfoItem
                     label={t("settings","system","technicalSupport")}
-                    value="support@example.com | +21376262511"
+                    value="nr_bendifallah@esi.dz | +21376262511"
                     icon={<Mail size={18} />}
                   />
 
                   <SystemInfoItem
                     label={t("settings","system","documentation")}
-                    value="https://docs.example.com/platform-guide"
+                    value="https://drive.google.com/file/d/10QX2dBUDB4YWH9aQN5ZfnBFViw5vMsXR/view?usp=drive_link"
                     icon={<Globe size={18} />}
                   />
 

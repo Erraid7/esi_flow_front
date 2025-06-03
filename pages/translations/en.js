@@ -954,7 +954,7 @@ export const en = {
       supportInformation: "Support Information",
       technicalSupport: "Technical Support",
       documentation: "Documentation",
-      madeWithLove: "Made with love by ARCAD team"
+      madeWithLove: "Made with love by CUDA WIZARDS team"
     },
     actions: {
       saveSettings: "Save Settings",

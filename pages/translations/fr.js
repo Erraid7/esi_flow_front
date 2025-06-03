@@ -910,7 +910,7 @@ export const fr = {
       supportInformation: "Informations de support",
       technicalSupport: "Support technique",
       documentation: "Documentation",
-      madeWithLove: "Fait avec amour par l'équipe ARCAD"
+      madeWithLove: "Fait avec amour par l'équipe CUDA WIZARDS"
     },
     actions: {
       saveSettings: "Enregistrer les paramètres",
