@@ -37,7 +37,7 @@ export default function PersonalDashboard() {
     type: "success",
   })
 
-  const API_BASE_URL = "https://esi-flow-back.onrender.com"
+  const API_BASE_URL = "https://esiflow2.onrender.com"
 
   // Get current user from localStorage
   const getCurrentUser = () => {

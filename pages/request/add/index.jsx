@@ -61,7 +61,7 @@ export default function RequestAddForm() {
       setIsLoadingEquipment(true)
       try {
         // Fetch equipment from your API
-        const response = await axios.get("https://esi-flow-back.onrender.com/equipments")
+        const response = await axios.get("https://esiflow2.onrender.com/equipments")
            console.log("API response:", response.data)
         // Format equipment data for display
         const formattedEquipment = response.data.map((equip) => ({
@@ -182,7 +182,7 @@ export default function RequestAddForm() {
     formData.append("image", photo.file)
 
     try {
-      const response = await axios.post("https://esi-flow-back.onrender.com/requests/upload", formData, {
+      const response = await axios.post("https://esiflow2.onrender.com/requests/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -266,7 +266,7 @@ export default function RequestAddForm() {
         console.log("Submitting request:", requestData)
 
         // Submit the request to create a new request
-        const response = await axios.post("https://esi-flow-back.onrender.com/requests", requestData)
+        const response = await axios.post("https://esiflow2.onrender.com/requests", requestData)
 
         console.log("Request created successfully:", response.data)
 

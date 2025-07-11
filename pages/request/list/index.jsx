@@ -52,8 +52,8 @@ export default function RequestListPage() {
         setUserRole(user.role)
         const response = await axios.get(
           user.role === "Admin"
-            ? "https://esi-flow-back.onrender.com/requests"
-            : `https://esi-flow-back.onrender.com/requests/user/${user.id}`
+            ? "https://esiflow2.onrender.com/requests"
+            : `https://esiflow2.onrender.com/requests/user/${user.id}`
         )
         console.log("Fetched requests:", response.data)
 
@@ -178,7 +178,7 @@ export default function RequestListPage() {
       const row = deleteModal.request
       if (!row) return
 
-      await axios.delete(`https://esi-flow-back.onrender.com/requests/${row.id}`)
+      await axios.delete(`https://esiflow2.onrender.com/requests/${row.id}`)
 
       // Remove the deleted request from the state
       setData((prevData) => prevData.filter((request) => request.id !== row.id))
@@ -213,7 +213,7 @@ export default function RequestListPage() {
       const updatedRequest = { ...row, status: "Refused" }
       updatedRequest.req_status = "Refused"
       
-      const response = await axios.put(`https://esi-flow-back.onrender.com/requests/${row.id}`, updatedRequest)
+      const response = await axios.put(`https://esiflow2.onrender.com/requests/${row.id}`, updatedRequest)
       console.log("API response:", response.data)
       setData((prevData) =>
         prevData.map((request) => (request.id === row.id ? updatedRequest : request))

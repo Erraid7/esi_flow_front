@@ -126,7 +126,7 @@ export default function EquipmentEditForm() {
       setIsLoading(true)
       try {
         // Fetch equipment data using the ID from the route
-        const response = await axios.get(`https://esi-flow-back.onrender.com/equipments/${equipmentId}`)
+        const response = await axios.get(`https://esiflow2.onrender.com/equipments/${equipmentId}`)
         const data = response.data
 
         // Map the backend data to our form state
@@ -256,7 +256,7 @@ export default function EquipmentEditForm() {
         } 
         
         // Make the API call with FormData
-        const response = await axios.put(`https://esi-flow-back.onrender.com/equipments/${equipmentId}`, equipmentData)
+        const response = await axios.put(`https://esiflow2.onrender.com/equipments/${equipmentId}`, equipmentData)
 
         // Show success message
         showToast(response.data.message || "Equipment updated successfully", "success")

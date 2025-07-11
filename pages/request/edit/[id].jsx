@@ -68,7 +68,7 @@ export default function RequestEditForm() {
       setIsLoadingEquipment(true)
       try {
         // Fetch equipment from your API
-        const response = await axios.get("https://esi-flow-back.onrender.com/equipments")
+        const response = await axios.get("https://esiflow2.onrender.com/equipments")
         
         // Format equipment data for display
         const formattedEquipment = response.data.map((equip) => ({
@@ -102,7 +102,7 @@ export default function RequestEditForm() {
       setIsLoading(true)
       try {
         // Fetch request data from API
-        const response = await axios.get(`https://esi-flow-back.onrender.com/requests/${requestId}`)
+        const response = await axios.get(`https://esiflow2.onrender.com/requests/${requestId}`)
         const requestData = response.data
         
         // Format request data for the form
@@ -249,7 +249,7 @@ export default function RequestEditForm() {
     formData.append("image", photo.file)
 
     try {
-      const response = await axios.post("https://esi-flow-back.onrender.com/requests/upload", formData, {
+      const response = await axios.post("https://esiflow2.onrender.com/requests/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -331,7 +331,7 @@ export default function RequestEditForm() {
         }
 
         // Submit the request to update
-        const response = await axios.put(`https://esi-flow-back.onrender.com/requests/${request.id}`, requestData)
+        const response = await axios.put(`https://esiflow2.onrender.com/requests/${request.id}`, requestData)
 
         // Show success message
         showToast(t("requestForm","toast","updateSuccess"), "success")

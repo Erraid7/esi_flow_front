@@ -103,7 +103,7 @@ export default function UserEditForm() {
       try {
         setIsLoading(true)
         // Use relative path for API endpoint
-        const response = await axios.get(`https://esi-flow-back.onrender.com/users/${userId}`)
+        const response = await axios.get(`https://esiflow2.onrender.com/users/${userId}`)
         const userData = response.data
 
         setUser({
@@ -227,7 +227,7 @@ export default function UserEditForm() {
         // Only proceed if there are changes to submit
         if (Object.keys(updateData).length > 1 || (changePassword && password)) {
           // Using axios to send the request to our API route - use relative path
-          const response = await axios.put(`https://esi-flow-back.onrender.com/auth/edit-user/${userId}`, updateData)
+          const response = await axios.put(`https://esiflow2.onrender.com/auth/edit-user/${userId}`, updateData)
 
           // Update original user data with new values
           setOriginalUser({

@@ -90,7 +90,7 @@ const Dashboard = () => {
 
 
           setLoading(true)
-          const response = await axios.get("https://esi-flow-back.onrender.com/requests")
+          const response = await axios.get("https://esiflow2.onrender.com/requests")
           console.log("Raw API response:", response.data)
 
           // sort the requests by created_at date in descending order
@@ -213,8 +213,8 @@ const Dashboard = () => {
     try {
       const updatedRequest = { ...row, status: "Refused" }
       updatedRequest.req_status = "Refused"
-      
-      const response = await axios.put(`https://esi-flow-back.onrender.com/requests/${row.id}`, updatedRequest)
+
+      const response = await axios.put(`https://esiflow2.onrender.com/requests/${row.id}`, updatedRequest)
       console.log("API response:", response.data)
       setData((prevData) =>
         prevData.map((request) => (request.id === row.id ? updatedRequest : request))
@@ -242,7 +242,7 @@ const Dashboard = () => {
       const row = deleteModal.request;
       if (!row) return;
 
-      await axios.delete(`https://esi-flow-back.onrender.com/requests/${row.id}`);
+      await axios.delete(`https://esiflow2.onrender.com/requests/${row.id}`);
 
       // Remove the deleted request from the state
       setData((prevData) => prevData.filter((request) => request.id !== row.id));

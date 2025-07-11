@@ -161,7 +161,7 @@ export default function UserCreateForm() {
         }
 
         // Using axios to send the request to our API route
-        const response = await axios.post("https://esi-flow-back.onrender.com/auth/register", userData)
+        const response = await axios.post("https://esiflow2.onrender.com/auth/register", userData)
 
         // Show success message
         showToast("User created successfully", "success")

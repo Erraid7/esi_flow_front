@@ -245,7 +245,7 @@ export default function EquipmentAddForm() {
         }
 
         // Make the API call with FormData
-        const response = await axios.post("https://esi-flow-back.onrender.com/equipments", formData, {
+        const response = await axios.post("https://esiflow2.onrender.com/equipments", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

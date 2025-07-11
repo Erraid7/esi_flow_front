@@ -43,7 +43,7 @@ export default function UserManagement() {
     const fetchUsers = async () => {
       try {
         setLoading(true)
-        const response = await axios.get("https://esi-flow-back.onrender.com/users")
+        const response = await axios.get("https://esiflow2.onrender.com/users")
         setData(response.data)
 
         console.log("Fetched users:", response.data)
@@ -97,7 +97,7 @@ export default function UserManagement() {
       const row = deleteModal.user
       if (!row) return
       
-      await axios.delete(`https://esi-flow-back.onrender.com/users/${row.id}`) // Updated API endpoint
+      await axios.delete(`https://esiflow2.onrender.com/users/${row.id}`) // Updated API endpoint
       // Remove the deleted user from the state
       setData((prevData) => prevData.filter((user) => user.id !== row.id))
 

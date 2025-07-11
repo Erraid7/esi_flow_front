@@ -57,7 +57,7 @@ const Sidebar = ({ activeItem = "dashboard" }) => {
   // Function to create API client
   const createApiClient = useCallback(() => {
     return axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_URL || "https://esi-flow-back.onrender.com",
+      baseURL: process.env.NEXT_PUBLIC_API_URL || "https://esiflow2.onrender.com",
     })
   }, [])
 
@@ -269,7 +269,7 @@ const Sidebar = ({ activeItem = "dashboard" }) => {
         // Call the logout endpoint
         console.log("deleting the token...");
         await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL || "https://esi-flow-back.onrender.com"}/auth/logout`,
+          `${process.env.NEXT_PUBLIC_API_URL || "https://esiflow2.onrender.com"}/auth/logout`,
           {},
           {
             headers: {

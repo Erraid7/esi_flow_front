@@ -42,7 +42,7 @@ export default function EquipmentManagement() {
     const fetchEquipment = async () => {
       try {
         setLoading(true)
-        const response = await axios.get("https://esi-flow-back.onrender.com/equipments")
+        const response = await axios.get("https://esiflow2.onrender.com/equipments")
 
         console.log("Fetched equipment data:", response.data)
         // object exemple received from the API
@@ -161,7 +161,7 @@ export default function EquipmentManagement() {
       const equipment = deleteModal.equipment
       if (!equipment) return
 
-      await axios.delete(`https://esi-flow-back.onrender.com/equipments/${equipment.id}`)
+      await axios.delete(`https://esiflow2.onrender.com/equipments/${equipment.id}`)
 
       // Remove the deleted equipment from the state
       setData((prevData) => prevData.filter((item) => item.id !== equipment.id))

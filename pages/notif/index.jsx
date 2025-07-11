@@ -58,7 +58,7 @@ export default function NotificationsPage() {
   })
 
   // API base URL
-  const API_BASE_URL = "https://esi-flow-back.onrender.com"
+  const API_BASE_URL = "https://esiflow2.onrender.com"
 
   // Get current user from localStorage - moved to useEffect
   const getCurrentUser = useCallback(() => {

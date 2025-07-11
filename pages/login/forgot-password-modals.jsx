@@ -7,7 +7,7 @@ import { AlertTriangle, CheckCircle, Mail, Lock, KeyRound, ArrowLeft } from "luc
 import axios from "axios"
 
 // Configure axios base URL - you should set this to your Express backend URL
-const API_URL = "https://esi-flow-back.onrender.com/auth"
+const API_URL = "https://esiflow2.onrender.com/auth"
 const api = axios.create({
   baseURL: API_URL,
   headers: {

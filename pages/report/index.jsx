@@ -27,7 +27,7 @@ import { Card } from "../components/cards"
 import { useRouter } from "next/navigation"
 
 // Define your API base URL
-const API_URL = "https://esi-flow-back.onrender.com"
+const API_URL = "https://esiflow2.onrender.com"
 
 export default function ReportPage() {
   const { t } = useLanguage()

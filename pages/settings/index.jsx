@@ -235,7 +235,7 @@ const uploadProfileImage = async (imageFile) => {
     const formData = new FormData()
     formData.append("image", imageFile)
 
-    const response = await axios.post("https://esi-flow-back.onrender.com/requests/upload", formData, {
+    const response = await axios.post("https://esiflow2.onrender.com/requests/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       }
@@ -429,7 +429,7 @@ const uploadProfileImage = async (imageFile) => {
         console.log("User id:", user.id)
 
         // Step 3: Update user data in the backend
-        const response = await axios.put(`https://esi-flow-back.onrender.com/auth/edit-user/${user.id}`, userData)
+        const response = await axios.put(`https://esiflow2.onrender.com/auth/edit-user/${user.id}`, userData)
 
         // Step 4: Update local storage with the updated user data
         const updatedUserData = response.data
