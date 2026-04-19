@@ -38,7 +38,7 @@ export default function Dashboard() {
   // Delete confirmation dialog
   const [deleteConfirm, setDeleteConfirm] = useState(null)
 
-  const API_BASE_URL = "https://esi-flow-back-u9go.onrender.com/"
+  const API_BASE_URL = "https://esi-flow-back-u9go.onrender.com"
 
   // Get current user from localStorage - moved to useEffect
   const getCurrentUser = () => {
