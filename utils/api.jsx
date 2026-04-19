@@ -1,6 +1,6 @@
 import axios from "axios"
 
-// Base URL for API requests - Use environment variable with fallback
+// Base URL for API requests
 const API_BASE_URL = "https://esi-flow-back-u9go.onrender.com/"
 
 // Create axios instance with default config
